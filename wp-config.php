@@ -37,6 +37,15 @@ define('DB_CHARSET', 'utf8');
 /** The Database Collate type. Don't change this if in doubt. */
 define('DB_COLLATE', '');
 
+/** Absolute path to the WordPress directory. */
+if ( !defined('ABSPATH') )
+    define('ABSPATH', dirname(__FILE__) . '/wordpress/');
+define('WP_HOME', 'http://' . $_SERVER['HTTP_HOST']);
+define('WP_CONTENT_DIR', realpath(ABSPATH . '../wp-content/'));
+define('WP_CONTENT_URL', WP_HOME . '/wp-content');
+define('WP_SITEURL', 'http://' . $_SERVER['HTTP_HOST'] . '/wordpress');
+define('UPLOADS', '../uploads');
+
 /**#@+
  * Authentication Unique Keys and Salts.
  *

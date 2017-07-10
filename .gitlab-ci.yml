@@ -2,6 +2,7 @@ cache:
   paths:
     - wp-content/themes/node_modules/
     - wp-content/themes/bower_components/
+    - wordpress
 stages:
 - build
 build:

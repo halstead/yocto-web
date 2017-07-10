@@ -1,0 +1,14 @@
+cache:
+  paths:
+    - wp-content/themes/node_modules/
+    - wp-content/themes/bower_components/
+stages:
+- build
+build:
+  stage: build
+  tags: ['shared']
+  script:
+  - cd wp-content/themes/yocto
+  - npm install
+  - bower install
+  - gulp

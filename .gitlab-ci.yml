@@ -7,6 +7,9 @@ stages:
 build:
   stage: build
   tags: ['shared']
+  before_script:
+  - git submodule sync --recursive
+  - git submodule update --init --recursive
   script:
   - cd wp-content/themes/yocto
   - npm install

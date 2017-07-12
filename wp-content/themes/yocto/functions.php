@@ -30,3 +30,17 @@ foreach ($sage_includes as $file) {
   require_once $filepath;
 }
 unset($file, $filepath);
+
+if (defined('WP_DEV_UPLOADS')){
+    if (is_dir(WP_DEV_UPLOADS)){
+        function wp_dev_upload_dir($upload_dir){
+            $upload_dir['path']    = str_replace( $upload_dir['basedir'], WP_DEV_UPLOADS, $upload_dir['path'] );
+            $upload_dir['basedir'] = WP_DEV_UPLOADS;
+
+            return $upload_dir;
+        }
+        add_filter('upload_dir', 'wp_dev_upload_dir');
+    } else {
+        error_log('WP_DEV_UPLOADS is defined but does not exist: ' . WP_DEV_UPLOADS);
+    }
+}

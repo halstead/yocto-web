@@ -65,6 +65,7 @@ function custom_project_blocks_function($atts) {
 			
 			// Image Fields
 			$image = '';
+			$imageBlockTitle = '';
 			$imageOverlay = '';
 			$imageLinkTarget = '';
 			
@@ -76,22 +77,30 @@ function custom_project_blocks_function($atts) {
 			
 			// Custom Blocks Fields
 			$customBlocksType = '';
+			$customBlocksTaxonomy = '';
+			$customBlocksTerm = '';
 			$customBlocksTitle = '';
 			$customBlocksCopy = '';
-			$customBlocksCategory = '';
-			$customBlocksCategory = '';
+			$customblocksSectionLink = '';
 			$customBlocksShowFeaturedImage = '';
 			$customBlocksShowTitle = '';
 			$customBlocksShowDescription = '';
 			$customBlocksCharacterCount = '';
 			$customBlocksBlockCount = '';
+			$customBlocksColumnsSelected = '';
+			$customBlocksReadMore = '';
 			$customblocksLink = '';
+			$customblocksSectionLink = '';
+			
+			//$customBlocksColumnsSelected = $field['numOfColumnsSelected']; 
+			//$customBlocksReadMore = $field['customblocksReadMore'];
+			
 				
 			// $field['customblocksShowFeaturedImage'];
 			// $field['customblocksShowTitle'];
 			// $field['customblocksShowDescription'];
 			// $field['customblocksCharacterCount'];
-			// $field['customblocksCategory'];
+			// $field['customblocksSectionLink'];
 			// $field['customblocksBlockCount'];
 			// $field['customblocksLink'];
 			
@@ -112,8 +121,16 @@ function custom_project_blocks_function($atts) {
 				
 				if($blockWidthType == 'fullwidth'){
 					$output .= '<div class="' . $blockContentContainerClass . '" style="padding-top:' . $blockPadding . '; padding-bottom:' . $blockPadding . '; background-color:' . $blockBackgroundColor . ';">';
+				}elseif($blockWidthType == 'contain'){
+					$output .= '<div class="' . $blockContentContainerClass . '" style="padding-top:' . $blockPadding . '; padding-bottom:' . $blockPadding . '; background-color:' . $blockBackgroundColor . ';">';
+					$output .= '	<div class="container">';
+				}else{
+					$output .= '<div class="container"><div class="content-block"><h5 class="alert">You must define a block width for this block.</h5>';
+				}
+				
+				if($blockWidthType == 'fullwidth' || $blockWidthType == 'contain'){
 					if($contentBlockTitle != 'undefined' && $contentBlockTitle != ''){
-						$output .= '<h2>' . $contentBlockTitle . '</h2>';
+						$output .= '<h2 class="block-title">' . $contentBlockTitle . '</h2>';
 					}
 					if($contentEmbedCode != 'undefined' && $contentEmbedCode != ''){
 						$mediaShortCode = do_shortcode($contentEmbedCode);
@@ -122,24 +139,11 @@ function custom_project_blocks_function($atts) {
 					if($contentBlockCopy != 'undefined' && $contentBlockCopy != ''){
 						$output .= '<div>' . $contentBlockCopy . '</div>';
 					}
-			 		$output .= '</div>';
-				}elseif($blockWidthType == 'contain'){
-					$output .= '<div class="' . $blockContentContainerClass . '" style="padding-top:' . $blockPadding . '; padding-bottom:' . $blockPadding . '; background-color:' . $blockBackgroundColor . ';">';
-						$output .= '<div class="container"><div class="inner">';
-						if($contentBlockTitle != 'undefined' && $contentBlockTitle != ''){
-							$output .= '<h2>' . $contentBlockTitle . '</h2>';
-						}
-						if($contentEmbedCode != 'undefined' && $contentEmbedCode != ''){
-							$mediaShortCode = do_shortcode($contentEmbedCode);
-							$output .= '<div>' . do_shortcode($contentEmbedCode) . '</div>';
-						}
-						if($contentBlockCopy != 'undefined' && $contentBlockCopy != ''){
-							$output .= '<div>' . $contentBlockCopy . '</div>';
-						}
-						$output .= '</div></div>';
+				}
+				if($blockWidthType == 'fullwidth'){
 					$output .= '</div>';
-				}else {
-					$output .= '<div class="container"><div class="inner"><h5 class="alert">You must define a block width for this block.</h5></div></div>';
+				}else{
+					$output .= '</div></div>';			
 				}
 			
 			// IMAGE BLOCK // 	 
@@ -150,13 +154,13 @@ function custom_project_blocks_function($atts) {
 					if( $image_attributes = wp_get_attachment_image_src( $attachmentID, $image_size ) ) {
 						$image = ' <img src="' . $image_attributes[0] . '" style="width:100%; height auto;" />';
 					}
-					
+					if (array_key_exists('imageBlockTitle', $field) && $field['imageBlockTitle'] != ''){
+						 $imageBlockTitle .= '<h2 class="block-title">' . $field['imageBlockTitle'] . '</h5>';
+				    }
 					$imageOverlay .= '<div class="relative-container"><div class="overlay-container">';
 					$imageOverlay .= '	<div class="overlay">';
-					if (array_key_exists('imageSlideOverlayTitle', $field) && $field['imageSlideOverlayTitle'] != ''){
-						 $imageOverlay .= '<h5>' . $field['imageSlideOverlayTitle'] . '</h5>';
-				    }
-					if (array_key_exists('imageSlideOverlayCopy', $field) && $field['imageSlideOverlayCopy'] != ''){
+					
+					if (array_key_exists('imageBlockTitle', $field) && $field['imageBlockTitle'] != ''){
 						 $imageOverlay .= '<p>' . $field['imageSlideOverlayCopy'] . '</p>';
 				    }
 					$imageOverlay .= '	</div>';
@@ -164,13 +168,19 @@ function custom_project_blocks_function($atts) {
 				}
 				$imageLinkTarget = (array_key_exists('imageLinkTarget', $field) && $field['imageLinkTarget'] == 'newWindow' ? '_blank' : '_self'); 
 			 	if($blockWidthType == 'fullwidth'){
-			 		$output .= (array_key_exists('imageSlideLink', $field) && $field['imageSlideLink'] != '' ? '<a href="' . $field['imageSlideLink']  . '" target="' . $imageLinkTarget . '">' : ''); 		
-			 		$output .= '<div class="' . $blockContentContainerClass . ' relative-container" style="padding-top:' . $blockPadding . '; padding-bottom:' . $blockPadding . '; background-color:' . $blockBackgroundColor . ';">' . $image . $imageOverlay . '</div>';
+			 		$output .= '<div class="' . $blockContentContainerClass . ' relative-container" style="padding-top:' . $blockPadding . '; padding-bottom:' . $blockPadding . '; background-color:' . $blockBackgroundColor . ';">';
+					$output .= $imageBlockTitle;
+					$output .= (array_key_exists('imageSlideLink', $field) && $field['imageSlideLink'] != '' ? '<a href="' . $field['imageSlideLink']  . '" target="' . $imageLinkTarget . '">' : ''); 	
+					$output .= $image . $imageOverlay;
 					$output .= (array_key_exists('imageSlideLink', $field) && $field['imageSlideLink'] != '' ? '</a>' : ''); 
-				}elseif($blockWidthType == 'contain'){
+					$output .= '</div>';
+				}elseif($blockWidthType == 'contain'){	
 					$output .= (array_key_exists('imageSlideLink', $field) && $field['imageSlideLink'] != '' ? '<a href="' . $field['imageSlideLink']  . '" target="' . $imageLinkTarget . '">' : ''); 	
 					$output .= '<div class="' . $blockContentContainerClass . ' relative-container" style="padding-top:' . $blockPadding . '; padding-bottom:' . $blockPadding . '; background-color:' . $blockBackgroundColor . ';">';
-					$output .= '	<div class="container relative-container">' . $image . $imageOverlay . '</div>';
+					$output .= '	<div class="container">';
+					$output .= 			$imageBlockTitle;
+					$output .= '		<div  class="relative-container">' . $image . $imageOverlay . '</div>';
+					$output .= '	</div>';
 					$output .= '</div>';
 					$output .= (array_key_exists('imageSlideLink', $field) && $field['imageSlideLink'] != '' ? '</a>' : ''); 
 				}else{
@@ -231,26 +241,34 @@ function custom_project_blocks_function($atts) {
 			// CUSTOM BLOCKS //	
 			} elseif($field['blockType'] == 'customblocks' && $blockState == 'blockActive') {
 				$customBlocksType = $field['customblocksType'];	
+				$customBlocksTaxonomy = $field['customblocksTaxonomies'];
+				$customBlocksTerm = $field['customblocksTerms'];
+				
 				$customBlocksTitle = $field['customblocksTitle'];
 				$customBlocksCopy = $field['customblocksCopy'];
-				$customBlocksCategory = $field['customblocksCategory'];
+				
 				$customBlocksShowFeaturedImage = $field['customblocksShowFeaturedImage'];
 				$customBlocksShowTitle = $field['customblocksShowTitle'];
 				$customBlocksShowDescription = $field['customblocksShowDescription'];
 				$customBlocksCharacterCount = $field['customblocksCharacterCount'];
 				$customBlocksBlockCount = $field['customblocksBlockCount'];
+				$customBlocksReadMore = $field['customblocksReadMore'];
+				$customBlocksColumnsSelected = $field['numOfColumnsSelected'];
 				$customblocksLink = $field['customblocksLink'];
+				$customblocksSectionLink = $field['customblocksSectionLink'];
 				
 				$attsArray = array(
 				    "custom-post-type" => $customBlocksType, 
+				    "taxonomy" => $customBlocksTaxonomy,
+				    "term" => $customBlocksTerm,
 				    "featured-image" => $customBlocksShowFeaturedImage,
 				    "title" => $customBlocksShowTitle,
 				    "content" => $customBlocksShowDescription,
-				    "block-class" => "col-xs-12 col-sm-4 section-block",
+				    //"block-class" => "col-xs-12 col-sm-4 section-block",
 				    "block-number" => $customBlocksBlockCount,
 				    "character-count" => $customBlocksCharacterCount,
-				    "taxonomy" => 'category',
-				    "terms" => $customBlocksCategory,
+				    "read-more" => $customBlocksReadMore,
+				    "columns" => $customBlocksColumnsSelected,
 				    "block-link" => $customblocksLink
 				    //"excluded-post-array"
 				    // "meta_query_array" => array(
@@ -262,15 +280,21 @@ function custom_project_blocks_function($atts) {
 				
 				if($blockWidthType == 'fullwidth'){
 					$output .= '<div class="' . $blockContentContainerClass . '" style="padding-top:' . $blockPadding . '; padding-bottom:' . $blockPadding . '; background-color:' . $blockBackgroundColor . ';">';
+					if($customblocksSectionLink != 'undefined' && $customblocksSectionLink != ''){
+						$output .= $customblocksSectionLink;
+					}
 				}elseif($blockWidthType == 'contain'){
 					$output .= '<div class="' . $blockContentContainerClass . '" style="padding-top:' . $blockPadding . '; padding-bottom:' . $blockPadding . '; background-color:' . $blockBackgroundColor . ';">';
 					$output .= '	<div class="container">';
+					if($customblocksSectionLink != 'undefined' && $customblocksSectionLink != ''){
+						$output .= $customblocksSectionLink;
+					}
 				}else{
 					$output .= '<div class="container"><div class="content-block"><h5 class="alert">You must define a block width for this block.</h5>';
 				}
 				if($blockWidthType === 'fullwidth' || $blockWidthType === 'contain'){
 					if($customBlocksTitle != 'undefined' && $customBlocksTitle != ''){
-						$output .= '<h2>' . $customBlocksTitle . '</h2>';
+						$output .= '<h2 class="block-title">' . $customBlocksTitle . '</h2>';
 					}
 					if($customBlocksCopy != 'undefined' && $customBlocksCopy != ''){
 						$output .= '<div>' . $customBlocksCopy . '</div>';
@@ -319,37 +343,95 @@ function custom_project_blocks_function($atts) {
 function list_post_types($selectedOption = 0) {
 	$output = '';
 	$args=array(
-     	'public'   => true//,
-     	//'_builtin' => true
+     	'public'   => true,
+     	//'_builtin' => true // make true to show post,page,media types
     ); 
-    $content = 'names';
+    $content = 'objects';
     $operator = 'and';
-    $post_types=get_post_types($args, $content, $operator); 
+    $post_types = get_post_types($args, $content, $operator); 
+	
+	$exclude = array( 'Media', 'Page' );  //Exclude Medai and Page Post Tpes
 
-    $output .= '<select name="customblocksType[]">';
+    $output .= '<select name="customblocksType[]" class="postTypeSelect">';
     foreach ($post_types  as $post_type ) {
     	//$output .=  '<option value="'. $post_type.'">'. $post_type. '</option>';
-		$output .=  '<option value="' . $post_type .'" ' . selected( $selectedOption, $post_type, false )  . ' >'. $post_type. '</option>';
+    	if( TRUE != in_array( $post_type->labels->singular_name, $exclude ) ) {
+    		if($post_type->labels->singular_name === 'Post'){
+    			$output .=  '<option value="post" ' . selected( $selectedOption, 'post', false )  . ' >' . $post_type->labels->singular_name . '</option>';
+    		}else{
+    			$output .=  '<option value="' . $post_type->rewrite['slug'] .'" ' . selected( $selectedOption, $post_type->rewrite['slug'], false )  . ' >' . $post_type->labels->singular_name . '</option>';
+    		}
+    		
+    	}
 	}
 	$output .=  '</select>';
 	return $output;
 }
 
-function custom_blocks ($atts) { // 
+function list_taxonomy_terms($selectedOption = 0, $taxonomy = 'category', $postType = 'post') {
+	$terms = get_terms( array(
+	    'taxonomy' => $taxonomy,
+	    'hide_empty' => false,
+	    'post_type' => $postType
+	) );
+	$output = '';
+	$output .= '<select name="customblocksTerms[]" class="termsSelect">';
+    foreach ($terms as $term ) {
+    	//$output .=  '<option value="'. $post_type.'">'. $post_type. '</option>';
+		$output .=  '<option value="' . $term->name .'" ' . selected( $selectedOption, $term->name, false )  . ' >' . $term->name . '</option>';
+	}
+	$output .=  '</select>';
+	return $output;
+}
+
+
+function list_taxonomies($selectedOption = 0, $postType = 'post') {
+	$taxonomy_objects = get_object_taxonomies( $postType );
+	$output = '';
+    $output .= '<select name="customblocksTaxonomies[]" class="taxonomiesSelect">';
+    foreach ($taxonomy_objects as $taxonomy_object ) {
+    	//$output .=  '<option value="'. $post_type.'">'. $post_type. '</option>';
+		$output .=  '<option value="' . $taxonomy_object .'" ' . selected( $selectedOption, $taxonomy_object, false )  . ' >' . $taxonomy_object . '</option>';
+	}
+	$output .=  '</select>';
+	//$output .= list_taxonomy_terms(0, 'software-type');
+	return $output;
+}
+
+
+function list_column_select($selectedOption = 4) {
+	$output = '';
+	$numberArray = array("1", "2", "3", "4", "5");
+	
+	$output .= '<select name="numOfColumnsSelected[]">';
+	foreach ($numberArray as $key=>$value) {
+    	$output .=  '<option value="' . $value .'" ' . selected( $selectedOption, $value, false )  . ' >' . $value . '</option>';
+	}
+	$output .=  '</select>';
+	return $output;
+}
+
+
+function custom_blocks($atts) { 
 	$post_type = $atts["custom-post-type"];
+	$taxonomy = $atts["taxonomy"];
+	$taxonomy_term = $atts["term"];
 	$featured_img = $atts["featured-image"];	
 	$title = $atts["title"];	    
 	$content = $atts["content"];
 	$block_num = $atts["block-number"];
 	$character_count = $atts["character-count"];
-	$taxonomy = $atts["taxonomy"];
-	$taxonomy_terms = $atts["terms"];
+	$columns = $atts["columns"];
+	$read_more = $atts["read-more"];
 	$block_link = $atts["block-link"];
+	
+	$columns = 12 / $columns;
+	
 	$args = '';
 	
 	$character_count = ($character_count == '') ? 120 : $character_count; 
 	
-	if($taxonomy_terms == '' || $taxonomy_terms == undefined){
+	if($taxonomy_term == '' || $taxonomy_term == undefined){
 		// $taxonomy_terms = get_terms( $taxonomy, array(
 		    // 'hide_empty' => 0,
 		    // 'fields' => 'slugs'
@@ -368,32 +450,39 @@ function custom_blocks ($atts) { //
 	      'order' => 'DESC',
 	      'tax_query' => array(
 	        array(
-	            'taxonomy' => 'category',
+	            'taxonomy' => $taxonomy,
 	            'field' => 'slug',
-	            'terms' => $taxonomy_terms
+	            'terms' => $taxonomy_term
 	        	)
 	    	)
 	    );
 	}
-
+    //colorbox
 	$output = '';
 	$my_query = null;
     $my_query = new WP_Query($args);
     if( $my_query->have_posts() ) {
 		while ($my_query->have_posts()) : $my_query->the_post();
-			$output .= '<div class="col-xs-12 col-sm-6 col-md-4 ' . $post_type . '">';
-	      	$output .= ($block_link == 'yes') ? '<a href="' . get_permalink(get_the_ID())  . '" class="inline-block">' : '';
+			$output .= '<div class="col-xs-12 col-sm-6 col-md-' . $columns . ' ' . $post_type . ' custom-block">';
+	      	$output .= ($block_link == 'yes') ? '<a href="' . get_permalink(get_the_ID())  . '" class="inline-block full-width">' : '';
 	      	$output .= '		<div class="grid-block">';
 		    $output .=  ($featured_img == 'checked' ? '<div class="grid-featured-image-container">' .	get_the_post_thumbnail(get_the_ID(), 'medium', array( 'class' => 'img-responsive' )) . '</div>' : ''); 
 		    $output .= '			<div class="grid-block-copy">';
 		    $output .=  ($title == 'checked' ? '<h6>' . get_the_title() . '</h6>' : '');
 		    $output .=  ($content == 'checked' ? '<p>' . get_custom_excerpt( $character_count, 'excerpt' ) . '</p>' : ''); 
+		    $output .=  ($read_more == 'checked' ? '<span class="blue-link">Read More &raquo;</span>' : ''); 
 		    $output .= '			</div>';
 		    $output .= '		</div>';
 		    $output .= ($block_link == 'yes') ? '</a>' : '';
 		    $output .= '	</a>';
 	      	$output .= '</div>';
 		endwhile;
+	}else{
+		$output .= '	<div class="container" role="document">';
+	    $output .= '		<div class="content">';
+	    $output .= '			<p>There are no blocks that match your query.</p>';	
+	    $output .= '		</div>';
+		$output .= '	</div>';
 	}
 	wp_reset_postdata();
 	wp_reset_query();
@@ -406,7 +495,7 @@ function get_custom_excerpt($limit, $source = null){ // Custom Excerpt function 
     if($source == "content" ? ($excerpt = get_the_content()) : ($excerpt = get_the_excerpt()));
 	    $excerpt = preg_replace(" (\[.*?\])",'',$excerpt);
 	    $excerpt = strip_shortcodes($excerpt);
-	    $excerpt = strip_tags($excerpt);
+	    //$excerpt = strip_tags($excerpt);
 	    $excerpt = substr($excerpt, 0, $limit);
 	    //$excerpt = substr($excerpt, 0, strripos($excerpt, " "));
 	    $excerpt = trim(preg_replace( '/\s+/', ' ', $excerpt));
@@ -414,6 +503,49 @@ function get_custom_excerpt($limit, $source = null){ // Custom Excerpt function 
 		//$excerpt = $excerpt . '...';
     return $excerpt;
 }
+
+//////------>> END - GLOBAL FUNCTIONS <<------//////
+
+
+
+//////------>> START - AJAX HANDLER FUNCTION <<------//////
+
+add_action('wp_ajax_nopriv_do_ajax', __NAMESPACE__ . '\\ajax_request_func'); //-->> Inialized here - Then Called by ajax login form (second ajax login call)
+add_action('wp_ajax_do_ajax', __NAMESPACE__ . '\\ajax_request_func');
+
+function ajax_request_func(){
+     switch($_REQUEST['dropDown']){
+          case 'postType':                    
+			   //$output = 'Dropdown Menu: ' . $_REQUEST['dropDown'];
+			   //$output .= 'Slug: ' . $_REQUEST['slug'];
+			   $dropDown =  $_REQUEST['dropDown'];
+			   $itemSlug =  $_REQUEST['slug'];
+			   $output = list_taxonomies(0, $itemSlug);
+          break;
+		  case 'taxonomy':
+			   $dropDown =  $_REQUEST['dropDown'];
+			   $itemSlug =  $_REQUEST['slug'];
+			   $postType = $_REQUEST['postType'];
+			   $output = list_taxonomy_terms(0, $itemSlug, $postType);		
+          break;
+          default:
+              $output = 'No function specified, check your jQuery.ajax() call';
+          break;
+
+     }
+
+     $output=json_encode($output);
+     if(is_array($output)){
+     	print_r($output);
+     }
+     else{
+     	echo $output;
+     }
+	 echo
+     die;
+}
+
+//////------>> END - AJAX HANDLER FUNCTION <<------//////
 
 
 
@@ -525,6 +657,10 @@ function project_builder_meta_box() {
 		 	color:#0085ba;
 		 	cursor:pointer;
 		}
+		
+		.taxonomiesSelect, .postTypeSelect, .termsSelect, .sectionLinkField {
+			min-width:148px;
+		}
 	</style>
 	<script type="text/javascript">
 	jQuery(document).ready(function($) {
@@ -561,7 +697,7 @@ function project_builder_meta_box() {
 			row.find('.color-field-clone').wpColorPicker();
 			return false;
 		});
-
+		
 		$('.remove-row').on('click', function() {
 			$(this).parents('tr').remove();
 			return false;
@@ -641,6 +777,9 @@ function project_builder_meta_box() {
 	        }       
 	    });
 	    
+	    
+	    // Helper - Tool Tips
+	    
 	    $('.dashicons-info').hover(
 		  function() {
 		    //$( this ).text( "hey" );
@@ -648,8 +787,87 @@ function project_builder_meta_box() {
 		    //$( this ).text( "ho" );
 		  }
 		);
-	    
 		
+		
+		// Post Type and Taxonomy Select scripts
+		var postType = '';
+		$(document.body).on('change',".postTypeSelect",function (e) {
+		  postType = this.value;
+		  // $this = this;
+		  //alert(postType);
+		  $taxonomyContainer = $(this).closest('.project-block-field-containter').find('.taxonomy-container');
+		  $termContainer = $(this).closest('.project-block-field-containter').find('.term-container');
+		  console.log('update taxonomy - post type: ' + postType);
+		  updatePostTypeSelectField('postType', this.value,  $taxonomyContainer, $termContainer);
+		});
+		
+		$(document.body).on('change',".taxonomiesSelect",function (e) {
+		  console.log('update term - post type: ' + postType);
+		  //$termContainer = this.parent;
+		  $termContainer = $(this).closest('.taxonomy-terms-container').find('.term-container');
+		  updateTaxonomySelectField('taxonomy', this.value,  $termContainer, postType);
+		});
+		
+		
+		function updatePostTypeSelectField(dropDown, slug, taxContainer, termContainer){
+			jQuery.ajax({
+		          url: '/wp-admin/admin-ajax.php',
+		          data:{
+		               'action':'do_ajax',
+		               'dropDown': dropDown,
+		               'slug': slug
+		               },
+		          dataType: 'JSON',
+		          success:function(data){
+				  		console.log(data);
+				  		$(taxContainer).empty();
+				  		$(taxContainer).html(data);
+				  		var taxonomy = $(taxContainer).find('select').val();
+				  		console.log("POSTTYPE: " + postType);
+				  		console.log("TAX: " + taxonomy);
+				  		
+				  		updateTaxonomySelectField('taxonomy', taxonomy, termContainer, postType)
+						// $('#main').empty();
+						// $('#main').html(data.html);
+		          },
+		          error: function(errorThrown){
+		          	   
+		               alert('Error Retrieving Request');
+		               console.log(errorThrown);
+		               //animating = false;
+		          }
+			 });	
+		}
+		
+		function updateTaxonomySelectField(dropDown, slug, container, postType){
+			jQuery.ajax({
+		          url: '/wp-admin/admin-ajax.php',
+		          data:{
+		               'action':'do_ajax',
+		               'dropDown': dropDown,
+		               'slug': slug,
+		               'postType': postType
+		               },
+		          dataType: 'JSON',
+		          success:function(data){
+				  		console.log(data);
+				  		$(container).empty();
+				  		$(container).html(data);
+						//#taxonomy-container
+			   			//#terms-container
+						// $('#main').empty();
+						// $('#main').html(data.html);
+		          },
+		          error: function(errorThrown){
+		          	   
+		               alert('error');
+		               console.log(errorThrown);
+		               //animating = false;
+		          }
+			 });	
+		}
+		
+
 		//console.log('custom admin script added');
 		
 		/*
@@ -939,9 +1157,9 @@ function project_builder_meta_box() {
 								</div>
 							</div>
 							<div style="margin-bottom:12px; overflow:hidden;"><!-- Slide Overlay Title -->
-								<div style="float:left; width:32%;">Image Overlay Title:</div>
+								<div style="float:left; width:32%;">Image Block Title:</div>
 								<div style="float:left; width:68%;">
-									<input type="text" class="widefat" name="imageSlideOverlayTitle[]" value="<?php if (array_key_exists('imageSlideOverlayTitle', $field) && $field['imageSlideOverlayTitle'] != '') echo esc_attr( $field['imageSlideOverlayTitle'] ); ?>" />
+									<input type="text" class="widefat" name="imageBlockTitle[]" value="<?php if (array_key_exists('imageBlockTitle', $field) && $field['imageBlockTitle'] != '') echo esc_attr( $field['imageBlockTitle'] ); ?>" />
 								</div>
 							</div>
 							<div>
@@ -1007,19 +1225,47 @@ function project_builder_meta_box() {
 						<div class="project-block-field-containter">
 							<h4>Custom Blocks Fields</h4>
 							<div style="margin-bottom:12px; overflow:hidden;">
-								<div style="float:left; width:32%;">Post Types:</div>
+								<div style="float:left; width:32%;">Post Options:</div>
 								<div style="float:left; width:68%;">
-									<div class="alignleft" style="margin-right:12px;">
-									<?php
-									$selectedPostType = '';
-									$selectedPostType = (array_key_exists('customblocksType', $field) && $field['customblocksType'] != '') ? $field['customblocksType'] : 'Undefined Post Type';
-									echo list_post_types($selectedPostType); 
-									?>
+									<div class="alignleft" style="margin-right:18px;"">
+										<label>Post Type</label>
+										<div>
+											<?php
+											$selectedPostType = '';
+											$selectedPostType = (array_key_exists('customblocksType', $field) && $field['customblocksType'] != '') ? $field['customblocksType'] : 'Undefined Post Type';
+											echo list_post_types($selectedPostType); 
+											?>
+										</div>
 									</div>
 									<div class="alignleft">
-										<label>Category</label> 
-										<input type="text" name="customblocksCategory[]" style="width:148px; margin-left:6px" value="<?php if (array_key_exists('customblocksCategory', $field) && $field['customblocksCategory'] != '') echo esc_attr( $field['customblocksCategory'] ); ?>" />  
-										<span class="dashicons dashicons-info" data-class-target="customblocksCategory"></span><div class="hidden">Use Category Slug. Leave blank to show all.</div>
+										<label>Section Link</label> 
+										<div>
+											<input type="text" name="customblocksSectionLink[]" class="sectionLinkField" value="<?php if (array_key_exists('customblocksSectionLink', $field) && $field['customblocksSectionLink'] != '') echo esc_attr( $field['customblocksSectionLink'] ); ?>" />  
+											<span class="dashicons dashicons-info" data-class-target="customblocksSectionLink"></span><div class="hidden">Use Category Slug. Leave blank to show all.</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div style="margin-bottom:12px; overflow:hidden;">
+								<div style="float:left; width:32%;">Categories and Terms:</div>
+								<div style="float:left; width:68%;" class="taxonomy-terms-container">
+									<div class="alignleft" style="margin-right:18px;">
+										<label>Category</label>
+										<?php
+											$selectedTaxonomy = '';  
+											$selectedTaxonomy = (array_key_exists('customblocksTaxonomies', $field) && $field['customblocksTaxonomies'] != '') ? $field['customblocksTaxonomies'] : 'category';
+											//echo 'Tax: ' . $field['customblocksTaxonomies']; //$selectedTaxonomy;
+										?>
+										<div class="taxonomy-container"><?php echo list_taxonomies($selectedTaxonomy, $selectedPostType); ?></div>	
+									</div>
+									<div class="alignleft">
+										<label>Term</label> 
+										<?php
+											$selectedTaxonomyTerm = ''; 
+											$selectedTaxonomyTerm = (array_key_exists('customblocksTerms', $field) && $field['customblocksTerms'] != '') ? $field['customblocksTerms'] : 'uncategorized';
+											//echo 'Term: ' . $selectedTaxonomyTerm;
+										?>
+										<div class="term-container"><?php echo list_taxonomy_terms($selectedTaxonomyTerm, $selectedTaxonomy, $selectedPostType); ?></div> 
 									</div>
 								</div>
 							</div>
@@ -1049,6 +1295,13 @@ function project_builder_meta_box() {
 										$descriptionChecked = '';
 										$hiddenDescriptionChecked = 'unchecked';
 									}
+									if($field['customblocksReadMore'] == "checked") {
+										$readMoreChecked = 'checked="checked"';
+										$hiddenReadMoreChecked = 'checked';
+									}else{
+										$readMoreChecked = 'title=""';
+										$hiddenReadMoreChecked = 'unchecked';
+									}
 									?>
 									<div class="alignleft" style="margin-right:10px; margin-bottom:5px;">
 										<input type="hidden" value="<?php echo $hiddenfeaturedImageChecked; ?>" name='customblocksShowFeaturedImageHidden[]' class="customblocksShowFeaturedImageHidden">
@@ -1068,8 +1321,21 @@ function project_builder_meta_box() {
 											<input type="text" name="customblocksCharacterCount[]" style="width:48px; margin-left:6px" value="<?php if (array_key_exists('customblocksCharacterCount', $field) && $field['customblocksCharacterCount'] != '') echo esc_attr( $field['customblocksCharacterCount'] ); ?>" />  
 											<span class="dashicons dashicons-info" data-class-target="customblocksCharacterCount"></span><div class="hidden">Leave blank to not limit.</div>
 										</div>
+										<div class="alignleft" style="margin-top:7px;">
+											<input type="hidden" value="<?php echo $hiddenReadMoreChecked; ?>" name='customblocksReadMoreHidden[]' class="customblocksReadMoreHidden">
+											<input type="checkbox" class="checkbox-trigger" data-class-target="customblocksReadMoreHidden" name="customblocksReadMore[]" value="yes" <?php echo $readMoreChecked; ?> />Show "Read More" Button
+										</div>	
+									</div>
+									<div style="margin:10px 0px; display:inline-block">
 										<div class="alignleft">
-											<label>Number of Blocks</label> 
+											<label>Number of Columns</label> 
+											<?php
+											$numOfColumnsSelected = $field['numOfColumnsSelected']; 
+											echo list_column_select($numOfColumnsSelected); 
+											?>
+										</div>
+										<div class="alignleft">
+											<label style="margin-left:10px">Visible Blocks</label> 
 											<input type="text" name="customblocksBlockCount[]" style="width:48px; margin-left:6px" value="<?php if (array_key_exists('customblocksBlockCount', $field) && $field['customblocksBlockCount'] != '') echo esc_attr( $field['customblocksBlockCount'] ); ?>" />  
 											<span class="dashicons dashicons-info" data-class-target="customblocksBlockCount"></span><div class="hidden">Leave blank to not limit.</div>
 										</div>
@@ -1077,10 +1343,12 @@ function project_builder_meta_box() {
 								</div>
 							</div>
 							<div style="margin-bottom:12px; overflow:hidden;"><!-- Slide Link -->
-								<div style="float:left; width:32%;">Link Blocks:</div>
-								<div style="float:left; width:68%;">	<?php //echo $key; ?>
-									<input type="radio" name="customblocksLink<?php echo $key; ?>[]" class="custom-blocks-link-radio custom-blocks-link-yes" id="custom-blocks-link-yes" value="yes" <?php checked( $field['customblocksLink'], 'yes' ); ?> > Yes 
-									<input type="radio" name="customblocksLink<?php echo $key; ?>[]" class="custom-blocks-link-radio custom-blocks-link-no" id="custom-blocks-link-no" style="margin-left:12px;" value="no" <?php checked( $field['customblocksLink'], 'no' ); ?> > No
+								<div style="float:left; width:32%;">Link Options:</div>
+								<div style="float:left; width:68%;">	
+									<input type="radio" name="customblocksLink<?php echo $key; ?>[]" class="custom-blocks-link-radio custom-blocks-link-yes" id="custom-blocks-link-page" value="page" <?php checked( $field['customblocksLink'], 'page' ); ?> > Page 
+									<input type="radio" name="customblocksLink<?php echo $key; ?>[]" class="custom-blocks-link-radio custom-blocks-link-modal" id="custom-blocks-link-modal" style="margin-left:12px;" value="modal" <?php checked( $field['customblocksLink'], 'modal' ); ?> > Modal
+									<input type="radio" name="customblocksLink<?php echo $key; ?>[]" class="custom-blocks-link-radio custom-blocks-link-customField" id="custom-blocks-link-customField" style="margin-left:12px;" value="customField" <?php checked( $field['customblocksLink'], 'customField' ); ?> > Custom Field
+									<input type="radio" name="customblocksLink<?php echo $key; ?>[]" class="custom-blocks-link-radio custom-blocks-link-no" id="custom-blocks-link-no" style="margin-left:12px;" value="no" <?php checked( $field['customblocksLink'], 'no' ); ?> > Don't Link
 								</div>
 							</div>
 							<div style="margin-bottom:12px; overflow:hidden;">
@@ -1223,9 +1491,9 @@ function project_builder_meta_box() {
 								</div>
 							</div>
 							<div style="margin-bottom:12px; overflow:hidden;">
-								<div style="float:left; width:32%;">Image Overlay Title:</div>
+								<div style="float:left; width:32%;">Image Block Title:</div>
 								<div style="float:left; width:68%;">
-									<input type="text" class="widefat" name="imageSlideOverlayTitle[]" />
+									<input type="text" class="widefat" name="imageBlockTitle[]" />
 								</div>
 							</div>
 							<div style="margin-bottom:12px; overflow:hidden;">
@@ -1280,19 +1548,37 @@ function project_builder_meta_box() {
 						<div class="project-block-field-containter">
 							<h4>Custom Blocks Fields</h4>
 							<div style="margin-bottom:12px; overflow:hidden;">
-								<div style="float:left; width:32%;">Post Types:</div>
+								<div style="float:left; width:32%;">Post Options:</div>
 								<div style="float:left; width:68%;">
-									<div class="alignleft" style="margin-right:12px;">
-									<?php
-									echo list_post_types(); 
-									?>
+									<div class="alignleft" style="margin-right:18px;">
+										<label>Post Type</label> 
+										<div>
+										<?php
+										echo list_post_types(); 
+										?>
+										</div>
 									</div>
 									<div class="alignleft">
-										<label>Category</label> 
-										<input type="text" name="customblocksCategory[]" style="width:148px; margin-left:6px" />  
-										<span class="dashicons dashicons-info" data-class-target="customblocksCategory"></span><div class="hidden">Use Category Slug. Leave blank to show all.</div>
+										<label>Section Link</label>  
+										<div>
+											<input type="text" name="customblocksSectionLink[]" class="sectionLinkField" />  
+											<span class="dashicons dashicons-info" data-class-target="customblocksSectionLink"></span><div class="hidden">Use Category Slug. Leave blank to show all.</div>
+										</div>
 									</div>
 								</div>
+							</div>
+							<div style="margin-bottom:12px; overflow:hidden;">
+								<div style="float:left; width:32%;">Categories and Terms:</div>
+								<div style="float:left; width:68%;" class="taxonomy-terms-container">
+									<div class="alignleft" style="margin-right:18px;">
+										<label>Category</label>
+										<div class="taxonomy-container"><?php echo list_taxonomies(0, 'post'); ?></div>	
+									</div>
+									<div class="alignleft">
+										<label>Term</label> 
+										<div class="term-container"><?php echo list_taxonomy_terms(0, 'category', 'post'); //'software-type' ?></div> 
+									</div>
+								</div>		
 							</div>
 							<div style="margin-bottom:12px; overflow:hidden;">
 								<div style="float:left; width:32%;">Display Options:</div>
@@ -1315,19 +1601,33 @@ function project_builder_meta_box() {
 											<input type="text" name="customblocksCharacterCount[]" value="120" style="width:48px; margin-left:6px" />  
 											<span class="dashicons dashicons-info" data-class-target="customblocksCharacterCount"></span><div class="hidden">Leave blank to not limit.</div>
 										</div>
+										<div class="alignleft" style="margin-top:7px;">
+											<input type="hidden" value="" name='customblocksReadMoreHidden[]' class="customblocksReadMorenHidden">
+											<input type="checkbox" class="checkbox-trigger" data-class-target="customblocksReadMoreHidden" name="customblocksReadMore[]" value="yes" />Show "Read More" Button
+										</div>
+									</div>
+									<div style="margin:10px 0px; display:inline-block">
 										<div class="alignleft">
-											<label>Number of Blocks</label> 
-											<input type="text" name="customblocksBlockCount[]" value="6" style="width:48px; margin-left:6px" />  
+											<label>Number of Columns</label> 
+											<?php
+											echo list_column_select('3'); 
+											?>
+										</div>
+										<div class="alignleft">
+											<label style="margin-left:10px">Visible Blocks</label> 
+											<input type="text" name="customblocksBlockCount[]" style="width:48px; margin-left:6px" />  
 											<span class="dashicons dashicons-info" data-class-target="customblocksBlockCount"></span><div class="hidden">Leave blank to not limit.</div>
 										</div>
 									</div>
 								</div>
 							</div>
 							<div style="margin-bottom:12px; overflow:hidden;"><!-- Slide Link -->
-								<div style="float:left; width:32%;">Link Blocks:</div>
-								<div style="float:left; width:68%;">	<?php //echo $key; ?>
-									<input type="radio" name="customblocksLink0[]" class="custom-blocks-link-radio custom-blocks-link-yes" id="custom-blocks-link-yes" value="yes" checked> Yes 
-									<input type="radio" name="customblocksLink0[]" class="custom-blocks-link-radio custom-blocks-link-no" id="custom-blocks-link-no" style="margin-left:12px;" value="no"> No
+								<div style="float:left; width:32%;">Link Options:</div>
+								<div style="float:left; width:68%;">
+									<input type="radio" name="customblocksLink0[]" class="custom-blocks-link-radio custom-blocks-link-yes" id="custom-blocks-link-page" value="page"> Page 
+									<input type="radio" name="customblocksLink0[]" class="custom-blocks-link-radio custom-blocks-link-modal" id="custom-blocks-link-modal" style="margin-left:12px;" value="modal"> Modal
+									<input type="radio" name="customblocksLink0[]" class="custom-blocks-link-radio custom-blocks-link-customField" id="custom-blocks-link-customField" style="margin-left:12px;" value="customField"> Custom Field
+									<input type="radio" name="customblocksLink0[]" class="custom-blocks-link-radio custom-blocks-link-no" id="custom-blocks-link-no" style="margin-left:12px;" value="no"> Don't Link
 								</div>
 							</div>
 							<div style="margin-bottom:12px; overflow:hidden;">
@@ -1468,9 +1768,9 @@ function project_builder_meta_box() {
 								</div>
 							</div>
 							<div style="margin-bottom:12px; overflow:hidden;">
-								<div style="float:left; width:32%;">Image Overlay Title:</div>
+								<div style="float:left; width:32%;">Image Block Title:</div>
 								<div style="float:left; width:68%;">
-									<input type="text" class="widefat" name="imageSlideOverlayTitle[]" />
+									<input type="text" class="widefat" name="imageBlockTitle[]" />
 								</div>
 							</div>
 							<div style="margin-bottom:12px; overflow:hidden;">
@@ -1525,19 +1825,37 @@ function project_builder_meta_box() {
 						<div class="project-block-field-containter">
 							<h4>Custom Blocks Fields</h4>
 							<div style="margin-bottom:12px; overflow:hidden;">
-								<div style="float:left; width:32%;">Post Types:</div>
+								<div style="float:left; width:32%;">Post Options:</div>
 								<div style="float:left; width:68%;">
-									<div class="alignleft" style="margin-right:12px;">
-									<?php
-									echo list_post_types(); 
-									?>
+									<div class="alignleft" style="margin-right:18px;">
+										<label>Post Type</label> 
+										<div>
+										<?php
+										echo list_post_types(); 
+										?>
+										</div>
 									</div>
 									<div class="alignleft">
-										<label>Category</label> 
-										<input type="text" name="customblocksCategory[]" style="width:148px; margin-left:6px" />  
-										<span class="dashicons dashicons-info" data-class-target="customblocksCategory"></span><div class="hidden">Use Category Slug. Leave blank to show all.</div>
+										<label>Section Link</label>  
+										<div>
+											<input type="text" name="customblocksSectionLink[]" class="sectionLinkField" />  
+											<span class="dashicons dashicons-info" data-class-target="customblocksSectionLink"></span><div class="hidden">Use Category Slug. Leave blank to show all.</div>
+										</div>
 									</div>
 								</div>
+							</div>
+							<div style="margin-bottom:12px; overflow:hidden;">
+								<div style="float:left; width:32%;">Categories and Terms:</div>
+								<div style="float:left; width:68%;" class="taxonomy-terms-container">
+									<div class="alignleft" style="margin-right:18px;">
+										<label>Category</label>
+										<div class="taxonomy-container"><?php echo list_taxonomies(0, 'post'); ?></div>	
+									</div>
+									<div class="alignleft">
+										<label>Term</label> 
+										<div class="term-container"><?php echo list_taxonomy_terms(0, 'category', 'post'); //'software-type' ?></div> 
+									</div>
+								</div>		
 							</div>
 							<div style="margin-bottom:12px; overflow:hidden;">
 								<div style="float:left; width:32%;">Display Options:</div>
@@ -1560,19 +1878,33 @@ function project_builder_meta_box() {
 											<input type="text" name="customblocksCharacterCount[]" value="120" style="width:48px; margin-left:6px" />  
 											<span class="dashicons dashicons-info" data-class-target="customblocksCharacterCount"></span><div class="hidden">Leave blank to not limit.</div>
 										</div>
+										<div class="alignleft" style="margin-top:7px;">
+											<input type="hidden" value="" name='customblocksReadMoreHidden[]' class="customblocksReadMorenHidden">
+											<input type="checkbox" class="checkbox-trigger" data-class-target="customblocksReadMoreHidden" name="customblocksReadMore[]" value="yes" />Show "Read More" Button
+										</div>
+									</div>
+									<div style="margin:10px 0px; display:inline-block">
 										<div class="alignleft">
-											<label>Number of Blocks</label> 
-											<input type="text" name="customblocksBlockCount[]" value="6" style="width:48px; margin-left:6px" />  
+											<label>Number of Columns</label> 
+											<?php
+											echo list_column_select('3'); 
+											?>
+										</div>
+										<div class="alignleft">
+											<label style="margin-left:10px">Visible Blocks</label> 
+											<input type="text" name="customblocksBlockCount[]" style="width:48px; margin-left:6px" />  
 											<span class="dashicons dashicons-info" data-class-target="customblocksBlockCount"></span><div class="hidden">Leave blank to not limit.</div>
 										</div>
 									</div>
 								</div>
 							</div>
 							<div style="margin-bottom:12px; overflow:hidden;"><!-- Slide Link -->
-								<div style="float:left; width:32%;">Link Blocks:</div>
+								<div style="float:left; width:32%;">Link Options:</div>
 								<div style="float:left; width:68%;">	<?php //echo $key; ?>
-									<input type="radio" name="customblocksLink[]" class="custom-blocks-link-radio custom-blocks-link-yes" id="custom-blocks-link-yes" value="yes" checked> Yes 
-									<input type="radio" name="customblocksLink[]" class="custom-blocks-link-radio custom-blocks-link-no" id="custom-blocks-link-no" style="margin-left:12px;" value="no"> No
+									<input type="radio" name="customblocksLink0[]" class="custom-blocks-link-radio custom-blocks-link-yes" id="custom-blocks-link-page" value="page"> Page 
+									<input type="radio" name="customblocksLink0[]" class="custom-blocks-link-radio custom-blocks-link-modal" id="custom-blocks-link-modal" style="margin-left:12px;" value="modal"> Modal
+									<input type="radio" name="customblocksLink0[]" class="custom-blocks-link-radio custom-blocks-link-customField" id="custom-blocks-link-customField" style="margin-left:12px;" value="customField"> Custom Field
+									<input type="radio" name="customblocksLink0[]" class="custom-blocks-link-radio custom-blocks-link-no" id="custom-blocks-link-no" style="margin-left:12px;" value="no"> Don't Link
 								</div>
 							</div>
 							<div style="margin-bottom:12px; overflow:hidden;">
@@ -1659,13 +1991,13 @@ function repeatable_meta_box_save($post_id) {
 	$imageSlide = $_POST['imageSlide'];
 	$imageSlideLink = $_POST['imageSlideLink'];
 	$imageLinkTarget = $_POST['imageLinkTarget']; 
-	$imageSlideOverlayTitle = $_POST['imageSlideOverlayTitle'];
 	$imageSlideOverlayCopy = $_POST['imageSlideOverlayCopy'];
+	$imageBlockTitle = $_POST['imageBlockTitle'];
 	
 	// $field['imageSlide'];
 	// $field['imageSlideLink'];
-	// $field['imageSlideOverlayTitle'];
 	// $field['imageSlideOverlayCopy'];
+	// $field['imageBlockTitle'];
 
 	//--> Video Section Fields <--//
 	
@@ -1685,6 +2017,8 @@ function repeatable_meta_box_save($post_id) {
 	//--> Custom Block Section Fields <--//
 	
 	$customblocksType = $_POST['customblocksType'];
+	$customblocksTaxonomies = $_POST['customblocksTaxonomies'];
+	$customblocksTerms = $_POST['customblocksTerms'];
 	$customblocksTitle = $_POST['customblocksTitle'];
 	$customblocksCopy = $_POST['customblocksCopy'];
 	
@@ -1693,9 +2027,12 @@ function repeatable_meta_box_save($post_id) {
 	$customblocksShowTitle = $_POST['customblocksShowTitleHidden'];
 	$customblocksShowDescription = $_POST['customblocksShowDescriptionHidden'];
 	$customblocksCharacterCount = $_POST['customblocksCharacterCount'];
-	$customblocksCategory = $_POST['customblocksCategory'];
+	$customblocksSectionLink = $_POST['customblocksSectionLink'];
 	$customblocksBlockCount = $_POST['customblocksBlockCount'];
 	$customblocksLink = $_POST['customblocksLink'];
+	
+	$numOfColumnsSelected = $_POST['numOfColumnsSelected']; 
+	$customblocksReadMore = $_POST['customblocksReadMoreHidden'];  
 
 	
 	for ( $i = 0; $i < $blockCount; $i++ ) {
@@ -1748,13 +2085,12 @@ function repeatable_meta_box_save($post_id) {
 			
 			if ( $_POST['imageLinkTarget' . $blocksOrder[$i]][0] != '' )
 				$new[$i]['imageLinkTarget'] = $_POST['imageLinkTarget' . $blocksOrder[$i]][0];
+		
+			if ( $imageBlockTitle[$i] != '' )
+				$new[$i]['imageBlockTitle'] = stripslashes( $imageBlockTitle[$i] );
 			
-			if ( $imageSlideOverlayTitle[$i] != '' )
-				$new[$i]['imageSlideOverlayTitle'] = stripslashes($imageSlideOverlayTitle[$i] );
-
 			if ( $imageSlideOverlayCopy[$i] != '' )
-				$new[$i]['imageSlideOverlayCopy'] = stripslashes( $imageSlideOverlayCopy[$i] );
-
+				$new[$i]['imageSlideOverlayCopy'] = stripslashes($imageSlideOverlayCopy[$i] );
 
 			//--> Set - Video Section Fields <--//
 			if ( $videoSlidePosterImage[$i] != '' )
@@ -1778,6 +2114,12 @@ function repeatable_meta_box_save($post_id) {
 			//--> Set - Custom Block Section Fields <--//
 			if ( $customblocksType[$i] != '' )
 				$new[$i]['customblocksType'] = stripslashes($customblocksType[$i] );
+			
+			if ( $customblocksTaxonomies[$i] != '' )
+				$new[$i]['customblocksTaxonomies'] = stripslashes($customblocksTaxonomies[$i] ); 
+				
+			if ( $customblocksTerms[$i] != '' )
+				$new[$i]['customblocksTerms'] = stripslashes($customblocksTerms[$i] ); 
 
 			if ( $customblocksTitle[$i] != '' )
 				$new[$i]['customblocksTitle'] = stripslashes(  $customblocksTitle[$i] );
@@ -1786,7 +2128,7 @@ function repeatable_meta_box_save($post_id) {
 				$new[$i]['customblocksCopy'] = stripslashes(  $customblocksCopy[$i] );
 				
 			if ( $customblocksShowFeaturedImage[$i] != '' )
-			$new[$i]['customblocksShowFeaturedImage'] = stripslashes(  $customblocksShowFeaturedImage[$i] );
+				$new[$i]['customblocksShowFeaturedImage'] = stripslashes(  $customblocksShowFeaturedImage[$i] );
 				
 			if ($customblocksShowTitle[$i] != '') 
 				$new[$i]['customblocksShowTitle'] = stripslashes( $customblocksShowTitle[$i] ); 
@@ -1797,15 +2139,21 @@ function repeatable_meta_box_save($post_id) {
 			if ($customblocksCharacterCount[$i] != '') 
 				$new[$i]['customblocksCharacterCount'] = stripslashes( $customblocksCharacterCount[$i] );
 			
-			if ($customblocksCategory[$i] != '') 
-				$new[$i]['customblocksCategory'] = stripslashes( $customblocksCategory[$i] );
+			if ($customblocksSectionLink[$i] != '') 
+				$new[$i]['customblocksSectionLink'] = stripslashes( $customblocksSectionLink[$i] );
 			
 			if ($customblocksBlockCount[$i] != '') 
 				$new[$i]['customblocksBlockCount'] = stripslashes( $customblocksBlockCount[$i] );
 			
+			if ($numOfColumnsSelected[$i] != '') 
+				$new[$i]['numOfColumnsSelected'] = stripslashes( $numOfColumnsSelected[$i] );
+			
+			if ($customblocksReadMore[$i] != '') 
+				$new[$i]['customblocksReadMore'] = stripslashes( $customblocksReadMore[$i] );
+			
 			if ( $_POST['customblocksLink' . $blocksOrder[$i]][0] != '' )
 				$new[$i]['customblocksLink'] = $_POST['customblocksLink' . $blocksOrder[$i]][0];
-			
+
 		}else {
 			$blocks[$i] = 'inactive-block';
 		}

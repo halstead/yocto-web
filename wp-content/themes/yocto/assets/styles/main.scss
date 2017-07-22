@@ -23,6 +23,7 @@
 
 body {
   padding-top:119px;
+  font-family: 'Lato', sans-serif;
 }
 
 body.admin-bar {
@@ -39,20 +40,47 @@ body.home {
 }
 
 
-
+p {
+  font-size:18px;
+  font-family: 'Lato', sans-serif;
+  font-weight:300;
+}
 a, p {
   color:#9b9d9c;
+  font-family: 'Lato', sans-serif;
 } 
+
+p{
+  strong{
+    color:$header-black;
+    margin-bottom: 24px;
+    display: block;
+    font-weight:700;
+  }
+}
 
 a:hover, a:active {
   color:#6b6b6b;
   text-decoration:none;
 }
 
+h1,h2,h3,h4,h5,h6 {
+  font-family: 'Lato', sans-serif;
+  text-transform:uppercase;
+  font-weight:700;
+  letter-spacing:.01em;
+}
+
+h3 {
+  font-size:16px;
+  margin-bottom: 20px;
+  font-weight:400;
+}
+
 h5 {
   text-transform:uppercase;
-  font-size:19px;
-  line-height:28px;
+  font-size:14px;
+  line-height:20px;
   color:$black;
 }
 
@@ -88,10 +116,24 @@ header.banner {
 .padding-left-0 {
   padding-left:0px;
 }
+.padding-right-0 {
+  padding-right:0px;
+}
+
+.left-padding-block {
+  padding-left:60px;
+}
+
+.center-image {
+    width: auto;
+    max-width: 100%;
+    margin: 0px auto;
+    display: block;
+}
 
 .btn {
   display:inline-block;
-  padding:20px;
+  padding:14px;
 }
 
 .full-width {
@@ -102,15 +144,119 @@ a.btn-blue {
   background:$brand-blue;
   color:$white;
   text-transform:uppercase;
-  text-align:left;
+  text-align:center;
   border-radius:0px;
   font-size:12px;
   line-height:20px;
   white-space:normal;
+  font-weight:800;
+  opacity:1;
+  transition: opacity .25s ease-in-out;
+  -moz-transition: opacity .25s ease-in-out;
+  -webkit-transition: opacity .25s ease-in-out;
+  
+  img {
+    margin-right:6px;
+  }
+  
+  &:hover {
+    color:$white;
+    opacity: 0.7;
+  }
 }
 .content-block {
   padding:46px 0px;
+  
+  ul{
+    list-style:none;
+    padding-left:20px;
+    
+    li>a {
+      color:$brand-blue;
+      font-size:14px;
+      font-weight:bold;
+    }
+  }
 }
+
+.copy-small {
+  font-size:13px;
+}
+  
+.copy-large {
+  font-size:18px;
+}
+
+.blue-link {
+  text-transform:uppercase;
+  color:$brand-blue;
+  font-weight:700;
+}
+
+.block-more-link {
+  margin-top:20px;
+  float:right;
+  font-weight:700;
+}
+  
+.row{
+  .block-more-link {
+    margin-top:-54px;
+    float:right;
+  }
+}
+
+.narrow-block {
+  padding:10px 100px;
+}
+
+.narrow-double-block {
+  padding:10px 140px;
+}
+
+.inline-block {
+  display:inline-block;
+}
+
+.half-block {
+  padding:16px 0px;
+  border-bottom:1px solid #dfdfdf;
+  overflow:hidden;
+  cursor:pointer;
+  
+  &:hover {
+    background:#ffffff;
+    cursor:pointer;
+  }
+  &:first-child {
+    border-top:1px solid #dfdfdf;
+  }
+}
+
+.half-block-img-container {
+  padding-left:0px !important;
+  padding-right:5px !important;
+  
+  img{
+    width:100%;
+    height:auto !important;
+    margin-right:20px;
+    float:left;
+  }
+}
+
+.half-block-copy h6 {
+    color: #0098db;
+    font-size: 14px;
+    text-transform: uppercase;
+  margin-top:0;
+    margin-bottom: 4px;
+}
+
+.half-block-copy p {
+  margin-bottom:0px;
+}
+
 
 // HOME CAROUSEL
 
@@ -253,6 +399,10 @@ ul#menu-primary-navigation {
 
 // GRID BLOCKS
 
+.custom-block {
+  margin-bottom:30px;
+}
+
 .grid-block-link {
   display:inline-block;
 }
@@ -271,23 +421,64 @@ ul#menu-primary-navigation {
     color: $brand-blue;
     font-size:14px;
     text-transform:uppercase;
-    margin-bottom:0px;
+    margin-bottom:5px;
   } 
+  
+  p {
+    font-size:14px;
+  }
+}
+
+.header-small {
+  &.content-block {
+    h2.block-title {
+      font-size:15px;
+      margin-bottom:12px;
+    }
+  }
 }
 
 .content-block {
-  h2 {
+  h2.block-title {
     text-transform: uppercase;
     font-size: 19px;
     line-height: 28px;
     color: $black;
-    margin-bottom:32px;
+    margin-bottom:30px;
+    
+    &:first-child {
+      margin-top:0px;
+    }
+    
   }
   .row {
     margin-bottom:30px;
   
     &:last-child{
       margin-bottom:0px;
+    }
+  }
+}
+
+// PAGE - HOME
+
+a.btn-start, a.btn-features {
+  text-align:center; 
+  padding:10px;
+}
+
+
+// PAGE - SOFTWARE
+
+.software-blocks {
+  .grid-block {
+    .grid-block-copy {
+      h6 {
+        margin-bottom:10px;
+      }
+      p{
+        font-size:13px;
+      }
     }
   }
 }
@@ -303,7 +494,11 @@ footer.content-info .container .conent-inner {
   border-top:1px solid #b0b0b0;
   padding-top:58px;
   padding-bottom:78px;
-  font-size:11px;
+  font-size:12px;
+  
+  p {
+    font-size:12px;
+  }
   
   ul {
      margin-bottom:20px;

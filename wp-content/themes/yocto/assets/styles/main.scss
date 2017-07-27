@@ -513,6 +513,82 @@ a.btn-start, a.btn-features {
   }
 }
 
+div. ambassadors {
+  text-align:center !important;
+}
+
+div.ambassadors {
+  .grid-block-copy{
+    text-align:center !important;
+    border-bottom:0px none;
+  }
+}
+
+
+// PAGE - ECOSYSTEM
+
+.members-badge {
+  vertical-align: middle;
+  margin-bottom: 6px;
+  width:30px;
+  height:30px;
+  border-radius:15px;
+  margin-right:6px;
+}
+.circle-platinum {
+    background-color:#e5e4e2;
+}
+.circle-gold {
+  background-color:#ffd700;
+}
+.circle-silver {
+  background-color:#c0c0c0;
+}
+.circle-bronze {
+  background-color:#cd7f32;
+}
+.inline-block {
+  display:inline-block;
+}
+
+div.single-member .container {
+  border-top:0px none;
+}
+
+div.member-level-block{
+  padding:0px 0px 20px 0px;
+}
+.member-level-block .container {
+  border-top:1px solid #d7d9db;
+  margin-bottom:20px;
+  padding:20px 15px;
+}
+.member-level-block .grid-block-copy {
+  border-bottom:0px none;
+}
+div.platinum-member .container {
+  border-top:0px none;
+}
+div.platinum-member .grid-featured-image-container img {
+      width:100%;
+    max-width:243px;
+      display:block;
+      margin:0px auto;
+}
+.member-gold-level-block .grid-featured-image-container img {
+  max-width:78%;
+  margin: 0px auto;
+}
+.member-silver-level-block .grid-featured-image-container img {
+  max-width:75%;
+  margin: 0px auto;
+}
+.member-bronze-level-block .grid-featured-image-container img {
+  max-width: 70%;
+  margin: 0px auto;
+}
+
+
 
 // FOOTER 
 

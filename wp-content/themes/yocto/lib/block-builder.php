@@ -443,6 +443,7 @@ function custom_blocks($atts) {
 	      'post_status' => 'publish',
 	      'posts_per_page' => $block_num,
 	      'order' => 'DESC',
+	      'posts_per_page' => -1
 	    );
 	}else{
 		$args=array(
@@ -450,6 +451,7 @@ function custom_blocks($atts) {
 	      'post_status' => 'publish',
 	      'posts_per_page' => $block_num,
 	      'order' => 'DESC',
+	      'posts_per_page' => -1,
 	      'tax_query' => array(
 	        array(
 	            'taxonomy' => $taxonomy,

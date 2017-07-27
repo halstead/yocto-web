@@ -11,7 +11,7 @@ class BASEKIT_Functions {
 	public function __construct() {
 		add_action( 'after_setup_theme', array( $this, 'define_constants' ), 1 );
 		add_action( 'init', array( $this, 'add_post_type' ) );
-		//add_action( 'init', array( $this, 'add_taxonomy' ) );
+		add_action( 'init', array( $this, 'add_taxonomy' ) );
 	}
 	
 	public function define_constants() {
@@ -80,11 +80,15 @@ class BASEKIT_Functions {
 			register_post_type( $key, $args );
 		}
 	public function add_taxonomy() {
-		$this->setup_taxonomy( 'App Category', 'App Categories', 'app-category', 'app-category', array( 'apps' ), true, 'intelrealsense' );
-		$this->setup_taxonomy( 'Payment Type', 'Payment Types', 'payment-type', 'payment-type', array( 'apps' ), true, 'intelrealsense' );
-		$this->setup_taxonomy( 'Camera Support Option', 'Camera Support Options', 'camera-support-option', 'camera-support-option', array( 'apps' ), true, 'intelrealsense' );
-		$this->setup_taxonomy( 'Windows Version', 'Windows Versions', 'window-version', 'window-version', array( 'apps' ), false, 'intelrealsense' );
-		$this->setup_taxonomy( 'Language', 'Languages', 'language', 'language', array( 'apps' ), false, 'intelrealsense' );
+		//$this->setup_taxonomy( 'App Category', 'App Categories', 'app-category', 'app-category', array( 'apps' ), true, 'intelrealsense' );
+		//$this->setup_taxonomy( 'Payment Type', 'Payment Types', 'payment-type', 'payment-type', array( 'apps' ), true, 'intelrealsense' );
+		//$this->setup_taxonomy( 'Camera Support Option', 'Camera Support Options', 'camera-support-option', 'camera-support-option', array( 'apps' ), true, 'intelrealsense' );
+		//$this->setup_taxonomy( 'Windows Version', 'Windows Versions', 'window-version', 'window-version', array( 'apps' ), false, 'intelrealsense' );
+		//$this->setup_taxonomy( 'Language', 'Languages', 'language', 'language', array( 'apps' ), false, 'intelrealsense' );
+		$this->setup_taxonomy( 'Software Type', 'Software Types', 'software-type', 'software-type', array( 'software-item' ), true, 'baseKit' );
+		$this->setup_taxonomy( 'Learn Category', 'Learn Categories', 'learn-category', 'learn-category', array( 'learn-items' ), true, 'baseKit' );
+		$this->setup_taxonomy( 'Member Level', 'Member Levels', 'member-level', 'member-level', array( 'members' ), true, 'baseKit' );
+	
 	}
 		public function setup_taxonomy( $type, $types, $key, $url_slug, $post_type_keys, $hierarchical, $theme) {
 			$labels = array(

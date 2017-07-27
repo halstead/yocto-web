@@ -304,7 +304,7 @@ class BASEKIT_Function_Slider {
 		
 			});
 			</script>
-		
+			<h5 style="display:inline-block">Slider Shortcode: </h5> <input type="text" style="width:200px;" value="[custom_slider id='<?php  echo get_the_ID(); ?>']" />
 			<table id="repeatable-fieldset-one" width="100%">
 			<thead>
 				<tr>
@@ -723,7 +723,7 @@ class BASEKIT_Function_Slider {
 						$new[$i]['imageSlideOverlayTitle'] = stripslashes($imageSlideOverlayTitle[$i] );
 		
 					if ( $imageSlideOverlayCopy[$i] != '' )
-						$new[$i]['imageSlideOverlayCopy'] = stripslashes( strip_tags( $imageSlideOverlayCopy[$i] ) );
+						$new[$i]['imageSlideOverlayCopy'] = stripslashes(  $imageSlideOverlayCopy[$i] );
 
 		
 					//--> Set - Video Section Fields <--//
@@ -737,7 +737,7 @@ class BASEKIT_Function_Slider {
 						$new[$i]['videoSlideSourceLink'] = stripslashes( $videoSlideSourceLink[$i]  );
 		
 					if ( $videoSlideOverlayTitle[$i] != '' )
-						$new[$i]['videoSlideOverlayTitle'] = stripslashes( strip_tags( $videoSlideOverlayTitle[$i] ) );
+						$new[$i]['videoSlideOverlayTitle'] = stripslashes( $videoSlideOverlayTitle[$i] ); //stripslashes( strip_tags( $videoSlideOverlayTitle[$i] ) );
 		
 					if ( $videoSlideOverlayCopy[$i] != '' )
 						$new[$i]['videoSlideOverlayCopy'] = stripslashes( $videoSlideOverlayCopy[$i] );

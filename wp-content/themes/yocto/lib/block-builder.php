@@ -50,18 +50,19 @@ function custom_project_blocks_function($atts) {
 			$blockBackgroundColor = '';
 			$blockContentContainerClass= '';
 			
-			$blockType = $field['blockType'];
-			$blockState = $field['blockState'];
-			$blockWidthType = $field['blockContentWidth'];
-			$blockPadding = $field['blockContentPadding'];
-			$blockBackgroundColor = $field['blockContentBackgroundColor'];
-			$blockContentContainerClass = $field['blockContentContainerClass'];
+			if(isset($field['blockType'])){ $blockType = $field['blockType']; }
+			if(isset($field['blockState'])){ $blockState = $field['blockState']; }
+			if(isset($field['blockContentWidth'])){ $blockWidthType = $field['blockContentWidth']; }
+			if(isset($field['blockContentPadding'])){ $blockPadding = $field['blockContentPadding']; }
+			if(isset($field['blockContentBackgroundColor'])){ $blockBackgroundColor = $field['blockContentBackgroundColor']; }
+			if(isset($field['blockContentContainerClass'])){ $blockContentContainerClass = $field['blockContentContainerClass']; }
 			
 			// Clear values so they doesn't get reused on other images
 			
 			// Content Fields
 			$contentBlockTitle = '';
 			$contentBlockCopy = '';
+			$contentEmbedCode= '';
 			
 			// Image Fields
 			$image = '';
@@ -111,18 +112,17 @@ function custom_project_blocks_function($atts) {
 			
 			
 			// CONTENT BLOCK // 
-			if($blockType == 'content' && $blockState == 'blockActive'){ 
-				$contentBlockTitle = $field['contentBlockTitle'];
-				$contentBlockCopy = $field['contentBlockCopy'];
-				
-				$contentEmbedCode = $field['contentShortcode'];
+			if($blockType == 'content' && $blockState == 'blockActive'){
+				if(isset($field['contentBlockTitle'])){ $contentBlockTitle = $field['contentBlockTitle']; }
+				if(isset($field['contentBlockCopy'])){ $contentBlockCopy = $field['contentBlockCopy']; } 
+				if(isset($field['contentShortcode'])){ $contentEmbedCode = $field['contentShortcode']; }
 				//$mediaShortCode = do_shortcode($contentEmbedCode);
 				//$output .= '<div>' . $mediaShortCode . '</div>';
 				
 				if($blockWidthType == 'fullwidth'){
-					$output .= '<div class="' . $blockContentContainerClass . '" style="padding-top:' . $blockPadding . '; padding-bottom:' . $blockPadding . '; background-color:' . $blockBackgroundColor . ';">';
+					$output .= '<div class="' . $blockContentContainerClass . ' content-block" style="padding-top:' . $blockPadding . '; padding-bottom:' . $blockPadding . '; background-color:' . $blockBackgroundColor . ';">';
 				}elseif($blockWidthType == 'contain'){
-					$output .= '<div class="' . $blockContentContainerClass . '" style="padding-top:' . $blockPadding . '; padding-bottom:' . $blockPadding . '; background-color:' . $blockBackgroundColor . ';">';
+					$output .= '<div class="' . $blockContentContainerClass . ' content-block" style="padding-top:' . $blockPadding . '; padding-bottom:' . $blockPadding . '; background-color:' . $blockBackgroundColor . ';">';
 					$output .= '	<div class="container">';
 				}else{
 					$output .= '<div class="container"><div class="content-block"><h5 class="alert">You must define a block width for this block.</h5>';
@@ -149,9 +149,9 @@ function custom_project_blocks_function($atts) {
 			// IMAGE BLOCK // 	 
 			} elseif($blockType == 'image' && $blockState == 'blockActive'){ 
 				
-				if (array_key_exists('imageSlide', $field) && $field['imageSlide'] != undefined) {
+				if (array_key_exists('imageSlide', $field) && $field['imageSlide'] != '') {
 					$attachmentID = esc_attr( $field['imageSlide'] ); 
-					if( $image_attributes = wp_get_attachment_image_src( $attachmentID, $image_size ) ) {
+					if( $image_attributes = wp_get_attachment_image_src( $attachmentID, 'full' ) ) {
 						$image = ' <img src="' . $image_attributes[0] . '" style="width:100%; height auto;" />';
 					}
 					if (array_key_exists('imageBlockTitle', $field) && $field['imageBlockTitle'] != ''){
@@ -168,7 +168,7 @@ function custom_project_blocks_function($atts) {
 				}
 				$imageLinkTarget = (array_key_exists('imageLinkTarget', $field) && $field['imageLinkTarget'] == 'newWindow' ? '_blank' : '_self'); 
 			 	if($blockWidthType == 'fullwidth'){
-			 		$output .= '<div class="' . $blockContentContainerClass . ' relative-container" style="padding-top:' . $blockPadding . '; padding-bottom:' . $blockPadding . '; background-color:' . $blockBackgroundColor . ';">';
+			 		$output .= '<div class="' . $blockContentContainerClass . ' relative-container content-block" style="padding-top:' . $blockPadding . '; padding-bottom:' . $blockPadding . '; background-color:' . $blockBackgroundColor . ';">';
 					$output .= $imageBlockTitle;
 					$output .= (array_key_exists('imageSlideLink', $field) && $field['imageSlideLink'] != '' ? '<a href="' . $field['imageSlideLink']  . '" target="' . $imageLinkTarget . '">' : ''); 	
 					$output .= $image . $imageOverlay;
@@ -176,7 +176,7 @@ function custom_project_blocks_function($atts) {
 					$output .= '</div>';
 				}elseif($blockWidthType == 'contain'){	
 					$output .= (array_key_exists('imageSlideLink', $field) && $field['imageSlideLink'] != '' ? '<a href="' . $field['imageSlideLink']  . '" target="' . $imageLinkTarget . '">' : ''); 	
-					$output .= '<div class="' . $blockContentContainerClass . ' relative-container" style="padding-top:' . $blockPadding . '; padding-bottom:' . $blockPadding . '; background-color:' . $blockBackgroundColor . ';">';
+					$output .= '<div class="' . $blockContentContainerClass . ' relative-container content-block" style="padding-top:' . $blockPadding . '; padding-bottom:' . $blockPadding . '; background-color:' . $blockBackgroundColor . ';">';
 					$output .= '	<div class="container">';
 					$output .= 			$imageBlockTitle;
 					$output .= '		<div  class="relative-container">' . $image . $imageOverlay . '</div>';
@@ -223,11 +223,11 @@ function custom_project_blocks_function($atts) {
 				$videoOverlay .= '</div></div>';
 				$videoLinkTarget = (array_key_exists('videoLinkTarget', $field) && $field['videoLinkTarget'] == 'newWindow' ? '_blank' : '_self'); 
 				if($blockWidthType == 'fullwidth'){
-			 		$output .= '<div class="' . $blockContentContainerClass . ' relative-container" style="padding-top:' . $blockPadding . '; padding-bottom:' . $blockPadding . '; background-color:' . $blockBackgroundColor . ';">' . $video . $videoOverlay;
+			 		$output .= '<div class="' . $blockContentContainerClass . ' relative-container content-block" style="padding-top:' . $blockPadding . '; padding-bottom:' . $blockPadding . '; background-color:' . $blockBackgroundColor . ';">' . $video . $videoOverlay;
 					$output .= (array_key_exists('videoSlideLink', $field) && $field['videoSlideLink'] != '' ? '<a href="' . $field['videoSlideLink']  . '" style="position:absolute; top:0px; left:0px; width:100%; min-height:80%;" target="' . $videoLinkTarget . '"></a>' : '');
 					$output .= '</div>';
 				}elseif($blockWidthType == 'contain'){
-					$output .= '<div class="' . $blockContentContainerClass . ' relative-container" style="padding-top:' . $blockPadding . '; padding-bottom:' . $blockPadding . '; background-color:' . $blockBackgroundColor . ';">';
+					$output .= '<div class="' . $blockContentContainerClass . ' relative-container content-block" style="padding-top:' . $blockPadding . '; padding-bottom:' . $blockPadding . '; background-color:' . $blockBackgroundColor . ';">';
 					$output .= '	<div class="container relative-container">';
 					$output .= '		<div>' . $video . $videoOverlay . '</div>';
 					$output .= (array_key_exists('videoSlideLink', $field) && $field['videoSlideLink'] != '' ? '<a href="' . $field['videoSlideLink']  . '" style="position:absolute; top:0px; left:0px; width:100%; min-height:80%;" target="' . $videoLinkTarget . '"></a>' : '');
@@ -240,22 +240,23 @@ function custom_project_blocks_function($atts) {
 			
 			// CUSTOM BLOCKS //	
 			} elseif($field['blockType'] == 'customblocks' && $blockState == 'blockActive') {
-				$customBlocksType = $field['customblocksType'];	
-				$customBlocksTaxonomy = $field['customblocksTaxonomies'];
-				$customBlocksTerm = $field['customblocksTerms'];
+				if(isset($field['customblocksType'])){ $customBlocksType = $field['customblocksType']; }
+				if(isset($field['customblocksTaxonomies'])){ $customBlocksTaxonomy = $field['customblocksTaxonomies']; }
+				if(isset($field['customblocksTerms'])){ $customBlocksTerm = $field['customblocksTerms']; }
+
+				if(isset($field['customblocksTitle'])){ $customBlocksTitle = $field['customblocksTitle']; }
+				if(isset($field['customblocksCopy'])){ $customBlocksCopy = $field['customblocksCopy']; }
 				
-				$customBlocksTitle = $field['customblocksTitle'];
-				$customBlocksCopy = $field['customblocksCopy'];
-				
-				$customBlocksShowFeaturedImage = $field['customblocksShowFeaturedImage'];
-				$customBlocksShowTitle = $field['customblocksShowTitle'];
-				$customBlocksShowDescription = $field['customblocksShowDescription'];
-				$customBlocksCharacterCount = $field['customblocksCharacterCount'];
-				$customBlocksBlockCount = $field['customblocksBlockCount'];
-				$customBlocksReadMore = $field['customblocksReadMore'];
-				$customBlocksColumnsSelected = $field['numOfColumnsSelected'];
-				$customblocksLink = $field['customblocksLink'];
-				$customblocksSectionLink = $field['customblocksSectionLink'];
+				if(isset($field['customblocksShowFeaturedImage'])){ $customBlocksShowFeaturedImage = $field['customblocksShowFeaturedImage']; }
+				if(isset($field['customblocksShowTitle'])){ $customBlocksShowTitle = $field['customblocksShowTitle']; }
+				if(isset($field['customblocksShowDescription'])){ $customBlocksShowDescription = $field['customblocksShowDescription']; }
+				if(isset($field['customblocksCharacterCount'])){ $customBlocksCharacterCount = $field['customblocksCharacterCount']; }
+				if(isset($field['customblocksBlockCount'])){ $customBlocksBlockCount = $field['customblocksBlockCount']; }
+				if(isset($field['customblocksReadMore'])){ $customBlocksReadMore = $field['customblocksReadMore']; }
+				if(isset($field['numOfColumnsSelected'])){ $customBlocksColumnsSelected = $field['numOfColumnsSelected']; }
+				if(isset($field['customblocksLink'])){ $customblocksLink = $field['customblocksLink']; }
+				if(isset($field['customblocksSectionLink'])){ $customblocksSectionLink = $field['customblocksSectionLink']; }
+
 				
 				$attsArray = array(
 				    "custom-post-type" => $customBlocksType, 
@@ -279,12 +280,12 @@ function custom_project_blocks_function($atts) {
 				);
 				
 				if($blockWidthType == 'fullwidth'){
-					$output .= '<div class="' . $blockContentContainerClass . '" style="padding-top:' . $blockPadding . '; padding-bottom:' . $blockPadding . '; background-color:' . $blockBackgroundColor . ';">';
+					$output .= '<div class="' . $blockContentContainerClass . ' content-block" style="padding-top:' . $blockPadding . '; padding-bottom:' . $blockPadding . '; background-color:' . $blockBackgroundColor . ';">';
 					if($customblocksSectionLink != 'undefined' && $customblocksSectionLink != ''){
 						$output .= $customblocksSectionLink;
 					}
 				}elseif($blockWidthType == 'contain'){
-					$output .= '<div class="' . $blockContentContainerClass . '" style="padding-top:' . $blockPadding . '; padding-bottom:' . $blockPadding . '; background-color:' . $blockBackgroundColor . ';">';
+					$output .= '<div class="' . $blockContentContainerClass . ' content-block" style="padding-top:' . $blockPadding . '; padding-bottom:' . $blockPadding . '; background-color:' . $blockBackgroundColor . ';">';
 					$output .= '	<div class="container">';
 					if($customblocksSectionLink != 'undefined' && $customblocksSectionLink != ''){
 						$output .= $customblocksSectionLink;
@@ -314,7 +315,7 @@ function custom_project_blocks_function($atts) {
 			$block_counter++;
 		}
 	else:
-		$output .= '<div class="' . $block_class  . '" id="section-' . $block_counter . '" style="background-color:#db4103;">';
+		$output .= '<div class="content-block" id="section-' . $block_counter . '" style="background-color:#db4103;">';
 		$output .= '	<div class="container" role="document">';
 	    $output .= '		<div class="content">';
 		$output .= '			<h1 class="block-title">' . get_the_title() . '</h1>';
@@ -425,13 +426,14 @@ function custom_blocks($atts) {
 	$read_more = $atts["read-more"];
 	$block_link = $atts["block-link"];
 	
+	$columns = ($columns == 0) ? 1 : $columns; // fix for if columns is 0 or undefined
 	$columns = 12 / $columns;
 	
 	$args = '';
 	
 	$character_count = ($character_count == '') ? 120 : $character_count; 
 	
-	if($taxonomy_term == '' || $taxonomy_term == undefined){
+	if($taxonomy_term == '' || !isset($taxonomy_term)){  
 		// $taxonomy_terms = get_terms( $taxonomy, array(
 		    // 'hide_empty' => 0,
 		    // 'fields' => 'slugs'
@@ -462,9 +464,11 @@ function custom_blocks($atts) {
 	$my_query = null;
     $my_query = new WP_Query($args);
     if( $my_query->have_posts() ) {
-		while ($my_query->have_posts()) : $my_query->the_post();
+		while ($my_query->have_posts()) : $my_query->the_post();  //$value = get_field( "text_field" );
 			$output .= '<div class="col-xs-12 col-sm-6 col-md-' . $columns . ' ' . $post_type . ' custom-block">';
-	      	$output .= ($block_link == 'yes') ? '<a href="' . get_permalink(get_the_ID())  . '" class="inline-block full-width">' : '';
+	      	$output .= ($block_link == 'page') ? '<a href="' . get_permalink(get_the_ID())  . '" class="inline-block full-width">' : '';
+			$output .= ($block_link == 'modal') ? '<a href="' . get_permalink(get_the_ID())  . '" class="inline-block full-width colorbox">' : '';
+			$output .= ($block_link == 'customField') ? '<a href="' . get_field( "redirect_field", get_the_ID() )  . '" class="inline-block full-width">' : '';
 	      	$output .= '		<div class="grid-block">';
 		    $output .=  ($featured_img == 'checked' ? '<div class="grid-featured-image-container">' .	get_the_post_thumbnail(get_the_ID(), 'medium', array( 'class' => 'img-responsive' )) . '</div>' : ''); 
 		    $output .= '			<div class="grid-block-copy">';
@@ -555,9 +559,12 @@ function ajax_request_func(){
 add_action( 'admin_head', __NAMESPACE__ . '\\check_page_template' );
 function check_page_template() {
     global $post;
-    if ( 'template-block-builder.php' == get_post_meta( $post->ID, '_wp_page_template', true ) ) {
-        project_builder_meta_box_add();
-    }
+	if(isset($post->ID)){
+		if ( 'template-block-builder.php' == get_post_meta( $post->ID, '_wp_page_template', true ) ) {
+        	project_builder_meta_box_add();
+    	}
+	}
+    
 }
 
 
@@ -1414,7 +1421,7 @@ function project_builder_meta_box() {
 								<div style="float:left; width:32%;">Block Width:</div>
 								<div style="float:left; width:68%;">	<?php //echo $key; ?>
 									<input type="radio" name="blockContentWidth0[]" class="block-width-radio block-type-fullwidth-radio" id="block-type-fullwidth-radio" value="fullwidth"> Full Width 
-									<input type="radio" name="blockContentWidth0[]" class="block-width-radio block-type-contain-radio" id="block-type-contain-radio" style="margin-left:12px;" value="contain"> Contain 
+									<input type="radio" name="blockContentWidth0[]" class="block-width-radio block-type-contain-radio" id="block-type-contain-radio" style="margin-left:12px;" value="contain" checked="checked"> Contain 
 								</div>
 							</div>
 							<div style="margin-bottom:12px; overflow:hidden;">
@@ -1624,7 +1631,7 @@ function project_builder_meta_box() {
 							<div style="margin-bottom:12px; overflow:hidden;"><!-- Slide Link -->
 								<div style="float:left; width:32%;">Link Options:</div>
 								<div style="float:left; width:68%;">
-									<input type="radio" name="customblocksLink0[]" class="custom-blocks-link-radio custom-blocks-link-yes" id="custom-blocks-link-page" value="page"> Page 
+									<input type="radio" name="customblocksLink0[]" class="custom-blocks-link-radio custom-blocks-link-yes" id="custom-blocks-link-page" value="page" checked="checked"> Page 
 									<input type="radio" name="customblocksLink0[]" class="custom-blocks-link-radio custom-blocks-link-modal" id="custom-blocks-link-modal" style="margin-left:12px;" value="modal"> Modal
 									<input type="radio" name="customblocksLink0[]" class="custom-blocks-link-radio custom-blocks-link-customField" id="custom-blocks-link-customField" style="margin-left:12px;" value="customField"> Custom Field
 									<input type="radio" name="customblocksLink0[]" class="custom-blocks-link-radio custom-blocks-link-no" id="custom-blocks-link-no" style="margin-left:12px;" value="no"> Don't Link
@@ -1691,7 +1698,7 @@ function project_builder_meta_box() {
 								<div style="float:left; width:32%;">Block Width:</div>
 								<div style="float:left; width:68%;">	<?php //echo $key; ?>
 									<input type="radio" name="blockContentWidth[]" class="block-width-radio block-type-fullwidth-radio" id="block-type-fullwidth-radio" value="fullwidth"> Full Width 
-									<input type="radio" name="blockContentWidth[]" class="block-width-radio block-type-contain-radio" id="block-type-contain-radio" style="margin-left:12px;" value="contain"> Contain 
+									<input type="radio" name="blockContentWidth[]" class="block-width-radio block-type-contain-radio" id="block-type-contain-radio" style="margin-left:12px;" value="contain" checked="checked"> Contain 
 								</div>
 							</div>
 							<div style="margin-bottom:12px; overflow:hidden;">
@@ -1901,7 +1908,7 @@ function project_builder_meta_box() {
 							<div style="margin-bottom:12px; overflow:hidden;"><!-- Slide Link -->
 								<div style="float:left; width:32%;">Link Options:</div>
 								<div style="float:left; width:68%;">	<?php //echo $key; ?>
-									<input type="radio" name="customblocksLink0[]" class="custom-blocks-link-radio custom-blocks-link-yes" id="custom-blocks-link-page" value="page"> Page 
+									<input type="radio" name="customblocksLink0[]" class="custom-blocks-link-radio custom-blocks-link-yes" id="custom-blocks-link-page" value="page" checked="checked"> Page 
 									<input type="radio" name="customblocksLink0[]" class="custom-blocks-link-radio custom-blocks-link-modal" id="custom-blocks-link-modal" style="margin-left:12px;" value="modal"> Modal
 									<input type="radio" name="customblocksLink0[]" class="custom-blocks-link-radio custom-blocks-link-customField" id="custom-blocks-link-customField" style="margin-left:12px;" value="customField"> Custom Field
 									<input type="radio" name="customblocksLink0[]" class="custom-blocks-link-radio custom-blocks-link-no" id="custom-blocks-link-no" style="margin-left:12px;" value="no"> Don't Link
@@ -1932,6 +1939,7 @@ function project_builder_meta_box() {
 	</p>
 
 	<?php
+	
 	 // $blockTypes = $field['blockName'];
 	 // $ShowfeatureImage = $field['customblocksShowFeaturedImage'];
      // echo "Feature Image: " . $ShowfeatureImage;
@@ -1990,7 +1998,7 @@ function repeatable_meta_box_save($post_id) {
 	
 	$imageSlide = $_POST['imageSlide'];
 	$imageSlideLink = $_POST['imageSlideLink'];
-	$imageLinkTarget = $_POST['imageLinkTarget']; 
+	//$imageLinkTarget = $_POST['imageLinkTarget']; 
 	$imageSlideOverlayCopy = $_POST['imageSlideOverlayCopy'];
 	$imageBlockTitle = $_POST['imageBlockTitle'];
 	
@@ -2004,7 +2012,7 @@ function repeatable_meta_box_save($post_id) {
 	//  Slide Image (Poster)  
 	$videoSlidePosterImage = $_POST['videoSlidePosterImage'];
 	$videoSlideLink = $_POST['videoSlideLink'];
-	$videoLinkTarget = $_POST['videoLinkTarget'];
+	//$videoLinkTarget = $_POST['videoLinkTarget'];
 	$videoSlideSourceLink = $_POST['videoSlideSourceLink'];
 	$videoSlideOverlayTitle = $_POST['videoSlideOverlayTitle'];
 	$videoSlideOverlayCopy = $_POST['videoSlideOverlayCopy'];
@@ -2028,8 +2036,9 @@ function repeatable_meta_box_save($post_id) {
 	$customblocksShowDescription = $_POST['customblocksShowDescriptionHidden'];
 	$customblocksCharacterCount = $_POST['customblocksCharacterCount'];
 	$customblocksSectionLink = $_POST['customblocksSectionLink'];
+	
+	
 	$customblocksBlockCount = $_POST['customblocksBlockCount'];
-	$customblocksLink = $_POST['customblocksLink'];
 	
 	$numOfColumnsSelected = $_POST['numOfColumnsSelected']; 
 	$customblocksReadMore = $_POST['customblocksReadMoreHidden'];  
@@ -2151,6 +2160,9 @@ function repeatable_meta_box_save($post_id) {
 			if ($customblocksReadMore[$i] != '') 
 				$new[$i]['customblocksReadMore'] = stripslashes( $customblocksReadMore[$i] );
 			
+			// if ( $customblocksLink . $blocksOrder[$i][0] != '' )
+				// $new[$i]['customblocksLink'] = $customblocksLink . $blocksOrder[$i][0];
+			
 			if ( $_POST['customblocksLink' . $blocksOrder[$i]][0] != '' )
 				$new[$i]['customblocksLink'] = $_POST['customblocksLink' . $blocksOrder[$i]][0];
 
@@ -2170,6 +2182,5 @@ function repeatable_meta_box_save($post_id) {
 	elseif ( empty($new) && $old )
 		delete_post_meta( $post_id, 'project-builder-meta-box-blocks', $old );
 }
-
 
 //////------>> END - ADD CUSTOM LOCATION META BOXES TO FOR PROJECT BUILDER CUSTOM POST TYPE <<------//////

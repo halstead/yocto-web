@@ -44,6 +44,7 @@ p {
   font-size:18px;
   font-family: 'Lato', sans-serif;
   font-weight:300;
+  margin-bottom:16px;
 }
 a, p {
   color:#9b9d9c;
@@ -149,7 +150,7 @@ a.btn-blue {
   font-size:12px;
   line-height:20px;
   white-space:normal;
-  font-weight:800;
+  font-weight:500;
   opacity:1;
   transition: opacity .25s ease-in-out;
   -moz-transition: opacity .25s ease-in-out;
@@ -185,6 +186,14 @@ a.btn-blue {
   
 .copy-large {
   font-size:18px;
+}
+
+.copy-uppercase {
+  text-transform:uppercase;
+}
+
+.copy-lowercase {
+  text-transform:lowercase;
 }
 
 .blue-link {
@@ -249,7 +258,7 @@ a.btn-blue {
     color: #0098db;
     font-size: 14px;
     text-transform: uppercase;
-  margin-top:0;
+    margin-top:0;
     margin-bottom: 4px;
 }
 
@@ -284,17 +293,21 @@ a.btn-blue {
   
   h5 {
     color:$white;
-    margin-top:220px;
+    font-size:24px;
+    margin:176px auto 14px auto;
     text-align:center;
+    width:60%;
+    line-height:32px;
   }
    
   p {
-    text-transform:uppercase;
-    font-size:14px;
-    line-height:68px;
+    font-size:18px;
     color:$white;
-    font-weight:bold;
-    margin-bottom:-2px;
+    font-weight:100;
+    line-height:26px;
+    width:60%;
+    margin:0px auto;
+    text-align:center;
    }
 }
 
@@ -460,6 +473,14 @@ ul#menu-primary-navigation {
   }
 }
 
+h2.block-title {
+  text-transform: uppercase;
+  font-size: 19px;
+  line-height: 28px;
+  color: $black;
+  margin-bottom:30px;
+}
+
 // PAGE - HOME
 
 a.btn-start, a.btn-features {
@@ -480,6 +501,15 @@ a.btn-start, a.btn-features {
         font-size:13px;
       }
     }
+  }
+}
+
+
+// PAGE - COMMUNITY
+
+.half-block-copy{
+  p {
+    font-size:14px;
   }
 }
 

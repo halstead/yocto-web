@@ -21,7 +21,6 @@ class BASEKIT_Functions {
 
 	
 	public function add_post_type() {
-		//$this->setup_post_type( array( 'App', 'Apps', 'apps', 'apps' ), array( 'taxonomies' => array( 'app-category' ) ) );
 		$this->setup_post_type( array( 'Featured Block', 'Featured Blocks', 'featured-blocks', 'featured-blocks' ), array() );
 		$this->setup_post_type( array( 'Ambassador', 'Ambassadors', 'ambassadors', 'ambassadors' ), array() );
 		$this->setup_post_type( array( 'Software Item', 'Software Items', 'software-item', 'software-item' ), array() );
@@ -80,15 +79,12 @@ class BASEKIT_Functions {
 			register_post_type( $key, $args );
 		}
 	public function add_taxonomy() {
-		//$this->setup_taxonomy( 'App Category', 'App Categories', 'app-category', 'app-category', array( 'apps' ), true, 'intelrealsense' );
-		//$this->setup_taxonomy( 'Payment Type', 'Payment Types', 'payment-type', 'payment-type', array( 'apps' ), true, 'intelrealsense' );
-		//$this->setup_taxonomy( 'Camera Support Option', 'Camera Support Options', 'camera-support-option', 'camera-support-option', array( 'apps' ), true, 'intelrealsense' );
-		//$this->setup_taxonomy( 'Windows Version', 'Windows Versions', 'window-version', 'window-version', array( 'apps' ), false, 'intelrealsense' );
-		//$this->setup_taxonomy( 'Language', 'Languages', 'language', 'language', array( 'apps' ), false, 'intelrealsense' );
 		$this->setup_taxonomy( 'Software Type', 'Software Types', 'software-type', 'software-type', array( 'software-item' ), true, 'baseKit' );
 		$this->setup_taxonomy( 'Learn Category', 'Learn Categories', 'learn-category', 'learn-category', array( 'learn-items' ), true, 'baseKit' );
 		$this->setup_taxonomy( 'Member Level', 'Member Levels', 'member-level', 'member-level', array( 'members' ), true, 'baseKit' );
-	
+		$this->setup_taxonomy( 'Featured Page', 'Featured Pages', 'featured-page', 'featured-page', array( 'featured-blocks' ), true, 'baseKit' );
+		$this->setup_taxonomy( 'Ambassador Type', 'Ambassador Types', 'ambassador-type', 'ambassador-type', array( 'ambassadors' ), true, 'baseKit' );
+		$this->setup_taxonomy( 'Document Type', 'Document Types', 'document-type', 'document-type', array( 'documents' ), true, 'baseKit' );
 	}
 		public function setup_taxonomy( $type, $types, $key, $url_slug, $post_type_keys, $hierarchical, $theme) {
 			$labels = array(

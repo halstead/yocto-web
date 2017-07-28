@@ -12,6 +12,7 @@ build:
   - git submodule sync --recursive
   - git submodule update --init --recursive
   script:
+  - cp .htaccess.permalinks wordpress/.htaccess
   - cd wp-content/themes/yocto
   - npm install
   - bower install

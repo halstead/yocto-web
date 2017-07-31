@@ -21,45 +21,7 @@
       	
       	
 
-		jQuery(function($) {
-			if ( $( ".home" ).length ) {
-				var navVisible = false;
-				$(window).scroll(function() {
-					  var $element = $("body, html");
-					  var windowOffset = Math.abs(parseInt($element.offset().top) - parseInt($(window).scrollTop()));
-					  var sliderHeight = $('.carousel-inner').outerHeight();
-					  var headerHeight = $('.banner').outerHeight();
-					  var navigationOffset = parseInt(sliderHeight) - parseInt(headerHeight);
-					  console.log(navigationOffset);
-					  console.log(windowOffset);
-					  if(windowOffset > navigationOffset) {
-					    console.log("your mamma");
-					    $('.banner').css('background-color', '#2b3034');
-					    $('ul.dropdown-menu').css('background-color', '#2b3034');
-						navVisible = true;
-					  }else{
-					    $('.banner').css('background-color', 'transparent');
-					    $('ul.dropdown-menu').css('background-color', 'transparent');
-						navVisible = false;
-					  } 
-				});
-				
-				$( ".banner" ).hover(
-				  function() {
-				    $('.banner').css('background-color', '#2b3034');
-				    $('ul.dropdown-menu').css('background-color', '#2b3034');
-				  }, function() {
-					  if(navVisible === false){
-				  	    $('.banner').css('background-color', 'transparent');
-				  	    $('ul.dropdown-menu').css('background-color', 'transparent');
-					  }
-				  }
-				);
-					
-			}
-		});
-
- 
+ 		
 
         // JavaScript to be fired on all pages
         //jQuery(".media-item-image").colorbox({rel:'carousel-image', transition:"fade", maxWidth:'95%', maxHeight:'95%'});
@@ -82,15 +44,72 @@
 		// Resize Colorbox when resizing window or changing mobile device orientation
 		jQuery(window).resize(resizeColorBox);
 		window.addEventListener("orientationchange", resizeColorBox, false);
+		
+		// Block Builder Scripts
+      
+      	//$('.error').on('click', function(e) {
+		jQuery(document.body).on('click',".error",function (e) {
+			e.preventDefault();
+			var targetID = $(this).attr("id");
+			alert(targetID);
+		});
       },
       finalize: function() {
         // JavaScript to be fired on all pages, after page specific JS is fired
       }
+      
+      
+      
     },
     // Home page
     'home': {
       init: function() {
         // JavaScript to be fired on the home page
+        // HOME NAVIGATION
+
+		jQuery(function($) {
+			if ( $( ".home" ).length ) {
+				var navVisible = false;
+				var navActive = false;
+				$(window).scroll(function() {
+					  var $element = $("body, html");
+					  var windowOffset = Math.abs(parseInt($element.offset().top) - parseInt($(window).scrollTop()));
+					  var sliderHeight = $('.carousel-inner').outerHeight();
+					  var headerHeight = $('.banner').outerHeight();
+					  var navigationOffset = parseInt(sliderHeight) - parseInt(headerHeight);
+					  console.log(navigationOffset);
+					  console.log(windowOffset);
+					  if(windowOffset > navigationOffset) {
+					    
+					    $('.banner').css('background-color', '#2b3034');
+					    $('ul.dropdown-menu').css('background-color', '#2b3034');
+						navVisible = true;
+					  }else{
+					  	if(navActive === false){
+					  		$('.banner').css('background-color', 'transparent');
+					    	$('ul.dropdown-menu').css('background-color', 'transparent');
+							navVisible = false;
+					  	}
+					  } 
+				});
+				
+				$( ".banner" ).hover(
+				  function() {
+				  	navActive = true;
+				    $('.banner').css('background-color', '#2b3034');
+				    $('ul.dropdown-menu').css('background-color', '#2b3034');
+				   
+				  }, function() {
+				  	navActive = false;
+					if(navVisible === false){
+				  		$('.banner').css('background-color', 'transparent');
+				  	    $('ul.dropdown-menu').css('background-color', 'transparent');
+					}
+				  }
+				);
+					
+			}
+		});
       },
       finalize: function() {
         // JavaScript to be fired on the home page, after the init JS

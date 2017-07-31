@@ -69,6 +69,7 @@ function custom_project_blocks_function($atts) {
 			$imageBlockTitle = '';
 			$imageOverlay = '';
 			$imageLinkTarget = '';
+			$imageSlideOverlayCopy = '';
 			
 			// Video Fields
 			$video = '';
@@ -147,8 +148,9 @@ function custom_project_blocks_function($atts) {
 				}
 			
 			// IMAGE BLOCK // 	 
-			} elseif($blockType == 'image' && $blockState == 'blockActive'){ 
-				
+			} elseif($blockType == 'image' && $blockState == 'blockActive'){
+				if(isset($field['imageSlideOverlayCopy'])){ $imageSlideOverlayCopy = $field['imageSlideOverlayCopy']; }
+
 				if (array_key_exists('imageSlide', $field) && $field['imageSlide'] != '') {
 					$attachmentID = esc_attr( $field['imageSlide'] ); 
 					if( $image_attributes = wp_get_attachment_image_src( $attachmentID, 'full' ) ) {
@@ -161,7 +163,7 @@ function custom_project_blocks_function($atts) {
 					$imageOverlay .= '	<div class="overlay">';
 					
 					if (array_key_exists('imageBlockTitle', $field) && $field['imageBlockTitle'] != ''){
-						 $imageOverlay .= '<p>' . $field['imageSlideOverlayCopy'] . '</p>';
+						 $imageOverlay .= '<p>' . $imageSlideOverlayCopy . '</p>';
 				    }
 					$imageOverlay .= '	</div>';
 					$imageOverlay .= '</div></div>';
@@ -464,13 +466,15 @@ function custom_blocks($atts) {
     //colorbox
 	$output = '';
 	$my_query = null;
-    $my_query = new WP_Query($args);
+    $my_query = new WP_Query($args);  
     if( $my_query->have_posts() ) {
 		while ($my_query->have_posts()) : $my_query->the_post();  //$value = get_field( "text_field" );
-			$output .= '<div class="col-xs-12 col-sm-6 col-md-' . $columns . ' ' . $post_type . ' custom-block">';
+			$output .= '<div class="col-xs-12 col-sm-6 col-md-' . $columns . ' ' . $post_type . ' custom-block ' . $block_link . '">';
 	      	$output .= ($block_link == 'page') ? '<a href="' . get_permalink(get_the_ID())  . '" class="inline-block full-width">' : '';
 			$output .= ($block_link == 'modal') ? '<a href="' . get_permalink(get_the_ID())  . '" class="inline-block full-width colorbox">' : '';
-			$output .= ($block_link == 'customField') ? '<a href="' . get_field( "redirect_field", get_the_ID() )  . '" class="inline-block full-width">' : '';
+			if(($block_link == 'customField')){
+				$output .= (function_exists('get_field') && get_field( "redirect_field" )) ? '<a href="' . get_field( "redirect_field", get_the_ID() )  . '" class="inline-block full-width" target="_blank"">' : '<a href="/"class="error" id="Undefined Custom field - redirect_field">';
+			}
 	      	$output .= '		<div class="grid-block">';
 		    $output .=  ($featured_img == 'checked' ? '<div class="grid-featured-image-container">' .	get_the_post_thumbnail(get_the_ID(), 'medium', array( 'class' => 'img-responsive' )) . '</div>' : ''); 
 		    $output .= '			<div class="grid-block-copy">';
@@ -479,8 +483,8 @@ function custom_blocks($atts) {
 		    $output .=  ($read_more == 'checked' ? '<span class="blue-link">Read More &raquo;</span>' : ''); 
 		    $output .= '			</div>';
 		    $output .= '		</div>';
-		    $output .= ($block_link == 'yes') ? '</a>' : '';
-		    $output .= '	</a>';
+		    $output .= ($block_link == 'no') ? '' : '</a>';
+		    //$output .= '	</a>';
 	      	$output .= '</div>';
 		endwhile;
 	}else{
@@ -670,6 +674,49 @@ function project_builder_meta_box() {
 		.taxonomiesSelect, .postTypeSelect, .termsSelect, .sectionLinkField {
 			min-width:148px;
 		}
+		
+		.delete-gate-container {
+		  padding:30px;
+		  padding-top:80px;
+		  color:#333;
+		  text-align:center;
+		  font-size:18px;
+		  font-family:Helvetica, sans-serif;
+  		}
+  
+		.delete-gate-container .btn-grey {
+		    margin-left: 30px;
+		    background-color: grey;
+		    padding: 10px 25px;
+		    display: inline-block;
+		    color: white !important;
+		    border:0px none;
+		    min-width:90px;
+		    text-align:center;
+		}
+		  
+		.delete-gate-container .btn-blue {
+		    padding: 10px 25px;
+		    display: inline-block;
+		    background-color: #0085ba;
+		    color: white !important;
+		    text-decoration: none;
+		    border:0px none;
+		    min-width:90px;
+		    text-align:center;
+		}
+		  
+		.delete-gate-container h3.txt-info-h3 {
+		    font-weight: normal;
+		    font-size: 22px;
+		    max-width: 450px;
+		    margin: 0 auto;
+		    line-height: 1.2;
+		    margin-bottom: 20px;
+		    font-family: 'intel-clear-regular';
+		    font-family:Helvetica, sans-serif;
+		}
+
 	</style>
 	<script type="text/javascript">
 	jQuery(document).ready(function($) {
@@ -707,10 +754,10 @@ function project_builder_meta_box() {
 			return false;
 		});
 		
-		$('.remove-row').on('click', function() {
-			$(this).parents('tr').remove();
-			return false;
-		});
+		// $('.remove-row').on('click', function() {
+			// $(this).parents('tr').remove();
+			// return false;
+		// });
 
 		$('#repeatable-fieldset-one tbody').sortable({
 			opacity: 0.6,
@@ -787,7 +834,7 @@ function project_builder_meta_box() {
 	    });
 	    
 	    
-	    // Helper - Tool Tips
+	    // Helper - Tool Tips - Errors
 	    
 	    $('.dashicons-info').hover(
 		  function() {
@@ -797,6 +844,30 @@ function project_builder_meta_box() {
 		  }
 		);
 		
+	    
+	    var thisContainer = '';
+	    $(document.body).on('click',".delete-disclaimer-remove",function (e) {
+	    	//e.preventDefault();
+	    	thisContainer.remove();
+	    	tb_remove() ;
+	    	console.log('remove');
+	    });
+	    
+	    $(document.body).on('click',".delete-disclaimer-popup-cancel",function (e) {
+	    	//e.preventDefault();
+	    	tb_remove();
+	    	console.log('cancel');
+	    });
+	    
+	    $(document.body).on('click',".delete-block-btn",function (e) {
+	    	e.preventDefault();
+	    	console.log("hey");
+	    	tb_show('', '#TB_inline?height=250&width=738&inlineId=deleteGateway');
+	    	thisContainer = $(this).closest("tr");
+	    });
+
+
+
 		
 		// Post Type and Taxonomy Select scripts
 		var postType = '';
@@ -1031,8 +1102,9 @@ function project_builder_meta_box() {
 
 	foreach ( $repeatable_project_fields as $key => $field ) {
 	?>
-	<tr class="<?php echo $field['blockState']; ?> block-builder-block">   <!-- rowspan="2" -->
-		<td><a class="button remove-row" href="#">-</a></td>
+	<tr class="<?php echo $field['blockState']; ?> block-builder-block" id="<?php echo 'block-' . $key ?>">   <!-- rowspan="2" -->
+		<!-- <td><a class="button remove-row" href="#">-</a></td> -->
+		<td><a href="#" class="button delete-block-btn">-</a></td>
 		<td>
 			<table class="block-inner-container">
 				<tr style="background:#fff;">
@@ -1354,10 +1426,10 @@ function project_builder_meta_box() {
 							<div style="margin-bottom:12px; overflow:hidden;"><!-- Slide Link -->
 								<div style="float:left; width:32%;">Link Options:</div>
 								<div style="float:left; width:68%;">	
-									<input type="radio" name="customblocksLink<?php echo $key; ?>[]" class="custom-blocks-link-radio custom-blocks-link-yes" id="custom-blocks-link-page" value="page" <?php checked( $field['customblocksLink'], 'page' ); ?> > Page 
-									<input type="radio" name="customblocksLink<?php echo $key; ?>[]" class="custom-blocks-link-radio custom-blocks-link-modal" id="custom-blocks-link-modal" style="margin-left:12px;" value="modal" <?php checked( $field['customblocksLink'], 'modal' ); ?> > Modal
-									<input type="radio" name="customblocksLink<?php echo $key; ?>[]" class="custom-blocks-link-radio custom-blocks-link-customField" id="custom-blocks-link-customField" style="margin-left:12px;" value="customField" <?php checked( $field['customblocksLink'], 'customField' ); ?> > Custom Field
-									<input type="radio" name="customblocksLink<?php echo $key; ?>[]" class="custom-blocks-link-radio custom-blocks-link-no" id="custom-blocks-link-no" style="margin-left:12px;" value="no" <?php checked( $field['customblocksLink'], 'no' ); ?> > Don't Link
+									<input type="radio" name="customblocksLink<?php echo $key; ?>[]" class="custom-blocks-link-radio custom-blocks-link-yes" id="custom-blocks-link-page" value="page" <?php if (array_key_exists('customblocksLink', $field) && $field['customblocksLink'] != '') checked( $field['customblocksLink'], 'page' ); ?> > Page 
+									<input type="radio" name="customblocksLink<?php echo $key; ?>[]" class="custom-blocks-link-radio custom-blocks-link-modal" id="custom-blocks-link-modal" style="margin-left:12px;" value="modal" <?php if (array_key_exists('customblocksLink', $field) && $field['customblocksLink'] != '') checked( $field['customblocksLink'], 'modal' ); ?> > Modal
+									<input type="radio" name="customblocksLink<?php echo $key; ?>[]" class="custom-blocks-link-radio custom-blocks-link-customField" id="custom-blocks-link-customField" style="margin-left:12px;" value="customField" <?php if (array_key_exists('customblocksLink', $field) && $field['customblocksLink'] != '') checked( $field['customblocksLink'], 'customField' ); ?> > Custom Field
+									<input type="radio" name="customblocksLink<?php echo $key; ?>[]" class="custom-blocks-link-radio custom-blocks-link-no" id="custom-blocks-link-no" style="margin-left:12px;" value="no" <?php if (array_key_exists('customblocksLink', $field) && $field['customblocksLink'] != '') checked( $field['customblocksLink'], 'no' ); ?> > Don't Link
 								</div>
 							</div>
 							<div style="margin-bottom:12px; overflow:hidden;">
@@ -1383,7 +1455,8 @@ function project_builder_meta_box() {
 		// show a blank one (on page load)
 	?>
 	<tr class="blockActive">
-		<td><a class="button remove-row" href="#">-</a></td>
+		<!-- <td><a class="button remove-row" href="#">-</a></td> -->
+		<td><a href="#" class="button delete-block-btn">-</a></td>
 		<td>
 			<table class="block-inner-container">
 				<tr style="background:#fff;">
@@ -1660,7 +1733,8 @@ function project_builder_meta_box() {
 
 	<!-- empty hidden one for jQuery (for adding a new one) -->
 	<tr class="blockActive empty-row screen-reader-text">
-		<td><a class="button remove-row" href="#">-</a></td>
+		<!-- <td><a class="button remove-row" href="#">-</a></td> -->
+		<td><a href="#" class="button delete-block-btn">-</a></td>
 		<td>
 			<table class="block-inner-container">
 				<tr style="background:#fff;">
@@ -1931,7 +2005,7 @@ function project_builder_meta_box() {
 				</tr>
 			</table>
 		</td>
-		<td><a class="sort">|||</a></td>   <!-- rowspan="2" -->
+		<td><a class="sort">|||</a></td>   <!-- rowspan="2" link-gateway-->
 	</tr>
 	</tbody>
 	</table>
@@ -1939,6 +2013,18 @@ function project_builder_meta_box() {
 	<p><a id="add-block" class="button" href="#">Add Another Block</a>
 	<input type="submit" class="metabox_submit button button-primary button-large" value="Save" />
 	</p>
+	<!-- <a href="#TB_inline?height=150&width=738&inlineId=deleteGateway" class="blue-btn thickbox">push</a> -->
+	<div class="hide" style="display:none;">
+		<div id="deleteGateway">
+			<div class="text-center delete-gate-container">
+				<h3 class="txt-info-h3">You are deleteing this content block. Press OK to continue.</h3>
+				<div class="popup-btn-group">
+			  		<button class="btn-blue delete-disclaimer-remove">OK</button>  <button class="btn-grey delete-disclaimer-popup-cancel">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
 
 	<?php
 	

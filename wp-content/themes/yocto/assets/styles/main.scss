@@ -51,6 +51,12 @@ a, p {
   font-family: 'Lato', sans-serif;
 } 
 
+a {
+  &:active, &:visited, &:focus {
+      text-decoration:none !important;
+  }
+}
+
 p{
   strong{
     color:$header-black;
@@ -121,8 +127,27 @@ header.banner {
   padding-right:0px;
 }
 
+.padding-left-30 {
+  padding-left:30px;
+}
+.padding-right-30 {
+  padding-right:30px;
+}
+
+.padding-left-50 {
+  padding-left:50px;
+}
+.padding-right-50 {
+  padding-right:50px;
+}
+
 .left-padding-block {
   padding-left:60px;
+}
+
+.no-padding-block {
+   padding-top:0px !important;
+   padding-bottom:0px !important;
 }
 
 .center-image {
@@ -130,6 +155,10 @@ header.banner {
     max-width: 100%;
     margin: 0px auto;
     display: block;
+}
+
+.inline-block {
+  display:inline-block;
 }
 
 .btn {
@@ -217,6 +246,14 @@ a.btn-blue {
 
 .narrow-block {
   padding:10px 100px;
+}
+
+.flex-block{
+  display: -webkit-box;      /* OLD - iOS 6-, Safari 3.1-6 */
+  display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
+  display: -ms-flexbox;      /* TWEENER - IE 10 */
+  display: -webkit-flex;     /* NEW - Chrome */
+  display: flex;
 }
 
 .narrow-double-block {
@@ -433,6 +470,7 @@ ul#menu-primary-navigation {
   h6 {
     color: $brand-blue;
     font-size:14px;
+    line-height:19px;
     text-transform:uppercase;
     margin-bottom:5px;
   } 
@@ -505,6 +543,49 @@ a.btn-start, a.btn-features {
 }
 
 
+// PAGE - DOCS
+
+form input.inlineSearch {
+  min-width: 200px;
+  padding: 6px 25px 6px 5px;
+  line-height: normal;
+  border: none;
+  border-radius: 0px;
+  border-bottom:1px solid #ced0d2;
+  font-family: sans-serif;  
+  background: transparent;
+} 
+
+form button.inlineSubmit {
+  position: absolute;
+  margin-top:20px;
+  top: 2px;
+  right: 13px;
+  height: 27px;
+  width: 26px;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  border-bottom:1px solid #ced0d2;
+  color:#0098db;
+}
+.featured-doc-blocks .grid-block-copy {
+  min-height:200px;
+}
+
+.featured-doc-blocks .custom-block:last-child {
+  background:#e6f5fc;
+}
+
+.featured-doc-blocks .custom-block:last-child .grid-block-copy {
+  background:#e6f5fc;
+}
+
+.documents .grid-block-copy {
+  min-height:200px;
+}
+
+
 // PAGE - COMMUNITY
 
 .half-block-copy{
@@ -547,9 +628,6 @@ div.ambassadors {
 .circle-bronze {
   background-color:#cd7f32;
 }
-.inline-block {
-  display:inline-block;
-}
 
 div.single-member .container {
   border-top:0px none;
@@ -580,24 +658,95 @@ div.platinum-member .grid-featured-image-container img {
   margin: 0px auto;
 }
 .member-silver-level-block .grid-featured-image-container img {
-  max-width:75%;
+  max-width:73%;
   margin: 0px auto;
 }
 .member-bronze-level-block .grid-featured-image-container img {
-  max-width: 70%;
+  max-width: 68%;
   margin: 0px auto;
 }
 
+.btn-center {
+  margin: 25px auto;
+  width: 50%;
+  position: relative;
+  display: block;
+}
+
+.members-blocks{
+  .col-sm-6{
+    padding-bottom:90px;
+    
+    &:first-child { 
+      border-right:1px dashed #d7d9db;
+    }
+    .btn-center {
+      margin: 0px auto;
+      position: absolute;
+      bottom:0px;
+      left: 50%;
+      margin-left: -25%;
+    }
+  } 
+}
+
+// PAGE SEARCH RESULT
+
+.search-results {
+    .content-block {
+      
+      h2 {
+        margin-bottom:8px;
+        
+        a {
+          color:$header-black;
+        }
+      }
+      
+      article {
+        margin-bottom:40px;
+      }
+    }
+}
+
+.header-info {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    margin-top:10px
+}
+
+.search-wrap {
+  position:relative;
+  
+}
+
+.search-wrap input[type=search]{
+  width:70px;
+  background-color:transparent;
+  margin-right: 26px;
+  border:0px none;
+  padding: 4px 10px;
+}
+
+.search-wrap button.icon-search {
+  position:absolute;
+  top:0px;
+  right:0px;
+  background:transparent;
+  color:$white;
+  border:0px none;
+}
 
 
 // FOOTER 
 
 footer.content-info {
-  background:#f8f8f8;
+  background:$brand-grey-background;
 }
 
 footer.content-info .container .conent-inner {
-  border-top:1px solid #b0b0b0;
+  border-top:1px solid $brand-gray;
   padding-top:58px;
   padding-bottom:78px;
   font-size:12px;

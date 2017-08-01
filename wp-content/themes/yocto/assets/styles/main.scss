@@ -216,6 +216,18 @@ a.btn-blue {
   font-size:18px;
 }
 
+.page-header {
+  padding-bottom: 0px;
+  margin: 40px 0 20px;
+  border-bottom: 0px none;
+  margin: 55px 0px 0px 0px;
+}
+
+h2.header-large {
+  font-size:22px;
+  
+}
+
 .copy-uppercase {
   text-transform:uppercase;
 }
@@ -260,7 +272,7 @@ a.btn-blue {
 }
 
 .narrow-block-subpage .container .row {
-  padding:30px 55px;
+  padding:0px 55px;
 }
 
 .narrow-double-block {
@@ -570,7 +582,7 @@ ul#menu-primary-navigation {
     font-size: 19px;
     line-height: 28px;
     color: $black;
-    margin-bottom:30px;
+    margin-bottom:10px;
     
     &:first-child {
       margin-top:0px;

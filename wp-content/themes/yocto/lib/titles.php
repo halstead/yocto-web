@@ -6,6 +6,7 @@ namespace Roots\Sage\Titles;
  * Page titles
  */
 function title() {
+	global $post;
   if (is_home()) {
     if (get_option('page_for_posts', true)) {
       return get_the_title(get_option('page_for_posts', true));
@@ -19,7 +20,11 @@ function title() {
     return sprintf(__('Search Results for %s', 'sage'), get_search_query());
   } elseif (is_404()) {
     return __('Not Found', 'sage');
-  } else {
+  } elseif( is_page() && $post->post_parent ) {
+  	$new_title = '<a href="<?php echo get_permalink( $post->post_parent ); ?>" class="blue-link">' . get_the_title( $post->post_parent ) . '</a> : ' . get_the_title(); 
+  	//return get_the_title( $post->post_parent ) . ': ' . get_the_title();
+  	return $new_title;
+  } else {  
     return get_the_title();
   }
 }

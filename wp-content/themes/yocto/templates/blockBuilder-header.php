@@ -3,7 +3,7 @@
   <div class="content row page-content">
     <div class="col-xs-12">
 		<div class="page-header">
-		  <h2 class="block-title"><?= Titles\title(); ?></h2>
+		  <h1><?= Titles\title(); ?></h1>
 		</div>
 	</div>
   </div>

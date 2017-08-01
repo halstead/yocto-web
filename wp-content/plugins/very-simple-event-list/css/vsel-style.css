@@ -1,0 +1,40 @@
+/* Very Simple Event List */
+#vsel {clear:both; float:left; width:100%; margin:0 auto 5px;}
+#vsel p {margin:0 0 10px;}
+#vsel .vsel-content {width:100%; clear:both; float:left; margin:0 0 20px; padding:0 0 10px; border-bottom:1px solid #ccc;}
+#vsel .vsel-meta {width:36%; float:left;}
+#vsel .vsel-meta-title {margin:0 0 10px;}
+#vsel .vsel-meta-date {}
+#vsel .vsel-meta-time {}
+#vsel .vsel-meta-location {}
+#vsel .vsel-meta-link {}
+#vsel .vsel-image-info {width:60%; float:right;}
+#vsel .vsel-image {width:40%; height:auto; float:right; margin:0.3em 0 0.3em 1em; padding:0; border:0;}
+#vsel .vsel-info {}
+#vsel .vsel-nav {clear:both;}
+#vsel a.next {float:right;}
+#vsel a.prev {float:left;}
+#vsel .vsel-page-hide {display:none;}
+#vsel .no-events {}
+
+
+/* Widget */
+.vsel_widget {}
+.vsel_widget:after {content:''; display:block; height:0; clear:both;}
+.vsel_widget .vsel-widget-text {clear:both; margin:0 0 10px; padding:0 0 5px; border-bottom: 1px solid #ccc;}
+.vsel_widget .vsel-widget-link {clear:both;}
+.vsel_widget #vsel .vsel-meta {width:100%; clear:both;}
+.vsel_widget #vsel .vsel-image-info {width:100%; clear:both; float:left;}
+.vsel_widget #vsel .vsel-image {width:100%; clear:both; float:left; margin:0 0 0.5em 0;}
+.vsel_widget #vsel .vsel-info {clear:both;}
+.vsel_widget #vsel .vsel-page-hide {display:block;}
+.vsel_widget #vsel .vsel-widget-hide {display:none;}
+
+
+/* Mobile */
+@media screen and (max-width:767px) { 
+	#vsel .vsel-meta {width:100%; clear:both;}
+	#vsel .vsel-image-info {width:100%; clear:both; float:left;}
+	#vsel .vsel-image {width:100%; clear:both; float:left; margin:0.3em 0 0.3em 0;}
+	#vsel .vsel-info {clear:both;}
+}

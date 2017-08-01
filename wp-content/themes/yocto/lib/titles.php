@@ -21,7 +21,7 @@ function title() {
   } elseif (is_404()) {
     return __('Not Found', 'sage');
   } elseif( is_page() && $post->post_parent ) {
-  	$new_title = '<a href="<?php echo get_permalink( $post->post_parent ); ?>" class="blue-link">' . get_the_title( $post->post_parent ) . '</a> : ' . get_the_title(); 
+  	$new_title = '<a href="' .  get_permalink( $post->post_parent ) . '" class="blue-link">' . get_the_title( $post->post_parent ) . '</a> : ' . get_the_title(); 
   	//return get_the_title( $post->post_parent ) . ': ' . get_the_title();
   	return $new_title;
   } else {  

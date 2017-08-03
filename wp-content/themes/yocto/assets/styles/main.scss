@@ -24,6 +24,7 @@
 body {
   padding-top:119px;
   font-family: 'Lato', sans-serif;
+  background:$brand-grey-background;
 }
 
 body.admin-bar {
@@ -225,7 +226,6 @@ a.btn-blue {
 
 h2.header-large {
   font-size:22px;
-  
 }
 
 .copy-uppercase {
@@ -598,12 +598,16 @@ ul#menu-primary-navigation {
   }
 }
 
+.header-wrapper {
+
+}
+
 h2.block-title {
   text-transform: uppercase;
   font-size: 19px;
   line-height: 28px;
   color: $black;
-  margin-bottom:30px;
+  margin-bottom:0px;
 }
 
 // PAGE - HOME
@@ -783,7 +787,7 @@ div.platinum-member .grid-featured-image-container img {
 .ambassador-list {
   
   .container .row {
-    padding:30px 70px;
+    padding:0px 70px;
   }
     
   div.ambassadors {
@@ -889,6 +893,45 @@ footer.content-info .container .conent-inner {
   ul#menu-social-menu {
     float:left;
   }
+  
+  .header-info {
+    display:none;
+  }
+  
+  .navbar-toggle .icon-bar {
+    background-color:#ffffff
+  }
+  
+  div.site-logo {
+    margin-left:30px;
+  }
+  
+  body.home header.banner {
+    background-color:rgb(43, 48, 52);
+  }
+  
+  .navbar-collapse {
+    box-shadow: none;
+    clear:both;
+    width:100%;
+  }
+  
+  .navbar-collapse .menu-primary-navigation-container {
+    box-sizing:border-box;
+  }
+  
+  .narrow-double-block {
+    padding:10px 0px;
+  }
+  
+  .navbar-toggle .icon-bar {
+    background-color:#ffffff
+  }
+  
+  div.navbar-header {
+    width: auto;
+  }
+  
 }
 
 
@@ -906,11 +949,71 @@ footer.content-info .container .conent-inner {
     display: block;
     margin-top: 0; // remove the gap so it doesn't close
   }
+  
+  body.home header.banner {
+    background-color:transparent;
+  }
+
+  div.site-logo {
+    margin-left:0px;
+  }
+
+  ul#menu-primary-navigation li {
+      padding:0px 12px;
+  }
+  
+  ul#menu-primary-navigation li a {
+      font-size: 12px;
+  }
+  
+  .banner .container {
+    padding-left:0px;
+    padding-right:0px;
+  }
+  
+  .search-wrap input[type=search]:focus {
+      width: 80px;
+  }
+  
+  .header-info {
+    display:block;
+  }
+  
+  .navbar-collapse .menu-primary-navigation-container {
+    padding-left:0px;
+  }
+  
+  div.navbar-header {
+    width: 100%;
+  }
+  
+
 }
   
 /* Medium Devices, Desktops */
 @media only screen and (min-width : 992px){
-           
+  
+  ul#menu-primary-navigation li {
+      padding:0px 18px;
+  }
+  
+  ul#menu-primary-navigation li a {
+    font-size: 14px;
+  }
+  
+  .banner .container {
+    padding-left:15px;
+    padding-right:15px;
+  }
+  
+  .search-wrap input[type=search]:focus {
+      width: 140px;
+  }
+    
+  .narrow-double-block {
+    padding:10px 140px;
+  }   
+      
 }
 
 /* Large Devices, Wide Screens */

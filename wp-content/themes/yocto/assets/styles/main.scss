@@ -291,45 +291,6 @@ h2.header-large {
   display:inline-block;
 }
 
-.half-block {
-  padding:16px 0px;
-  border-bottom:1px solid #dfdfdf;
-  overflow:hidden;
-  cursor:pointer;
-  
-  &:hover {
-    background:#ffffff;
-    cursor:pointer;
-  }
-  &:first-child {
-    border-top:1px solid #dfdfdf;
-  }
-}
-
-.half-block-img-container {
-  padding-left:0px !important;
-  padding-right:5px !important;
-  
-  img{
-    width:100%;
-    height:auto !important;
-    margin-right:20px;
-    float:left;
-  }
-}
-
-.half-block-copy h6 {
-    color: #0098db;
-    font-size: 14px;
-    text-transform: uppercase;
-    margin-top:0;
-    margin-bottom: 4px;
-}
-
-.half-block-copy p {
-  margin-bottom:0px;
-}
-
 
 // HOME CAROUSEL
 
@@ -679,6 +640,45 @@ form button.inlineSubmit {
 
 // PAGE - COMMUNITY
 
+.half-block {
+  padding:16px 0px;
+  border-bottom:1px solid #dfdfdf;
+  overflow:hidden;
+  cursor:pointer;
+  min-height:112;
+  
+  &:hover {
+    background:#ffffff;
+    cursor:pointer;
+  }
+  &:first-child {
+    border-top:1px solid #dfdfdf;
+  }
+  p {
+    margin-bottom:0px;
+  }
+}
+
+.half-block-img-container {
+  padding-left:0px !important;
+  padding-right:5px !important;
+  
+  img{
+    width:100%;
+    height:auto !important;
+    margin-right:20px;
+    float:left;
+  }
+}
+
+.half-block-copy h6 {
+    color: #0098db;
+    font-size: 14px;
+    text-transform: uppercase;
+    margin-top:0;
+    margin-bottom: 4px;
+}
+
 .half-block-copy{
   p {
     font-size:14px;
@@ -694,6 +694,20 @@ div.ambassadors {
     text-align:center !important;
     border-bottom:0px none;
   }
+}
+
+.find-us .container {
+  padding:10px 100px;
+}
+
+#vsel-custom {
+  width: 50%; 
+  float: left; 
+  position: relative; 
+  min-height: 1px; 
+  padding-left: 15px; 
+  padding-right: 15px; 
+  box-sizing: border-box;
 }
 
 

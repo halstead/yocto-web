@@ -135,10 +135,10 @@ function custom_project_blocks_function($atts) {
 					}
 					if($contentEmbedCode != 'undefined' && $contentEmbedCode != ''){
 						$mediaShortCode = do_shortcode($contentEmbedCode);
-						$output .= '<div>' . do_shortcode($contentEmbedCode) . '</div>';
+						$output .= '<div class="shortcode">' . do_shortcode($contentEmbedCode) . '</div>';
 					}
 					if($contentBlockCopy != 'undefined' && $contentBlockCopy != ''){
-						$output .= '<div>' . $contentBlockCopy . '</div>';
+						$output .= '<div class="content">' . $contentBlockCopy . '</div>';
 					}
 				}
 				if($blockWidthType == 'fullwidth'){

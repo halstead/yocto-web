@@ -469,7 +469,7 @@ function custom_blocks($atts) {
     $my_query = new WP_Query($args);  
     if( $my_query->have_posts() ) {
 		while ($my_query->have_posts()) : $my_query->the_post();  //$value = get_field( "text_field" );
-			$output .= '<div class="col-xs-12 col-sm-6 col-md-' . $columns . ' ' . $post_type . ' custom-block ' . $block_link . '">';
+			$output .= '<div class="col-xs-12 col-sm-6 col-md-' . $columns . ' ' . $post_type . ' custom-block">';
 	      	$output .= ($block_link == 'page') ? '<a href="' . get_permalink(get_the_ID())  . '" class="inline-block full-width">' : '';
 			$output .= ($block_link == 'modal') ? '<a href="' . get_permalink(get_the_ID())  . '" class="inline-block full-width colorbox">' : '';
 			if(($block_link == 'customField')){

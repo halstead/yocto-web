@@ -691,6 +691,7 @@ div.ambassadors {
 
 div.ambassadors {
   .grid-block-copy{
+    background:transparent;
     text-align:center !important;
     border-bottom:0px none;
   }
@@ -946,6 +947,14 @@ footer.content-info .container .conent-inner {
     width: auto;
   }
   
+  nav.navbar-collapse.collapse {
+    padding-top: 0px;
+  }
+  
+  .narrow-block {
+    padding: 10px 0px
+  }
+  
 }
 
 
@@ -999,6 +1008,14 @@ footer.content-info .container .conent-inner {
   
   div.navbar-header {
     width: 100%;
+  }
+  
+  nav.navbar-collapse.collapse {
+    padding-top: 10px;
+  }
+  
+  .narrow-block {
+    padding: 10px 100px
   }
   
 

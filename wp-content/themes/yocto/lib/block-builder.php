@@ -343,6 +343,17 @@ function custom_project_blocks_function($atts) {
 
 //////------>> START - GLOBAL FUNCTIONS <<------//////
 
+
+function bk_get_post_info($postID = null) {
+	$output = '';
+	$output .=  '<div id="bk-ajax-container" style="width:100%;">';
+	$output .=  '<div class="bk-image-container">' .	get_the_post_thumbnail($postID ,'medium', array( 'class' => 'img-responsive center' )) . '</div>';
+	$output .=  '<h6>' . get_the_title($postID) . '</h6>';
+	$output .=  '<p>' . get_post_field('post_content', $postID) . '</p>';
+	$output .= '</div>';
+	return $output;
+}
+
 function list_post_types($selectedOption = 0) {
 	$output = '';
 	$args=array(
@@ -428,8 +439,15 @@ function custom_blocks($atts) {
 	$read_more = $atts["read-more"];
 	$block_link = $atts["block-link"];
 	
+	// $columns = ($columns == 0) ? 1 : $columns; // fix for if columns is 0 or undefined
+	// $columns = 12 / $columns;
+	
 	$columns = ($columns == 0) ? 1 : $columns; // fix for if columns is 0 or undefined
-	$columns = 12 / $columns;
+	if($columns == 5){
+		$columns = 'col-md-5ths';
+	}else{
+		$columns = 'col-md-' . 12 / $columns;
+	}
 	
 	$args = '';
 	
@@ -469,9 +487,9 @@ function custom_blocks($atts) {
     $my_query = new WP_Query($args);  
     if( $my_query->have_posts() ) {
 		while ($my_query->have_posts()) : $my_query->the_post();  //$value = get_field( "text_field" );
-			$output .= '<div class="col-xs-12 col-sm-6 col-md-' . $columns . ' ' . $post_type . ' custom-block">';
+			$output .= '<div class="col-xs-12 col-sm-6 ' . $columns . ' ' . $post_type . ' custom-block">';
 	      	$output .= ($block_link == 'page') ? '<a href="' . get_permalink(get_the_ID())  . '" class="inline-block full-width">' : '';
-			$output .= ($block_link == 'modal') ? '<a href="' . get_permalink(get_the_ID())  . '" class="inline-block full-width colorbox">' : '';
+			$output .= ($block_link == 'modal') ? '<a href="#modal-colorbox" class="inline-block full-width open-colorbox" id="' . get_the_ID() . '">' : '';
 			if(($block_link == 'customField')){
 				$output .= (function_exists('get_field') && get_field( "redirect_field" )) ? '<a href="' . get_field( "redirect_field", get_the_ID() )  . '" class="inline-block full-width" target="_blank"">' : '<a href="/"class="error" id="Undefined Custom field - redirect_field">';
 			}
@@ -486,7 +504,10 @@ function custom_blocks($atts) {
 		    $output .= ($block_link == 'no') ? '' : '</a>';
 		    //$output .= '	</a>';
 	      	$output .= '</div>';
+			
+			
 		endwhile;
+		$output .= '<div id="modal-colorbox-container" style="display:none;"></div>';
 	}else{
 		$output .= '	<div class="container" role="document">';
 	    $output .= '		<div class="content">';
@@ -537,6 +558,42 @@ function ajax_request_func(){
 			   $itemSlug =  $_REQUEST['slug'];
 			   $postType = $_REQUEST['postType'];
 			   $output = list_taxonomy_terms(0, $itemSlug, $postType);		
+          break;
+		  case 'all':
+			   //$dropDown =  $_REQUEST['dropDown']; // get passed vaer
+			   $postID =  $_REQUEST['postID'];
+			   //$postType = $_REQUEST['postType'];
+			   //$output = list_taxonomy_terms(0, $itemSlug, $postType);		
+			   $output = bk_get_post_info($postID);
+          break;
+          default:
+              $output = 'No function specified, check your jQuery.ajax() call yo';
+          break;
+
+     }
+
+     $output=json_encode($output);
+     if(is_array($output)){
+     	print_r($output);
+     }
+     else{
+     	echo $output;
+     }
+	 echo
+     die;
+}
+
+add_action('wp_ajax_nopriv_do_ajax', __NAMESPACE__ . '\\ajax_content_func'); //-->> Inialized here - Then Called by ajax login form (second ajax login call)
+add_action('wp_ajax_do_ajax', __NAMESPACE__ . '\\ajax_content_func');
+
+function ajax_content_func(){
+     switch($_REQUEST['items']){
+		  case 'all':
+			   //$dropDown =  $_REQUEST['dropDown']; // get passed vaer
+			   $postID =  $_REQUEST['postID'];
+			   //$postType = $_REQUEST['postType'];
+			   //$output = list_taxonomy_terms(0, $itemSlug, $postType);		
+			   $output = bk_get_post_info($postID) . $postID;
           break;
           default:
               $output = 'No function specified, check your jQuery.ajax() call';
@@ -856,19 +913,17 @@ function project_builder_meta_box() {
 	    $(document.body).on('click',".delete-disclaimer-popup-cancel",function (e) {
 	    	//e.preventDefault();
 	    	tb_remove();
-	    	console.log('cancel');
+	    	//console.log('cancel');
 	    });
 	    
 	    $(document.body).on('click',".delete-block-btn",function (e) {
 	    	e.preventDefault();
-	    	console.log("hey");
+	    	//console.log("hey");
 	    	tb_show('', '#TB_inline?height=250&width=738&inlineId=deleteGateway');
 	    	thisContainer = $(this).closest("tr");
 	    });
 
 
-
-		
 		// Post Type and Taxonomy Select scripts
 		var postType = '';
 		$(document.body).on('change',".postTypeSelect",function (e) {

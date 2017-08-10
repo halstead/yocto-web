@@ -250,7 +250,7 @@ h2.header-large {
   
 .row{
   .block-more-link {
-    margin-top:-54px;
+    margin-top:-34px;
     float:right;
   }
 }
@@ -289,6 +289,10 @@ h2.header-large {
 
 .inline-block {
   display:inline-block;
+}
+
+img.center {
+  margin:0px auto;
 }
 
 
@@ -645,7 +649,7 @@ form button.inlineSubmit {
   border-bottom:1px solid #dfdfdf;
   overflow:hidden;
   cursor:pointer;
-  min-height:112;
+  min-height:112px;
   
   &:hover {
     background:#ffffff;
@@ -710,6 +714,15 @@ div.ambassadors {
   padding-right: 15px; 
   box-sizing: border-box;
 }
+
+#bk-ajax-container {
+  text-align:center; 
+  padding:10px; 
+  margin:0px auto;
+  width:100%;
+}
+
+
 
 
 // PAGE - ECOSYSTEM
@@ -898,6 +911,45 @@ footer.content-info .container .conent-inner {
 }
 
 
+/* BOOTSTRAP CUSTOM - 5 COLUMN LAYOUT */
+
+.col-xs-5ths,
+.col-sm-5ths,
+.col-md-5ths,
+.col-lg-5ths {
+    position: relative;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+.col-xs-5ths {
+    width: 20% !important;
+    float: left;
+}
+
+@media (min-width: 768px) {
+    .col-sm-5ths {
+        width: 20% !important;
+        float: left;
+    }
+}
+
+@media (min-width: 992px) {
+    .col-md-5ths {
+        width: 20% !important;
+        float: left;
+    }
+}
+
+@media (min-width: 1200px) {
+    .col-lg-5ths {
+        width: 20% !important;
+        float: left;
+    }
+}
+
+
 // Media Queries
 
 /* MOBILE FIRST */
@@ -952,7 +1004,34 @@ footer.content-info .container .conent-inner {
   }
   
   .narrow-block {
-    padding: 10px 0px
+    padding: 10px 0px;
+  }
+  
+  .find-us .container {
+    padding: 10px 0px;
+  }
+  
+  .row .block-more-link, .block-more-link {
+    float:none;
+    margin-top:14px;
+    display:inline-block;
+  }
+  
+  .left-padding-block {
+    padding-left:0px;
+  }
+  
+  .half-block-img-container img {
+    float:none;
+    margin-right:0px;
+  }
+  
+  .half-block-copy h6 {
+    margin-top:15px;
+  }
+  
+  div#vsel-custom {
+    width: 100%;
   }
   
 }
@@ -1015,9 +1094,35 @@ footer.content-info .container .conent-inner {
   }
   
   .narrow-block {
-    padding: 10px 100px
+    padding: 10px 40px;
   }
   
+  .find-us .container {
+    padding: 10px 40px;
+  }
+  
+  .row .block-more-link, .block-more-link {
+    float:right;
+  }
+  
+  .left-padding-block {
+    padding-left: 60px;
+  }
+  
+  .half-block-img-container img {
+    width: 100%;
+    height: auto!important;
+    margin-right: 20px;
+    float: left;
+  }
+  
+  .half-block-copy h6 {
+    margin-top:0px;
+  }
+  
+  div#vsel-custom {
+    width: 50%;
+  }
 
 }
   
@@ -1044,6 +1149,14 @@ footer.content-info .container .conent-inner {
   .narrow-double-block {
     padding:10px 140px;
   }   
+  
+  .narrow-block {
+    padding: 10px 100px !important;
+  }
+  
+  .find-us .container {
+    padding: 10px 100px;
+  }
       
 }
 

@@ -36,14 +36,49 @@
 		    }
 		    resizeTimer = setTimeout(function() {
 		            if (jQuery('#cboxOverlay').is(':visible')) {
-		            	jQuery.colorbox.resize({width:'90%', height:'90%'});
+		            	jQuery.colorbox.resize({width:'85%', height:'90%'});
 		            }
 		    }, 300);
 		}
+		
+		// Custom Block Ajax
+		
+		function modaleContent(postID, items , thisElement){
+			console.log(items);
+			jQuery.ajax({
+		          url: '/wp-admin/admin-ajax.php',
+		          data:{
+		               'action':'do_ajax',
+		               'dropDown': items,
+		               'postID': postID
+		               },
+		          dataType: 'JSON',
+		          success:function(data){
+				  		console.log(data);
+				  		$('#modal-colorbox-container').empty();
+						$('#modal-colorbox-container').html(data);					
+						$.colorbox({width:'450px', maxWidth:'90%', inline:true, href:"#bk-ajax-container"});
+
+		          },
+		          error: function(errorThrown){
+		          	   
+		               alert('Error Retrieving Request');
+		               console.log(errorThrown);  
+		          }
+			 });	
+		}
+		
+		$(document.body).on('click', ".open-colorbox",function (e) {
+	   	  e.preventDefault();
+	   	  $this = $(this);
+	   	  $postID = $this.attr('id');
+		  modaleContent($postID, 'all', $this);
+		});
+
 
 		// Resize Colorbox when resizing window or changing mobile device orientation
-		jQuery(window).resize(resizeColorBox);
-		window.addEventListener("orientationchange", resizeColorBox, false);
+		//jQuery(window).resize(resizeColorBox);
+		//window.addEventListener("orientationchange", resizeColorBox, false);
 		
 		// Block Builder Scripts
       

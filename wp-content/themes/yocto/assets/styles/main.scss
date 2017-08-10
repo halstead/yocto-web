@@ -876,6 +876,13 @@ div.table-row p {
 }
 
 
+// Custom Post Type detail page 
+
+.single-software-items .author, .single-software-items time, .single-learn-items .author, .single-learn-items time, .single-documents .author, .single-learn-items time, .single-ambassadors .author,  .single-ambassadors time {
+  display:none;
+}
+
+
 // FOOTER 
 
 footer.content-info {

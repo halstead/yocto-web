@@ -28,11 +28,11 @@
         "./assets/javascripts/bootstrap/scrollspy.js",
         "./assets/javascripts/bootstrap/tab.js",
         "./assets/javascripts/bootstrap/affix.js",
-        "./assets/fonts/glyphicons-halflings-regular.eot",
-        "./assets/fonts/glyphicons-halflings-regular.svg",
-        "./assets/fonts/glyphicons-halflings-regular.ttf",
-        "./assets/fonts/glyphicons-halflings-regular.woff",
-        "./assets/fonts/glyphicons-halflings-regular.woff2"
+        "./fonts/glyphicons-halflings-regular.eot",
+        "./fonts/glyphicons-halflings-regular.svg",
+        "./fonts/glyphicons-halflings-regular.ttf",
+        "./fonts/glyphicons-halflings-regular.woff",
+        "./fonts/glyphicons-halflings-regular.woff2"
       ]
     },
     "jquery-colorbox": {

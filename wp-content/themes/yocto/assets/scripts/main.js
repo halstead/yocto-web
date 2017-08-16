@@ -114,7 +114,7 @@
 					  var navigationOffset = parseInt(sliderHeight) - parseInt(headerHeight);
 					  console.log(navigationOffset);
 					  console.log(windowOffset);
-					  if(windowOffset > navigationOffset) {
+					  if(windowOffset > 40) {  //navigationOffset
 					    
 					    $('.banner').css('background-color', '#2b3034');
 					    $('ul.dropdown-menu').css('background-color', '#2b3034');

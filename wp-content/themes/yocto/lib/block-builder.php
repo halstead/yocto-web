@@ -507,7 +507,8 @@ function custom_blocks($atts) {
 			
 			
 		endwhile;
-		$output .= '<div id="modal-colorbox-container" style="display:none;"></div>';
+		$output .= ($block_link == 'modal') ? '<div id="modal-colorbox-container" style="display:none;"></div>' : '';
+		//$output .= '<div id="modal-colorbox-container" style="display:none;"></div>';
 	}else{
 		$output .= '	<div class="container" role="document">';
 	    $output .= '		<div class="content">';

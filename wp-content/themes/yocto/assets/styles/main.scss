@@ -81,9 +81,10 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 h3,h4 {
-  font-size:16px;
-  margin-bottom: 20px;
-  font-weight:400;
+  font-family: 'Lato-bold', sans-serif !important;
+  font-size:16px !important;
+  margin-bottom: 20px !important;;
+  font-weight:400 !important;;
 }
 
 h5, h6 {
@@ -149,6 +150,10 @@ header.banner {
 
 
 // GLOBAL CLASSES
+
+.no-bullets ul, .no-bullets ul li {
+  list-style:none !important;
+}
 
 .padding-left-0 {
   padding-left:0px;
@@ -290,6 +295,11 @@ h2.header-large {
   text-transform:uppercase;
   color:$brand-blue;
   font-weight:700;
+  
+  &:hover {
+    color:$brand-blue;
+    text-transform:none;
+  }
 }
 
 .block-more-link {
@@ -938,6 +948,24 @@ div.platinum-member .grid-featured-image-container img {
       margin-left: -25%;
     }
   } 
+}
+
+
+// SUBPAGE - Jobs
+
+#header {
+  .headerimg, hr{
+    display:none;
+  }
+}
+
+div#footer {
+  display:none;
+}
+
+.sjb-archive-page, .sjb-detail {
+
+  padding:10px;
 }
 
 

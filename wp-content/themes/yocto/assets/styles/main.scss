@@ -298,7 +298,7 @@ h2.header-large {
   
   &:hover {
     color:$brand-blue;
-    text-transform:none;
+    // text-transform:none;
   }
 }
 
@@ -387,6 +387,7 @@ img.center {
     text-align:center;
     width:60%;
     line-height:32px;
+    margin-top: 10%;
   }
    
   p {

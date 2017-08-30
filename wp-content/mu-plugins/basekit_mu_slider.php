@@ -850,7 +850,7 @@ class BASEKIT_Function_Slider {
 						$output .= '<div class="item ' . $activeClass . '">';
 					    $output .= '  	<div class="item-content">';
 						$output .= '  		<div class="video-container">';
-					    $output .= '  	  		<video preload="auto" width="1160" height="325" class="vid" poster="' . $videoPosterImagePath . '">';
+					    $output .= '  	  		<video preload="auto" width="1160" height="325" class="vid" poster="' . $videoPosterImagePath . '" controls>';
 				        $output .= '  	      		<source src="' . $field['videoSlideSourceLink'] . '" type="video/mp4">';
 				        $output .= '  	   		</video>';
 			            $output .= '  		</div>';

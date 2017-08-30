@@ -209,7 +209,7 @@ header.banner {
   min-width:100%;
 }
 
-a.btn-blue {
+a.btn-blue, input[type="submit"] {
   background:$brand-blue;
   color:$white;
   text-transform:uppercase;
@@ -223,6 +223,9 @@ a.btn-blue {
   transition: opacity .25s ease-in-out;
   -moz-transition: opacity .25s ease-in-out;
   -webkit-transition: opacity .25s ease-in-out;
+  border:0px none;
+  display:inline-block;
+  padding:14px;
   
   img {
     margin-right:6px;
@@ -951,6 +954,11 @@ div.platinum-member .grid-featured-image-container img {
   } 
 }
 
+
+// SUBPAGE - Members
+body.members {
+  background-color:#fff;
+}
 
 // SUBPAGE - Jobs
 

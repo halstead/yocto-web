@@ -185,6 +185,26 @@ header.banner {
    padding-bottom:0px !important;
 }
 
+.padding-block-0-250-0-90 {
+  padding:0px 250px 0px 90px;
+}
+
+.padding-block-0-250-40-90 {
+  padding:0px 250px 40px 90px;
+}
+
+.padding-block-50-150 {
+  padding:0px 150px 0px 50px;
+}
+  
+
+h2.header-large {
+  font-size:21px;
+  line-height:28px;
+  margin-bottom:18px;
+  text-transform:none !important;
+}
+
 .center-image {
     width: auto;
     max-width: 100%;
@@ -356,6 +376,33 @@ h2.header-large {
 
 img.center {
   margin:0px auto;
+}
+
+// FORMS
+
+.content-block form {
+  padding:20px;
+  box-sizing:border-box;
+  background:#fff;
+  border:1px solid #c3c3c3;
+}
+.content-block input[type="submit"] {
+  background:#0098db;
+  color:#fff;
+  text-transform:uppercase;
+  text-align:center;
+  border-radius:0px;
+  font-size:12px;
+  line-height:20px;
+  white-space:normal;
+  font-weight:500;
+  opacity:1;
+  transition: opacity .25s ease-in-out;
+  -moz-transition: opacity .25s ease-in-out;
+  -webkit-transition: opacity .25s ease-in-out;
+  border:0px none;
+  display:inline-block;
+  padding:14px;
 }
 
 
@@ -661,66 +708,70 @@ a.btn-start, a.btn-features {
 }
 
 .float-container {
-    overflow:hidden;
-  }
+  overflow:hidden;
+}
   
-  .btn-block {
-    min-height:120px;
-    h6 {
-      
-    }
-  }
-  
-  .btn-light-blue {
-    background-color:#cceaf8 !important;
-    color:#37424a !important;
-  }
-  
-
-  .blue-text, h6.blue-text,  .btn-block h6.blue-text {
-    text-transform:none;
-    color:#0098de !important;
-    }
-  
-  
-  .build-stats p {
-    font-size: 14px;
-    text-transform: uppercase;
-    margin-bottom:0px;
-  }
-  
-  
-  h1.stat-number {
-    font-size:40px;
-    color:#333;
-    font-size: 65px;
-    margin-bottom:2px;
-    font-family:Lato-bold,sans-serif;
-  }
-  
-
-  .build-stats h1.stat-number:after {
-    content: url('/wp-content/uploads/2017/07/hexagon-red.png');
-    padding-left:5px;
-  }
-  
-  .build-stats:first-child h1.stat-number:after {
-    content: url('/wp-content/uploads/2017/07/hexagon-green.png');
-    padding-left:5px;
-  }
-  
-  a.btn-block h6 {
-     color:$white;
-      margin-top:3px;
-      margin-bottom:3px;
-      font-size: 18px;
-      text-transform: none;
+.btn-block {
+  min-height:120px;
+  h6 {
     
   }
+}
+
+.btn-light-blue {
+  background-color:$brand-lt-blue-background !important;
+  color:$brand-blue-black !important;
+}
+
+
+.blue-text, h6.blue-text,  .btn-block h6.blue-text {
+  text-transform:none;
+  color:$brand-blue !important;
+}
+
+
+.build-stats p {
+  font-size: 14px;
+  text-transform: uppercase;
+  margin-bottom:0px;
+}
+
+
+h1.stat-number {
+  font-size:40px;
+  color:#333;
+  font-size: 65px;
+  margin-bottom:2px;
+  font-family:Lato-bold,sans-serif;
+}
+
+
+.build-stats h1.stat-number:after {
+  content: url('/wp-content/uploads/2017/07/hexagon-red.png');
+  padding-left:5px;
+}
+
+.build-stats:first-child h1.stat-number:after {
+  content: url('/wp-content/uploads/2017/07/hexagon-green.png');
+  padding-left:5px;
+}
+
+a.btn-block h6 {
+   color:$white;
+    margin-top:3px;
+    margin-bottom:3px;
+    font-size: 18px;
+    text-transform: none;
+  
+}
+
+.btn-light-blue {
   
   a.btn-block h6:first-child {
-    font-weight:300 !important;
+    font-weight:300;
+    color:$brand-blue-black;
   }
+}
 
 
 // PAGE - SOFTWARE
@@ -899,7 +950,12 @@ div.single-member .container {
 
 div.member-level-block{
   padding:0px 0px 20px 0px;
+  
+  .custom-block{
+    margin-bottom:15px;
+  }
 }
+
 .member-level-block .container {
   border-top:1px solid #d7d9db;
   margin-bottom:20px;
@@ -952,6 +1008,19 @@ div.platinum-member .grid-featured-image-container img {
       margin-left: -25%;
     }
   } 
+}
+
+
+// PAGE - ABOUT
+
+div.about-content {
+  background:url('/wp-content/uploads/2017/08/about-background.png') left top no-repeat;
+  background-size:cover;
+  
+  h2.block-title {
+    margin-bottom:35px;
+  }
+  
 }
 
 

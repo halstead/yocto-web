@@ -448,11 +448,11 @@ function custom_blocks($atts) {
 	}else{
 		$columns = 'col-md-' . 12 / $columns;
 	}
-	
-	$args = '';
-	
 	$character_count = ($character_count == '') ? 120 : $character_count; 
 	
+	$linkTarget = ($post_type == 'featured-block') ? '_self' : '_blank';
+
+	$args = '';
 	if($taxonomy_term == '' || !isset($taxonomy_term)){  
 		// $taxonomy_terms = get_terms( $taxonomy, array(
 		    // 'hide_empty' => 0,
@@ -491,7 +491,7 @@ function custom_blocks($atts) {
 	      	$output .= ($block_link == 'page') ? '<a href="' . get_permalink(get_the_ID())  . '" class="inline-block full-width">' : '';
 			$output .= ($block_link == 'modal') ? '<a href="#modal-colorbox" class="inline-block full-width open-colorbox" id="' . get_the_ID() . '">' : '';
 			if(($block_link == 'customField')){
-				$output .= (function_exists('get_field') && get_field( "redirect_field" )) ? '<a href="' . get_field( "redirect_field", get_the_ID() )  . '" class="inline-block full-width" target="_blank"">' : '<a href="/"class="error" id="Undefined Custom field - redirect_field">';
+				$output .= (function_exists('get_field') && get_field( "redirect_field" )) ? '<a href="' . get_field( "redirect_field", get_the_ID() )  . '" class="inline-block full-width" target="' . $linkTarget . '">' : '<a href="/"class="error" id="Undefined Custom field - redirect_field">';
 			}
 	      	$output .= '		<div class="grid-block">';
 		    $output .=  ($featured_img == 'checked' ? '<div class="grid-featured-image-container">' .	get_the_post_thumbnail(get_the_ID(), 'medium', array( 'class' => 'img-responsive' )) . '</div>' : ''); 

@@ -107,6 +107,14 @@ li, ul {
   padding:0px;
 }
 
+li {
+  a {
+    text-transform:capitalize;
+    font-weight:400;
+    font-size:16px;
+  }
+}
+
 .content, .content-block {
   
   ol {
@@ -985,11 +993,11 @@ div.platinum-member .grid-featured-image-container img {
   margin: 0px auto;
 }
 .member-silver-level-block .grid-featured-image-container img {
-  max-width:68%;
+  max-width:63%;
   margin: 0px auto;
 }
 .member-bronze-level-block .grid-featured-image-container img {
-  max-width: 60%;
+  max-width: 55%;
   margin: 0px auto;
 }
 

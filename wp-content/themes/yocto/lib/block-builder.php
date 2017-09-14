@@ -162,7 +162,7 @@ function custom_project_blocks_function($atts) {
 					$imageOverlay .= '<div class="relative-container"><div class="overlay-container">';
 					$imageOverlay .= '	<div class="overlay">';
 					
-					if (array_key_exists('imageBlockTitle', $field) && $field['imageBlockTitle'] != ''){
+					if (array_key_exists('imageSlideOverlayCopy', $field) && $field['imageSlideOverlayCopy'] != ''){
 						 $imageOverlay .= '<p>' . $imageSlideOverlayCopy . '</p>';
 				    }
 					$imageOverlay .= '	</div>';

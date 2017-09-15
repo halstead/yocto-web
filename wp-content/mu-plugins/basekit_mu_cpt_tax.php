@@ -26,7 +26,8 @@ class BASEKIT_Functions {
 		$this->setup_post_type( array( 'Software Item', 'Software Items', 'software-item', 'software-item' ), array() );
 		$this->setup_post_type( array( 'Document', 'Documents', 'documents', 'documents' ), array() );
 		$this->setup_post_type( array( 'Learn Item', 'Learn Items', 'learn-items', 'learn-items' ), array() );
-		$this->setup_post_type( array( 'Member', 'Members', 'members', 'members' ), array() );
+		$this->setup_post_type( array( 'Organization', 'Organizations', 'members', 'members' ), array() );
+		$this->setup_post_type( array( 'Releases', 'Releases', 'releases', 'releases' ), array() );
 	}
 	
 		public function setup_post_type( $type, $args = array() ) {
@@ -82,9 +83,11 @@ class BASEKIT_Functions {
 		$this->setup_taxonomy( 'Software Type', 'Software Types', 'software-type', 'software-type', array( 'software-item' ), true, 'baseKit' );
 		$this->setup_taxonomy( 'Learn Category', 'Learn Categories', 'learn-category', 'learn-category', array( 'learn-items' ), true, 'baseKit' );
 		$this->setup_taxonomy( 'Member Level', 'Member Levels', 'member-level', 'member-level', array( 'members' ), true, 'baseKit' );
+		$this->setup_taxonomy( 'Organization Type', 'Organization Types', 'organization-type', 'organization-type', array( 'members' ), true, 'baseKit' );
 		$this->setup_taxonomy( 'Featured Page', 'Featured Pages', 'featured-page', 'featured-page', array( 'featured-blocks' ), true, 'baseKit' );
 		$this->setup_taxonomy( 'Ambassador Type', 'Ambassador Types', 'ambassador-type', 'ambassador-type', array( 'ambassadors' ), true, 'baseKit' );
 		$this->setup_taxonomy( 'Document Type', 'Document Types', 'document-type', 'document-type', array( 'documents' ), true, 'baseKit' );
+		$this->setup_taxonomy( 'Release Version', 'Document Types', 'document-type', 'document-type', array( 'documents' ), false, 'baseKit' );
 	}
 		public function setup_taxonomy( $type, $types, $key, $url_slug, $post_type_keys, $hierarchical, $theme) {
 			$labels = array(

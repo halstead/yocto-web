@@ -87,7 +87,9 @@ class BASEKIT_Functions {
 		$this->setup_taxonomy( 'Featured Page', 'Featured Pages', 'featured-page', 'featured-page', array( 'featured-blocks' ), true, 'baseKit' );
 		$this->setup_taxonomy( 'Ambassador Type', 'Ambassador Types', 'ambassador-type', 'ambassador-type', array( 'ambassadors' ), true, 'baseKit' );
 		$this->setup_taxonomy( 'Document Type', 'Document Types', 'document-type', 'document-type', array( 'documents' ), true, 'baseKit' );
-		$this->setup_taxonomy( 'Release Version', 'Document Types', 'document-type', 'document-type', array( 'documents' ), false, 'baseKit' );
+		$this->setup_taxonomy( 'Release Version', 'Release Versions', 'release-version', 'release-version', array( 'releases' ), false, 'baseKit' );
+		$this->setup_taxonomy( 'Release Author', 'Release Authors', 'release-author', 'release-author', array( 'releases' ), false, 'baseKit' ); //build system, tool
+		$this->setup_taxonomy( 'Release Type', 'Release Types', 'release-type', 'release-type', array( 'releases' ), true, 'baseKit' ); // latest, active, previous
 	}
 		public function setup_taxonomy( $type, $types, $key, $url_slug, $post_type_keys, $hierarchical, $theme) {
 			$labels = array(

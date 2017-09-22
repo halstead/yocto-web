@@ -27,7 +27,10 @@ class BASEKIT_Functions {
 		$this->setup_post_type( array( 'Document', 'Documents', 'documents', 'documents' ), array() );
 		$this->setup_post_type( array( 'Learn Item', 'Learn Items', 'learn-items', 'learn-items' ), array() );
 		$this->setup_post_type( array( 'Organization', 'Organizations', 'members', 'members' ), array() );
-		$this->setup_post_type( array( 'Releases', 'Releases', 'releases', 'releases' ), array() );
+		$this->setup_post_type( array( 'Release', 'Releases', 'releases', 'releases' ), array() );
+		$this->setup_post_type( array( 'Event', 'Events', 'events', 'events' ), array() );
+		$this->setup_post_type( array( 'Job', 'Jobs', 'jobs', 'jobs' ), array() );
+		$this->setup_post_type( array( 'Participant', 'Participants', 'participants', 'participants' ), array() );
 	}
 	
 		public function setup_post_type( $type, $args = array() ) {

@@ -51,9 +51,7 @@ $valid_requests = array(
 	'http://layers.openembedded.org/layerindex/api/layerItems/?format=json',
 	'http://layers.openembedded.org/layerindex/api/layerItems/',
 	'https://layers.openembedded.org/layerindex/api/layerItems/?format=json',
-	'http://json-schema.org/example/card.json',
-	'https://wiki.yoctoproject.org/charts/attribution.json.txt',
-	'http://wiki.yoctoproject.org/charts/attribution.json.txt'
+	'http://json-schema.org/example/card.json'
 );
 
 /**

@@ -48,6 +48,8 @@ $valid_requests = array(
 	'https://wiki.yoctoproject.org/charts/importance-weekly.txt',
 	'https://wiki.yoctoproject.org/charts/severity-weekly.txt',
 	'https://wiki.yoctoproject.org/charts/wdd-weekly-recent.txt',
+	'http://wiki.yoctoproject.org/charts/attribution.json.txt',
+	'https://wiki.yoctoproject.org/charts/attribution.json.txt',
 	'http://layers.openembedded.org/layerindex/api/layerItems/?format=json',
 	'http://layers.openembedded.org/layerindex/api/layerItems/',
 	'https://layers.openembedded.org/layerindex/api/layerItems/?format=json',

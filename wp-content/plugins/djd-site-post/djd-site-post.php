@@ -480,7 +480,7 @@ if (!class_exists("DjdSitePost")) {
 	
 	function handle_display_shortcode($atts, $content = null){
 		
-		global $shortcode_cache, $post, $djd_post_id;
+		//global $shortcode_cache, $post, $djd_post_id;
 		
 		$local_atts = shortcode_atts( array(
 			'post_count' => 8,
@@ -497,16 +497,24 @@ if (!class_exists("DjdSitePost")) {
 		$dynamic_post_show_dates = $local_atts[ 'show_dates' ];
 		$dynamic_post_link_to_page = $local_atts[ 'link_to_page' ];
 		$dynamic_post_type = $local_atts[ 'dynamic_post_type' ];
-		$dynamic_post_taxonomy = [ 'dynamic_post_taxonomy' ];
+		$dynamic_post_taxonomy = $local_atts[ 'dynamic_post_taxonomy' ];
 		$dynamic_post_taxonomy_terms = $local_atts[ 'dynamic_post_taxonomy_terms' ];
+		
+		
+		
+		
+		
+		// $link = $_POST["djd_site_post_link"];
+		// $city = $_POST["djd_site_post_city"];
+		// $state = $_POST["djd_site_post_state"];
+		// $country = $_POST["djd_site_post_country"];
 		
 		//echo $dynamic_post_show_dates;
 		//echo $dynamic_post_taxonomy_terms;
 		// extract(shortcode_atts(array(
 //
 // 		), $atts));
-		
-		
+	
 		
 		$output = '';
 
@@ -554,29 +562,85 @@ if (!class_exists("DjdSitePost")) {
 			$output .= '<div class="float-container">';
 			while ($my_query->have_posts()) : $my_query->the_post();
 				$output .= '<div class="half-block cpt-block-container">';
-				$output .= '	<div class="half-block-img-container img-container col-sm-3">';
+				// $output .= '	<div class="half-block-img-container img-container col-sm-3">';
+// 				
+				// $output .= '		<img src="http://yocto.staging.caffelli.com/wp-content/uploads/2017/09/DSC02238.jpg" />';
+// 				
+				// $output .= '	</div>';
+				// $output .= '	<div class="block-copy col-sm-9">';
 				
-				$output .= '		<img src="http://yocto.staging.caffelli.com/wp-content/uploads/2017/09/DSC02238.jpg" />';
+				$output .= '	<div class="block-copy col-sm-12">';
 				
-				$output .= '	</div>';
-				$output .= '	<div class="block-copy col-sm-9">';
+				// djd_site_post_city
+				// djd_site_post_state
+				// djd_site_post_country
 				
-				if( get_field('my_meta_box_djd_site_post_link') ):
-					$output .= '		<h6><a href="' .  get_field('my_meta_box_djd_site_post_link') . '">' .  get_the_title() . '</a></h6>';
-				else:
-					$output .= '		<h4 class="title">' .  get_the_title() . '</h4>';
-				endif;
+				if($dynamic_post_type == 'jobs'){
+					
+					//get_the_title()
+					// djd_site_company_name
+					// djd_site_company_contact
+					// djd_site_phone
+					// djd_site_website
+					// djd_site_email
+					// djd_site_posting_link
+					
+					if( get_field('djd_site_website') ):
+						$output .= '		<h2 class="title"><a href="' .  get_field('djd_site_website') . '">' .  get_field('djd_site_company_name') . '</a></h2>';
+					else:
+						$output .= '		<h2 class="title">' .  get_field('djd_site_company_name') . '</h2>';
+					endif;
+					
+					if( get_field('djd_site_posting_link') ):
+						$output .= '		<h4 class="title"><a href="' .  get_field('djd_site_posting_link') . '">' .  get_the_title() . '</a></h4>';
+					else:
+						$output .= '		<h4 class="title">' .  get_the_title() . '</h4>';
+					endif;	
+					
+					$output .= '<p class="details">';
+					$output .= '	<div>Phone: ' .  get_field('djd_site_phone') . '</div>';
+					$output .= '	<div>Email: ' .  get_field('djd_site_email') . '</div>';
+					$output .= '</p>';
+										
+				}else if($dynamic_post_type == 'events'){
+					
+					if( get_field('djd_site_website') ):
+						$output .= '		<h2 class="title"><a href="' .  get_field('event_djd_site_post_link') . '">' .  get_the_title() . '</a></h2>';
+					else:
+						$output .= '		<h2 class="title">' .  get_the_title() . '</h2>';
+					endif;
+					
+					//get_the_title()
+					// event_djd_site_post_name
+					// event_djd_site_post_email
+					// event_djd_site_post_link
+					// djd_site_post_start_date
+					// djd_site_post_end_date
+					// event_djd_site_post_venue
+				}
+				
 				
 				$output .= '		<p>' . get_the_excerpt() . '</p>';
 				
 				//$output .= '		<p class="location">Location: <span>' .  . '</span></p>';
-				if($dynamic_post_show_dates != 'false'){
-					if( get_field('my_meta_box_djd_site_post_start_date', get_the_ID()) ):
-						$output .= '		<p class="date">Start date: <span>' . get_field('my_meta_box_djd_site_post_start_date', get_the_ID()) . '</span></p>';
-					endif;
-					if( get_field('my_meta_box_djd_site_post_end_date') ):
-						$output .= '		<p class="date">End date: <span>' . get_field('my_meta_box_djd_site_post_end_date', get_the_ID()) . '</span></p>';
-					endif;
+				
+				if($dynamic_post_type == 'jobs'){    // Evnets Fields
+					
+					//$link = get_post_meta(get_the_ID(), 'djd_site_post_link', true);
+					//$output .= 'link: ' . $link;
+				}
+				
+				
+				if($dynamic_post_type == 'events'){   // Evnets Fields
+					
+					if($dynamic_post_show_dates != 'false' || $dynamic_post_type == 'events'){
+						if( get_field('my_meta_box_djd_site_post_start_date', get_the_ID()) ):
+							$output .= '		<p class="date">Start date: <span>' . get_field('my_meta_box_djd_site_post_start_date', get_the_ID()) . '</span></p>';
+						endif;
+						if( get_field('my_meta_box_djd_site_post_end_date') ):
+							$output .= '		<p class="date">End date: <span>' . get_field('my_meta_box_djd_site_post_end_date', get_the_ID()) . '</span></p>';
+						endif;
+					}
 				}
 				
 				if($dynamic_post_link_to_page != 'false'){
@@ -607,6 +671,8 @@ if (!class_exists("DjdSitePost")) {
 	 * 	success_page_id: ID of the page to redirect to after the post. Overwrites success_url if set.
 	 */
 	function handle_form_shortcode($atts, $content = null){
+		
+		//if ( !empty ($_POST["djd-our-id"])) $djd_post_id = $_POST["djd-our-id"];
 
 		global $shortcode_cache, $post, $djd_post_id;
 		
@@ -756,15 +822,46 @@ if (!class_exists("DjdSitePost")) {
 				
 				
 				// Insert Meta Data
-				// if($post_success != 0)
-// 				{
-// 					$startDate = $_POST["djd_site_post_start_date"];
-// 					$endDate = $_POST["djd_site_post_end_date"];
-// 					$link = $_POST["djd_site_post_link"];
-// 					update_post_meta ($post_success, 'my_meta_box_djd_site_post_start_date', $startDate);
-// 				    update_post_meta ($post_success, 'my_meta_box_djd_site_post_end_date', $endDate);
-// 					update_post_meta ($post_success, 'my_meta_box_djd_site_post_link', $link);
-// 				}
+				if($post_success != 0)
+				{
+					if($djd_post_type == 'events') {
+						$eventlink = $_POST["event_djd_site_post_link"];
+						$startDate = $_POST["djd_site_post_start_date"];
+						$endDate = $_POST["djd_site_post_end_date"];
+						update_post_meta ($post_success, 'event_djd_site_post_link', $eventlink);
+						update_post_meta ($post_success, 'my_meta_box_djd_site_post_start_date', $startDate);
+				    	update_post_meta ($post_success, 'my_meta_box_djd_site_post_end_date', $endDate);
+				    }
+					if($djd_post_type == 'jobs') {
+						$companyName = $_POST["djd_site_company_name"];
+						$companyContact = $_POST["djd_site_company_contact"];
+						$companyPhone = $_POST["djd_site_phone"];
+						$companyEmail = $_POST["djd_site_email"];
+						$companyWebsite = $_POST["djd_site_website"];
+						$companyPostingLink = $_POST["djd_site_posting_link"];
+						
+						update_post_meta ($post_success, 'djd_site_company_name', $companyName);
+						update_post_meta ($post_success, 'djd_site_company_contact', $companyContact);
+						update_post_meta ($post_success, 'djd_site_phone', $companyPhone);	
+						update_post_meta ($post_success, 'djd_site_email', $companyEmail);
+						update_post_meta ($post_success, 'djd_site_website', $companyWebsite);
+						update_post_meta ($post_success, 'djd_site_posting_link', $companyPostingLink);
+					}
+					if($djd_post_type == 'jobs' || $djd_post_type == 'events'){
+						
+						$city = $_POST["djd_site_post_city"];
+						$state = $_POST["djd_site_post_state"];
+						$country = $_POST["djd_site_post_country"];
+						update_post_meta ($post_success, 'djd_site_post_link', $link);
+						update_post_meta ($post_success, 'my_meta_box_city_text', $city);
+					    update_post_meta ($post_success, 'my_meta_box_state_select', $state);
+					    update_post_meta ($post_success, 'my_meta_box_country_select', $country);
+					}
+					
+					
+					
+					
+				}
 
 				if($post_success === false) {
 					$result = "error";

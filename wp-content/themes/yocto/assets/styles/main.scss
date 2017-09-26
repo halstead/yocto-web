@@ -905,11 +905,29 @@ div.ambassadors {
 }
 
 div.ambassadors {
-  .grid-block-copy{
-    background:transparent;
-    text-align:center !important;
-    border-bottom:0px none;
+  
+  .grid-block {
+    padding-top: 22px;
+    
+    .grid-featured-image-container {
+      display: inline-block;
+      position: relative;
+      width: 120px;
+      height: 120px;
+      overflow: hidden;
+      border-radius: 50%;
+
+    }
+    
+
+    
+    .grid-block-copy{
+      background:transparent;
+      text-align:center !important;
+      border-bottom:0px none;
+    }
   }
+  
 }
 
 .find-us .container {
@@ -993,11 +1011,11 @@ div.platinum-member .grid-featured-image-container img {
   margin: 0px auto;
 }
 .member-silver-level-block .grid-featured-image-container img {
-  max-width:63%;
+  max-width:58%;
   margin: 0px auto;
 }
 .member-bronze-level-block .grid-featured-image-container img {
-  max-width: 55%;
+  max-width: 48%;
   margin: 0px auto;
 }
 

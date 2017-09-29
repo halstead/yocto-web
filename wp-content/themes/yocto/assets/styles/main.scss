@@ -814,6 +814,14 @@ body.software {
 
 
 // PAGE - DOCS
+select.header-select{
+    border: 0px none;
+    color: #0098db;
+    text-transform: uppercase;
+    font-weight: 700;  
+    margin-left:6px;
+   background:$white;
+}
 
 form input.inlineSearch {
   min-width: 200px;
@@ -1092,6 +1100,11 @@ div#footer {
     margin-bottom:0px;
     border-bottom:1px solid #ced0d2;
     
+    .grid-block {
+      overflow:hidden;
+      padding:20px 0px;
+    }
+    
     &:first-child {
       border-top:1px solid #ced0d2;
     }
@@ -1099,7 +1112,7 @@ div#footer {
     .grid-block-copy {
       float: left;
       text-align:left !important;
-      padding-top: 6.5%;
+      padding-top: 5.5%;
       
       h6 {
         display:inline-block;
@@ -1115,7 +1128,7 @@ div#footer {
     }
 
     .grid-featured-image-container {
-      width: 25%;
+     
       float: left;
     }
   }  

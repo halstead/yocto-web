@@ -57,7 +57,8 @@ if (!class_exists("DjdSitePost")) {
 		 * Custom actions
 		 */
 		
-		
+		//Include Conversions scripts
+		include( plugin_dir_path( __FILE__ ) . '/inc/conversions.php');
 		
 		// Static assets
 		//add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
@@ -154,6 +155,9 @@ if (!class_exists("DjdSitePost")) {
 		require(sprintf("%s/inc/djdsp-widget.php", dirname(__FILE__)));
 		register_widget( 'djd_site_post_widget' );
 	} // end register_form_widget
+	
+	
+	
 	
 	/*
 	 * Hook into WP's admin_init action hook
@@ -458,6 +462,8 @@ if (!class_exists("DjdSitePost")) {
 		$this->djd_insert_media_fix( $djd_post_id );
 	
 	}
+
+	
 	
 	
 	
@@ -480,6 +486,8 @@ if (!class_exists("DjdSitePost")) {
 	
 	function handle_display_shortcode($atts, $content = null){
 		
+		
+		
 		//global $shortcode_cache, $post, $djd_post_id;
 		
 		$local_atts = shortcode_atts( array(
@@ -499,11 +507,7 @@ if (!class_exists("DjdSitePost")) {
 		$dynamic_post_type = $local_atts[ 'dynamic_post_type' ];
 		$dynamic_post_taxonomy = $local_atts[ 'dynamic_post_taxonomy' ];
 		$dynamic_post_taxonomy_terms = $local_atts[ 'dynamic_post_taxonomy_terms' ];
-		
-		
-		
-		
-		
+
 		// $link = $_POST["djd_site_post_link"];
 		// $city = $_POST["djd_site_post_city"];
 		// $state = $_POST["djd_site_post_state"];
@@ -571,9 +575,10 @@ if (!class_exists("DjdSitePost")) {
 				
 				$output .= '	<div class="block-copy col-sm-12">';
 				
-				// djd_site_post_city
-				// djd_site_post_state
-				// djd_site_post_country
+				$stateField = get_field('my_meta_box_state_select');
+				$counteryField = get_field('my_meta_box_country_select');
+				$state = convertState($stateField, $strFormat='name');
+				$country = convertCountry($counteryField);
 				
 				if($dynamic_post_type == 'jobs'){
 					
@@ -586,29 +591,44 @@ if (!class_exists("DjdSitePost")) {
 					// djd_site_posting_link
 					
 					if( get_field('djd_site_website') ):
-						$output .= '		<h2 class="title"><a href="' .  get_field('djd_site_website') . '">' .  get_field('djd_site_company_name') . '</a></h2>';
+						$output .= '		<h2 class="title" style="margin-bottom:5px;"><a href="' .  get_field('djd_site_website') . '">' .  get_field('djd_site_company_name') . '</a></h2>';
 					else:
-						$output .= '		<h2 class="title">' .  get_field('djd_site_company_name') . '</h2>';
+						$output .= '		<h2 class="title" style="margin-bottom:5px;">' .  get_field('djd_site_company_name') . '</h2>';
 					endif;
 					
 					if( get_field('djd_site_posting_link') ):
-						$output .= '		<h4 class="title"><a href="' .  get_field('djd_site_posting_link') . '">' .  get_the_title() . '</a></h4>';
+						$output .= '		<h4 class="title" style="margin-bottom:5px !important;"><a href="' .  get_field('djd_site_posting_link') . '">' .  get_the_title() . '</a></h4>';
 					else:
-						$output .= '		<h4 class="title">' .  get_the_title() . '</h4>';
+						$output .= '		<h4 class="title" style="margin-bottom:5px !important;">' .  get_the_title() . '</h4>';
 					endif;	
 					
-					$output .= '<p class="details">';
-					$output .= '	<div>Phone: ' .  get_field('djd_site_phone') . '</div>';
-					$output .= '	<div>Email: ' .  get_field('djd_site_email') . '</div>';
-					$output .= '</p>';
-										
+	
+					$output .= '		<p>' . get_the_excerpt() . '</p>';
+					
+
+					$output .= '		<p class="date">' . get_field('my_meta_box_city_text') .  ', ' . $state .  '</p>';
+					$output .= '		<p class="date" style="margin-bottom:10px;">' . $country .  '</p>';
+					
+					
+					$output .= '<div class="row">';
+					$output .= '	<div class="col-xs-12 col-sm-8"><p class="details">';  
+					$output .= '		<div><strong>Contact Name: </strong>' .  get_field('djd_site_company_contact') . '</div>';
+					$output .= '		<div><strong>Contact Phone: </strong>' .  get_field('djd_site_phone') . '</div>';
+					$output .= '		<div><strong>Contact Email: </strong>' .  get_field('djd_site_email') . '</div>';
+					$output .= '	</p></div>';
+					$output .= '	<div class="col-xs-12 col-sm-4">';	
+					$output .= '		<div class="pull-right"><a href="' .  get_field('djd_site_posting_link') . '" class="btn btn-blue">View Job Details</a></div>';
+					$output .= '	</div>';
+					$output .= '</div>';					
 				}else if($dynamic_post_type == 'events'){
 					
-					if( get_field('djd_site_website') ):
-						$output .= '		<h2 class="title"><a href="' .  get_field('event_djd_site_post_link') . '">' .  get_the_title() . '</a></h2>';
+					if( get_field('event_djd_site_post_link') ):
+						$output .= '		<h2 class="title" style="margin-bottom:5px !important;"><a href="' .  get_field('event_djd_site_post_link') . '">' .  get_the_title() . '</a></h2>';
 					else:
-						$output .= '		<h2 class="title">' .  get_the_title() . '</h2>';
+						$output .= '		<h2 class="title" style="margin-bottom:5px !important;">' .  get_the_title() . '</h2>';
 					endif;
+					
+					$output .= '		<p>' . get_the_excerpt() . '</p>';
 					
 					//get_the_title()
 					// event_djd_site_post_name
@@ -620,7 +640,10 @@ if (!class_exists("DjdSitePost")) {
 				}
 				
 				
-				$output .= '		<p>' . get_the_excerpt() . '</p>';
+				
+				// END IF/ELSE 
+				// START - Post Type Specific fields
+				
 				
 				//$output .= '		<p class="location">Location: <span>' .  . '</span></p>';
 				
@@ -632,20 +655,35 @@ if (!class_exists("DjdSitePost")) {
 				
 				
 				if($dynamic_post_type == 'events'){   // Evnets Fields
+					$output .= '<div class="row">';
+					//if($dynamic_post_show_dates != 'false' || $dynamic_post_type == 'events'){}
+					$output .= '	<div class="col-xs-12 col-sm-8">';
+					if( get_field('event_djd_site_post_venue') ):
+						$output .= '	<p class="date">Venue: <span>' . get_field('event_djd_site_post_venue', get_the_ID()) . '</span></p>';
+					endif;
+					$output .= '		<p class="date">' . get_field('my_meta_box_city_text') .  ', ' . $state .  '</p>';
+					$output .= '		<p class="date" style="margin-bottom:10px !important;">' . $country .  '</p>';
 					
-					if($dynamic_post_show_dates != 'false' || $dynamic_post_type == 'events'){
-						if( get_field('my_meta_box_djd_site_post_start_date', get_the_ID()) ):
-							$output .= '		<p class="date">Start date: <span>' . get_field('my_meta_box_djd_site_post_start_date', get_the_ID()) . '</span></p>';
-						endif;
-						if( get_field('my_meta_box_djd_site_post_end_date') ):
-							$output .= '		<p class="date">End date: <span>' . get_field('my_meta_box_djd_site_post_end_date', get_the_ID()) . '</span></p>';
-						endif;
-					}
+					$output .= '	</div>';
+					$output .= '	<div class="col-xs-12 col-sm-8">';
+					if( get_field('djd_site_post_start_date', get_the_ID()) ):
+						$output .= '		<p class="date">Start date: <span>' . get_field('djd_site_post_start_date', get_the_ID()) . '</span></p>';
+					endif;
+					if( get_field('djd_site_post_end_date') ):
+						$output .= '		<p class="date">End date: <span>' . get_field('djd_site_post_end_date', get_the_ID()) . '</span></p>';
+					endif;
+					$output .= '	</div>';
+					$output .= '	<div class="col-xs-12 col-sm-4">';	
+					$output .= '		<div class="pull-right"><a href="' .  get_field('djd_site_posting_link') . '" class="btn btn-blue">View Event Details</a></div>';
+					$output .= '	</div>';
+					$output .= '</div>';
 				}
 				
 				if($dynamic_post_link_to_page != 'false'){
 					$output .= '		<p><a href="' . get_the_permalink(get_the_ID()) . '" class="view-more-link">View Details</a></p>';
 				}
+
+
 				
 					
 				$output .= '	</div>';
@@ -725,6 +763,7 @@ if (!class_exists("DjdSitePost")) {
 		return call_user_func_array(array($this, $form_name), array($atts, $content, $user_verified, $djd_post_id, $called_from_widget));
 
 	}
+
 
 	function process_site_post_form() {
 		if( isset($_POST) ){
@@ -826,11 +865,14 @@ if (!class_exists("DjdSitePost")) {
 				{
 					if($djd_post_type == 'events') {
 						$eventlink = $_POST["event_djd_site_post_link"];
+						$eventVenue = $_POST["djd_site_post_venue"];
 						$startDate = $_POST["djd_site_post_start_date"];
 						$endDate = $_POST["djd_site_post_end_date"];
+						
 						update_post_meta ($post_success, 'event_djd_site_post_link', $eventlink);
-						update_post_meta ($post_success, 'my_meta_box_djd_site_post_start_date', $startDate);
-				    	update_post_meta ($post_success, 'my_meta_box_djd_site_post_end_date', $endDate);
+						update_post_meta ($post_success, 'event_djd_site_post_venue', $eventVenue);
+						update_post_meta ($post_success, 'djd_site_post_start_date', $startDate);
+				    	update_post_meta ($post_success, 'djd_site_post_end_date', $endDate);
 				    }
 					if($djd_post_type == 'jobs') {
 						$companyName = $_POST["djd_site_company_name"];

@@ -48,13 +48,15 @@ $valid_requests = array(
 	'https://wiki.yoctoproject.org/charts/importance-weekly.txt',
 	'https://wiki.yoctoproject.org/charts/severity-weekly.txt',
 	'https://wiki.yoctoproject.org/charts/wdd-weekly-recent.txt',
-	'http://wiki.yoctoproject.org/charts/attribution.json.txt',
-	'https://wiki.yoctoproject.org/charts/attribution.json.txt',
 	'http://layers.openembedded.org/layerindex/api/layerItems/?format=json',
 	'http://layers.openembedded.org/layerindex/api/layerItems/',
 	'https://layers.openembedded.org/layerindex/api/layerItems/?format=json',
 	'https://wiki.yoctoproject.org/charts/attribution.json.txt',
-	'http://json-schema.org/example/card.json'
+	'http://json-schema.org/example/card.json',
+	// 'http://api-v1.yoctoproject.org/api/downloads?release%5B%5D=59',
+	'http://api-v1.yoctoproject.org/api/downloads',
+	'http://api-v1.yoctoproject.org/',
+	'api-v1.yoctoproject.org'
 );
 
 /**

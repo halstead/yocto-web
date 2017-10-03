@@ -439,6 +439,10 @@ function custom_blocks($atts) {
 	$read_more = $atts["read-more"];
 	$block_link = $atts["block-link"];
 	
+	if(!isset($block_num) || $block_num == ''){
+		$block_num = -1;
+	}
+	
 	// $columns = ($columns == 0) ? 1 : $columns; // fix for if columns is 0 or undefined
 	// $columns = 12 / $columns;
 	
@@ -462,8 +466,7 @@ function custom_blocks($atts) {
 	      'post_type' => $post_type,
 	      'post_status' => 'publish',
 	      'posts_per_page' => $block_num,
-	      'order' => 'DESC',
-	      'posts_per_page' => -1
+	      'order' => 'DESC'
 	    );
 	}else{
 		$args=array(
@@ -471,7 +474,6 @@ function custom_blocks($atts) {
 	      'post_status' => 'publish',
 	      'posts_per_page' => $block_num,
 	      'order' => 'DESC',
-	      'posts_per_page' => -1,
 	      'tax_query' => array(
 	        array(
 	            'taxonomy' => $taxonomy,

@@ -56,7 +56,11 @@ $valid_requests = array(
 	// 'http://api-v1.yoctoproject.org/api/downloads?release%5B%5D=59',
 	'http://api-v1.yoctoproject.org/api/downloads',
 	'http://api-v1.yoctoproject.org/',
-	'api-v1.yoctoproject.org'
+	'api-v1.yoctoproject.org',
+	'yoctoproject.org',
+	'https://www.yoctoproject.org/documentation-api',
+	'https://www.yoctoproject.org/',
+	'http://www.yoctoproject.org/'
 );
 
 /**

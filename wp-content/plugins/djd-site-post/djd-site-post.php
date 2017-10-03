@@ -724,6 +724,7 @@ if (!class_exists("DjdSitePost")) {
 		$form_name = 'site_post_form';
 		$djd_options = get_option('djd_site_post_settings');
 		
+		echo 'dpt' . $dynamic_post_type;
 		
 		$GLOBALS['djd_post_type'] = $dynamic_post_type;
 		$GLOBALS['dynamic_post_title'] = $dynamic_post_title;
@@ -968,7 +969,14 @@ if (!class_exists("DjdSitePost")) {
 
 		// Render the form html
 		
-		include_once (sprintf("%s/views/display.php", dirname(__FILE__)));
+		if ( !empty ($attrs['dynamic_post_type'])){
+			$dynamic_post_type = $attrs['dynamic_post_type'];
+			echo 'dpt: ' . $dynamic_post_type;
+			include_once (sprintf('%s/views/display-' . $dynamic_post_type . '.php', dirname(__FILE__)));
+		}else{
+			include_once (sprintf("%s/views/display.php", dirname(__FILE__)));
+		} 
+		
 
 		$ret = ob_get_contents();
 		ob_end_clean();

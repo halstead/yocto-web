@@ -132,7 +132,7 @@ $postTypeName = ucfirst($postTypeNameSingular) . ' ';
 			</div>
 		</div>
 		<?php                               //Shared Fields
-		if($postType  == 'events' || $postType  == 'jobs'){ ?>    
+		//if($postType  == 'events' || $postType  == 'jobs'){ ?>    
 			<!-- ADDRESS -->
 		
 		<!-- City -->
@@ -473,38 +473,11 @@ $postTypeName = ucfirst($postTypeNameSingular) . ' ';
 				</select>
 			</div>
 		
-		<?php } ?>
+		<?php //} ?>
 		
-		<?php                               //Events Fields
-		if($postType  == 'events'){ ?> 
-		
-		<!-- START DATE -->
-		
-			<div class="col-xs-12 col-sm-6">
-				<label for="djd_site_post_venue">Event Venue</label>
-				<input style="width:100%;" type="text" <?php  echo "required='required'"; ?> id="djd_site_post_venue" name="djd_site_post_venue" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_start_date."'"; ?>autofocus="autofocus"/>
-			</div>
-			<div class="col-xs-12 col-sm-6">
-				<label for="event_djd_site_post_link">Event Link</label>
-				<input style="width:100%;" type="text" <?php  echo "required='required'"; ?> id="event_djd_site_post_link" name="event_djd_site_post_link" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_event_link."'"; ?>autofocus="autofocus"/>
-			</div>	
-			<div class="col-xs-12 col-sm-6">
-				<label for="djd_site_post_start_date">Start Date</label>
-				<input style="width:100%;" type="date" <?php  echo "required='required'"; ?> id="djd_site_post_start_date" name="djd_site_post_start_date" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_start_date."'"; ?>autofocus="autofocus"/>
-			</div>
-			
-		<!-- END DATE -->
-			<div class="col-xs-12 col-sm-6">
-				<label for="djd_site_post_end_date">End Date <?php if($postTypeNameSingular == 'job'){echo '(When job posting will automatically be removed)';} ?></label>
-				<input style="width:100%;" type="date" <?php echo "required='required'"; ?> id="djd_site_post_end_date" name="djd_site_post_end_date" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_end_date."'"; ?>autofocus="autofocus"/>
-			</div>
-		</div>
 
-		<?php } ?>
-		
-		
 		<?php                               //Jobs Fields
-		if($postType  == 'jobs'){ ?>   
+		//if($postType  == 'jobs'){ ?>   
 		
 		<!-- <div class="row"> -->
 			<div class="col-xs-12 col-sm-6">
@@ -536,7 +509,7 @@ $postTypeName = ucfirst($postTypeNameSingular) . ' ';
 				<input style="width:100%;" type="text" <?php echo "required='required'"; ?> id="djd_site_posting_link" name="djd_site_posting_link" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_link."'"; ?>autofocus="autofocus"/>
 			</div>
 		</div>
-		<?php } ?>
+		<?php //} ?>
 		
 		<!-- Link -->
 		

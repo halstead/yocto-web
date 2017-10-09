@@ -495,8 +495,10 @@ if (!class_exists("DjdSitePost")) {
 			'show_thumbnail' => '1',
 			'show_dates' => 'true',
 			'link_to_page' => 'false',
+			'widget' => 'false',
+			'class' => '',
 			'dynamic_post_type' => 'post',
-			'dynamic_post_taxonomy' => '',
+			'dynamic_post_taxonomy' => 'category',
 			'dynamic_post_taxonomy_terms' => 'all'
 	    ), $atts );
 		
@@ -504,6 +506,8 @@ if (!class_exists("DjdSitePost")) {
 		$show_thumbnail = $local_atts[ 'show_thumbnail' ];
 		$dynamic_post_show_dates = $local_atts[ 'show_dates' ];
 		$dynamic_post_link_to_page = $local_atts[ 'link_to_page' ];
+		$dynamic_post_class = $local_atts[ 'class' ];
+		$dynamic_post_widget = $local_atts[ 'widget' ];
 		$dynamic_post_type = $local_atts[ 'dynamic_post_type' ];
 		$dynamic_post_taxonomy = $local_atts[ 'dynamic_post_taxonomy' ];
 		$dynamic_post_taxonomy_terms = $local_atts[ 'dynamic_post_taxonomy_terms' ];
@@ -549,32 +553,32 @@ if (!class_exists("DjdSitePost")) {
 	      'post_status' => 'publish',
 	      'posts_per_page' => $post_count,
 	      'orderby' => 'title',
-	      'order' => 'ASC'
-	      // 'tax_query' => array(
-// 				array(
-// 					'taxonomy' => $dynamic_post_taxonomy,
-// 					 'field' => 'slug',
-// 					 'terms' => $terms
-// 				),
-// 			   )
+	      'order' => 'ASC',
+	      'tax_query' => array(
+				array(
+					'taxonomy' => $dynamic_post_taxonomy,
+					 'field' => 'slug',
+					 'terms' => $terms
+				),
+			   )
 		   //'meta_query' => array($meta_array)
 	    );
+		
+		
 
 		$my_query = null;
 	    $my_query = new WP_Query($args);
 	    if( $my_query->have_posts() ) {
+			$output .= '<div class="' . $dynamic_post_class . '">';
+			
+			if($dynamic_post_type == 'events' && $dynamic_post_widget == 'true'){
+				$output .= '<div class="float-container"><h5 class="pull-left">Events</h5><a href="/community/events/" class="pull-right" style="margin:10px 0px;">All Events</a></div>';
+			}
 			$output .= '<div class="float-container">';
+			
 			while ($my_query->have_posts()) : $my_query->the_post();
-				$output .= '<div class="half-block cpt-block-container">';
-				// $output .= '	<div class="half-block-img-container img-container col-sm-3">';
-// 				
-				// $output .= '		<img src="http://yocto.staging.caffelli.com/wp-content/uploads/2017/09/DSC02238.jpg" />';
-// 				
-				// $output .= '	</div>';
-				// $output .= '	<div class="block-copy col-sm-9">';
 				
-				$output .= '	<div class="block-copy col-sm-12">';
-				
+				// Global Variables //
 				$stateField = get_field('my_meta_box_state_select');
 				$counteryField = get_field('my_meta_box_country_select');
 				$state = convertState($stateField, $strFormat='name');
@@ -589,6 +593,8 @@ if (!class_exists("DjdSitePost")) {
 					// djd_site_website
 					// djd_site_email
 					// djd_site_posting_link
+					$output .= '<div class="half-block">';
+					$output .= '	<div class="block-copy col-sm-12">';
 					
 					if( get_field('djd_site_website') ):
 						$output .= '		<h2 class="title" style="margin-bottom:5px;"><a href="' .  get_field('djd_site_website') . '">' .  get_field('djd_site_company_name') . '</a></h2>';
@@ -610,25 +616,84 @@ if (!class_exists("DjdSitePost")) {
 					$output .= '		<p class="date" style="margin-bottom:10px;">' . $country .  '</p>';
 					
 					
-					$output .= '<div class="row">';
-					$output .= '	<div class="col-xs-12 col-sm-8"><p class="details">';  
-					$output .= '		<div><strong>Contact Name: </strong>' .  get_field('djd_site_company_contact') . '</div>';
-					$output .= '		<div><strong>Contact Phone: </strong>' .  get_field('djd_site_phone') . '</div>';
-					$output .= '		<div><strong>Contact Email: </strong>' .  get_field('djd_site_email') . '</div>';
-					$output .= '	</p></div>';
-					$output .= '	<div class="col-xs-12 col-sm-4">';	
-					$output .= '		<div class="pull-right"><a href="' .  get_field('djd_site_posting_link') . '" class="btn btn-blue">View Job Details</a></div>';
+					$output .= '		<div class="row">';
+					$output .= '			<div class="col-xs-12 col-sm-8"><p class="details">';  
+					$output .= '				<div><strong>Contact Name: </strong>' .  get_field('djd_site_company_contact') . '</div>';
+					$output .= '				<div><strong>Contact Phone: </strong>' .  get_field('djd_site_phone') . '</div>';
+					$output .= '				<div><strong>Contact Email: </strong>' .  get_field('djd_site_email') . '</div>';
+					$output .= '			</div>';
+					$output .= '			<div class="col-xs-12 col-sm-4">';	
+					$output .= '				<div class="pull-right"><a href="' .  get_field('djd_site_posting_link') . '" class="btn btn-blue">View Job Details</a></div>';
+					$output .= '			</div>';
+					$output .= '		</div>';
 					$output .= '	</div>';
 					$output .= '</div>';					
 				}else if($dynamic_post_type == 'events'){
 					
-					if( get_field('event_djd_site_post_link') ):
-						$output .= '		<h2 class="title" style="margin-bottom:5px !important;"><a href="' .  get_field('event_djd_site_post_link') . '">' .  get_the_title() . '</a></h2>';
-					else:
-						$output .= '		<h2 class="title" style="margin-bottom:5px !important;">' .  get_the_title() . '</h2>';
-					endif;
+					// <a href="" class="inline-block">
+						// <div class="half-block-img-container col-sm-3"><img src="/wp-content/uploads/2017/06/icon-social-stack.png"></div>
+						// <div class="half-block-copy col-sm-9">
+							// <h6>Stack Overflow</h6>
+							// <p>A full-featured FAQ system</p>
+						// </div>
+					// </a>
 					
-					$output .= '		<p>' . get_the_excerpt() . '</p>';
+					
+					$output .= '<div class="half-block">';
+					if( get_field('event_djd_site_post_link') && $dynamic_post_widget == 'true' ):
+						$output .= '<a href="' .  get_field('event_djd_site_post_link') . '" class="inline-block width:100%;">';
+					endif;
+					$output .= '	<div class="block-copy col-sm-12">';
+					
+					if( get_field('event_djd_site_post_thumb') ){
+						$output .= '	<div class="half-block-img-container col-sm-3"><img src="/wp-content/uploads/2017/06/icon-social-stack.png"></div>';
+						$output .= '	<div class="half-block-copy col-sm-9">';
+					}else{
+						$output .= '	<div class="half-block-copy col-sm-12">';
+					}
+					
+					//if( get_field('event_djd_site_post_link') ):
+						//$output .= '	<h3 class="title" style="margin-top:0px; margin-bottom:5px !important;"><a href="' .  get_field('event_djd_site_post_link') . '">' .  get_the_title() . '</a></h3>';
+					//else:
+						$output .= '	<h3 class="title" style="margin-top:0px; margin-bottom:5px !important;">' .  get_the_title() . '</h3>';
+					//endif;
+					
+					$output .= '	<p>' . get_the_excerpt() . '</p>';
+					
+					
+					if($dynamic_post_widget == 'false'){
+						$output .= '		<div class="row">';
+						//if($dynamic_post_show_dates != 'false' || $dynamic_post_type == 'events'){}
+						$output .= '			<div class="col-xs-12 col-sm-8">';
+						if( get_field('event_djd_site_post_venue') ):
+							$output .= '			<p class="date">Venue: <span>' . get_field('event_djd_site_post_venue', get_the_ID()) . '</span></p>';
+						endif;
+						$output .= '				<p class="date">' . get_field('my_meta_box_city_text') .  ', ' . $state .  '</p>';
+						$output .= '				<p class="date" style="margin-bottom:10px !important;">' . $country .  '</p>';
+						
+						$output .= '			</div>';
+						$output .= '			<div class="col-xs-12 col-sm-8">';
+						if( get_field('djd_site_post_start_date', get_the_ID()) ):
+							$output .= '			<p class="date">Start date: <span>' . get_field('djd_site_post_start_date', get_the_ID()) . '</span></p>';
+						endif;
+						if( get_field('djd_site_post_end_date') ):
+							$output .= '			<p class="date">End date: <span>' . get_field('djd_site_post_end_date', get_the_ID()) . '</span></p>';
+						endif;
+						$output .= '			</div>';
+						$output .= '			<div class="col-xs-12 col-sm-4">';	
+						$output .= '				<div class="pull-right"><a href="' .  get_field('djd_site_posting_link') . '" class="btn btn-blue">View Event Details</a></div>';
+						$output .= '			</div>';
+						$output .= '		</div>';
+					}
+					
+					$output .= '		</div>';
+					$output .= '	</div>';
+					
+					if( get_field('event_djd_site_post_link') && $dynamic_post_widget == 'true' ):
+						$output .= '</a>';
+					endif;
+					$output .= '</div>';
+					
 					
 					//get_the_title()
 					// event_djd_site_post_name
@@ -638,59 +703,32 @@ if (!class_exists("DjdSitePost")) {
 					// djd_site_post_end_date
 					// event_djd_site_post_venue
 				}
-				
-				
-				
+	
 				// END IF/ELSE 
 				// START - Post Type Specific fields
 				
 				
 				//$output .= '		<p class="location">Location: <span>' .  . '</span></p>';
 				
-				if($dynamic_post_type == 'jobs'){    // Evnets Fields
+				//if($dynamic_post_type == 'jobs'){    // Evnets Fields
 					
 					//$link = get_post_meta(get_the_ID(), 'djd_site_post_link', true);
 					//$output .= 'link: ' . $link;
-				}
-				
-				
-				if($dynamic_post_type == 'events'){   // Evnets Fields
-					$output .= '<div class="row">';
-					//if($dynamic_post_show_dates != 'false' || $dynamic_post_type == 'events'){}
-					$output .= '	<div class="col-xs-12 col-sm-8">';
-					if( get_field('event_djd_site_post_venue') ):
-						$output .= '	<p class="date">Venue: <span>' . get_field('event_djd_site_post_venue', get_the_ID()) . '</span></p>';
-					endif;
-					$output .= '		<p class="date">' . get_field('my_meta_box_city_text') .  ', ' . $state .  '</p>';
-					$output .= '		<p class="date" style="margin-bottom:10px !important;">' . $country .  '</p>';
-					
-					$output .= '	</div>';
-					$output .= '	<div class="col-xs-12 col-sm-8">';
-					if( get_field('djd_site_post_start_date', get_the_ID()) ):
-						$output .= '		<p class="date">Start date: <span>' . get_field('djd_site_post_start_date', get_the_ID()) . '</span></p>';
-					endif;
-					if( get_field('djd_site_post_end_date') ):
-						$output .= '		<p class="date">End date: <span>' . get_field('djd_site_post_end_date', get_the_ID()) . '</span></p>';
-					endif;
-					$output .= '	</div>';
-					$output .= '	<div class="col-xs-12 col-sm-4">';	
-					$output .= '		<div class="pull-right"><a href="' .  get_field('djd_site_posting_link') . '" class="btn btn-blue">View Event Details</a></div>';
-					$output .= '	</div>';
-					$output .= '</div>';
-				}
-				
-				if($dynamic_post_link_to_page != 'false'){
-					$output .= '		<p><a href="' . get_the_permalink(get_the_ID()) . '" class="view-more-link">View Details</a></p>';
-				}
+				//}
 
-
-				
-					
-				$output .= '	</div>';
-				$output .= '</div>';
+				// if($dynamic_post_type == 'events'){   // Evnets Fields
+// 					
+				// }
+// 				
+				// if($dynamic_post_link_to_page != 'false'){
+					// $output .= '		<p><a href="' . get_the_permalink(get_the_ID()) . '" class="view-more-link">View Details</a></p>';
+				// }
+			
 			endwhile;
+			
 			wp_reset_postdata();
 			wp_reset_query();
+			$output .= '	</div>';
 			$output .= '</div>';
 			return $output;
 		} else {
@@ -724,7 +762,7 @@ if (!class_exists("DjdSitePost")) {
 		$form_name = 'site_post_form';
 		$djd_options = get_option('djd_site_post_settings');
 		
-		echo 'dpt' . $dynamic_post_type;
+		//echo 'dpt' . $dynamic_post_type;
 		
 		$GLOBALS['djd_post_type'] = $dynamic_post_type;
 		$GLOBALS['dynamic_post_title'] = $dynamic_post_title;
@@ -768,7 +806,7 @@ if (!class_exists("DjdSitePost")) {
 
 	function process_site_post_form() {
 		if( isset($_POST) ){
-			//echo 'your mom' . $GLOBALS['djd_post_type']
+			
 
 			$djd_options = get_option('djd_site_post_settings');
 				
@@ -971,7 +1009,7 @@ if (!class_exists("DjdSitePost")) {
 		
 		if ( !empty ($attrs['dynamic_post_type'])){
 			$dynamic_post_type = $attrs['dynamic_post_type'];
-			echo 'dpt: ' . $dynamic_post_type;
+			//echo 'dpt: ' . $dynamic_post_type;
 			include_once (sprintf('%s/views/display-' . $dynamic_post_type . '.php', dirname(__FILE__)));
 		}else{
 			include_once (sprintf("%s/views/display.php", dirname(__FILE__)));

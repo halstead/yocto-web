@@ -11,7 +11,8 @@
     "jquery-colorbox": "^1.6.4",
     "bootstrap-sass": "^3.3.7",
     "components-font-awesome": "^4.7.0",
-    "moment": "^2.18.1"
+    "moment": "^2.18.1",
+    "clipboard": "^1.7.1"
   },
   "overrides": {
     "bootstrap-sass": {

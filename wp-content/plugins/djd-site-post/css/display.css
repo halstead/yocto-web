@@ -111,13 +111,14 @@ form#site_post_form {
 
 /* START - Display */
 
-div.cpt-block-container {
+div.cpt-block-container .half-block {
 	background:#fff;
 }
 
 .cpt-block-container .title {
 	margin-top:0px;
-	margin-bottom:8px;
+	margin-bottom:5px !important;
+	font-size: 22px !important;
 }
 
 .cpt-block-container div.img-container img {

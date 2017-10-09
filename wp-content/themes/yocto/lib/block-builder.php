@@ -490,11 +490,17 @@ function custom_blocks($atts) {
     if( $my_query->have_posts() ) {
 		while ($my_query->have_posts()) : $my_query->the_post();  //$value = get_field( "text_field" );
 			$output .= '<div class="col-xs-12 col-sm-6 ' . $columns . ' ' . $post_type . ' custom-block">';
-	      	$output .= ($block_link == 'page') ? '<a href="' . get_permalink(get_the_ID())  . '" class="inline-block full-width">' : '';
-			$output .= ($block_link == 'modal') ? '<a href="#modal-colorbox" class="inline-block full-width open-colorbox" id="' . get_the_ID() . '">' : '';
-			if(($block_link == 'customField')){
-				$output .= (function_exists('get_field') && get_field( "redirect_field" )) ? '<a href="' . get_field( "redirect_field", get_the_ID() )  . '" class="inline-block full-width" target="' . $linkTarget . '">' : '<a href="/"class="error" id="Undefined Custom field - redirect_field">';
+			if(get_field('block_link_override') && get_field('block_link_override') != 'none'){
+				//if override is true and not sent to default
+				$output .= (get_field('block_link_override') == 'new-window') ? '<a href="' . get_field( "redirect_field", get_the_ID() )  . '" class="inline-block full-width" target="_blank">' : '<a href="' . get_field( "redirect_field", get_the_ID() )  . '" class="inline-block full-width">';
+			}else{
+		      	$output .= ($block_link == 'page') ? '<a href="' . get_permalink(get_the_ID())  . '" class="inline-block full-width">' : '';
+				$output .= ($block_link == 'modal') ? '<a href="#modal-colorbox" class="inline-block full-width open-colorbox" id="' . get_the_ID() . '">' : '';
+				if(($block_link == 'customField')){
+					$output .= (function_exists('get_field') && get_field( "redirect_field" )) ? '<a href="' . get_field( "redirect_field", get_the_ID() )  . '" class="inline-block full-width" target="' . $linkTarget . '">' : '<a href="/"class="error" id="Undefined Custom field - redirect_field">';
+				}
 			}
+			
 	      	$output .= '		<div class="grid-block">';
 		    $output .=  ($featured_img == 'checked' ? '<div class="grid-featured-image-container">' .	get_the_post_thumbnail(get_the_ID(), 'medium', array( 'class' => 'img-responsive' )) . '</div>' : ''); 
 		    $output .= '			<div class="grid-block-copy">';

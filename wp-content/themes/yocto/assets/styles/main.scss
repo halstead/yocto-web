@@ -163,6 +163,10 @@ header.banner {
   background:$header-black;
 }
 
+#carousel-header {
+  max-height:340px;
+}
+
 
 // GLOBAL CLASSES
 
@@ -862,7 +866,7 @@ form button.inlineSubmit {
 
 // PAGE - COMMUNITY
 
-.half-block, .cpt-block-container {
+.half-block {
   padding:16px 0px;
   border-bottom:1px solid #dfdfdf;
   overflow:hidden;
@@ -894,7 +898,7 @@ form button.inlineSubmit {
   }
 }
 
-.half-block-copy h6 {
+.half-block-copy h6, .half-block-copy h3 {
     color: #0098db;
     font-size: 14px;
     text-transform: uppercase;

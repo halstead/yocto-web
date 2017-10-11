@@ -55,6 +55,8 @@ $valid_requests = array(
 	'http://json-schema.org/example/card.json',
 	// 'http://api-v1.yoctoproject.org/api/downloads?release%5B%5D=59',
 	'http://api-v1.yoctoproject.org/api/downloads',
+	'http://api-v1.yoctoproject.org',
+	'http://api-v1.yoctoproject.org/commit_plus_cve.json.txt',
 	'http://api-v1.yoctoproject.org/',
 	'api-v1.yoctoproject.org',
 	'yoctoproject.org',

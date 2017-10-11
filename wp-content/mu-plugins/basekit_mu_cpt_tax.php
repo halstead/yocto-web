@@ -30,7 +30,7 @@ class BASEKIT_Functions {
 		$this->setup_post_type( array( 'Release', 'Releases', 'releases', 'releases' ), array() );
 		$this->setup_post_type( array( 'Event', 'Events', 'events', 'events' ), array() );
 		$this->setup_post_type( array( 'Job', 'Jobs', 'jobs', 'jobs' ), array() );
-		$this->setup_post_type( array( 'Participant', 'Participants', 'participants', 'participants' ), array() );
+		//$this->setup_post_type( array( 'Participant', 'Participants', 'participants', 'participants' ), array() );
 	}
 	
 		public function setup_post_type( $type, $args = array() ) {
@@ -84,7 +84,7 @@ class BASEKIT_Functions {
 		}
 	public function add_taxonomy() {
 		$this->setup_taxonomy( 'Software Type', 'Software Types', 'software-type', 'software-type', array( 'software-item' ), true, 'baseKit' );
-		$this->setup_taxonomy( 'Learn Category', 'Learn Categories', 'learn-category', 'learn-category', array( 'learn-items' ), true, 'baseKit' );
+		$this->setup_taxonomy( 'Learn Category', 'cLearn Categories', 'learn-category', 'learn-category', array( 'learn-items' ), true, 'baseKit' );
 		$this->setup_taxonomy( 'Member Level', 'Member Levels', 'member-level', 'member-level', array( 'members' ), true, 'baseKit' );
 		$this->setup_taxonomy( 'Organization Type', 'Organization Types', 'organization-type', 'organization-type', array( 'members' ), true, 'baseKit' );
 		$this->setup_taxonomy( 'Featured Page', 'Featured Pages', 'featured-page', 'featured-page', array( 'featured-blocks' ), true, 'baseKit' );
@@ -93,6 +93,7 @@ class BASEKIT_Functions {
 		$this->setup_taxonomy( 'Release Version', 'Release Versions', 'release-version', 'release-version', array( 'releases' ), false, 'baseKit' );
 		$this->setup_taxonomy( 'Release Author', 'Release Authors', 'release-author', 'release-author', array( 'releases' ), false, 'baseKit' ); //build system, tool
 		$this->setup_taxonomy( 'Release Type', 'Release Types', 'release-type', 'release-type', array( 'releases' ), true, 'baseKit' ); // latest, active, previous
+		$this->setup_taxonomy( 'Event Type', 'Event Types', 'event-type', 'event-type', array( 'events' ), true, 'baseKit' );
 	}
 		public function setup_taxonomy( $type, $types, $key, $url_slug, $post_type_keys, $hierarchical, $theme) {
 			$labels = array(

@@ -475,65 +475,37 @@ $postTypeName = ucfirst($postTypeNameSingular) . ' ';
 		
 		<?php } ?>
 		
-		<?php                               //Events Fields
-		if($postType  == 'events'){ ?> 
-		
-		<!-- START DATE -->
-		
-			<div class="col-xs-12 col-sm-6">
-				<label for="djd_site_post_venue">Event Venue</label>
-				<input style="width:100%;" type="text" <?php  echo "required='required'"; ?> id="djd_site_post_venue" name="djd_site_post_venue" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_start_date."'"; ?>autofocus="autofocus"/>
-			</div>
-			<div class="col-xs-12 col-sm-6">
-				<label for="event_djd_site_post_link">Event Link</label>
-				<input style="width:100%;" type="text" <?php  echo "required='required'"; ?> id="event_djd_site_post_link" name="event_djd_site_post_link" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_event_link."'"; ?>autofocus="autofocus"/>
-			</div>	
-			<div class="col-xs-12 col-sm-6">
-				<label for="djd_site_post_start_date">Start Date</label>
-				<input style="width:100%;" type="date" <?php  echo "required='required'"; ?> id="djd_site_post_start_date" name="djd_site_post_start_date" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_start_date."'"; ?>autofocus="autofocus"/>
-			</div>
-			
-		<!-- END DATE -->
-			<div class="col-xs-12 col-sm-6">
-				<label for="djd_site_post_end_date">End Date <?php if($postTypeNameSingular == 'job'){echo '(When job posting will automatically be removed)';} ?></label>
-				<input style="width:100%;" type="date" <?php echo "required='required'"; ?> id="djd_site_post_end_date" name="djd_site_post_end_date" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_end_date."'"; ?>autofocus="autofocus"/>
-			</div>
-		</div>
-
-		<?php } ?>
-		
-		
 		<?php                               //Jobs Fields
 		if($postType  == 'jobs'){ ?>   
 		
 		<!-- <div class="row"> -->
 			<div class="col-xs-12 col-sm-6">
-				<label for="djd_site_company_name">Company Name</label>
-				<input style="width:100%;" type="text" <?php  echo "required='required'"; ?> id="djd_site_company_name" name="djd_site_company_name" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_company_name."'"; ?>autofocus="autofocus"/>
+				<label for="dsp_job_company_name">Company Name</label>
+				<input style="width:100%;" type="text" <?php  echo "required='required'"; ?> id="dsp_job_company_name" name="dsp_job_company_name" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_company_name."'"; ?>autofocus="autofocus"/>
 			</div>
 			<div class="col-xs-12 col-sm-6">
-				<label for="djd_site_website">Company Website</label>
-				<input style="width:100%;" type="text" <?php  echo "required='required'"; ?> id="djd_site_website" name="djd_site_website" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_company_phone."'"; ?>autofocus="autofocus"/>
-			</div>
-		<!-- </div>
-		<div class="row"> -->
-			<div class="col-xs-12 col-sm-6">
-				<label for="djd_site_company_contact">Company Contact</label>
-				<input style="width:100%;" type="text" <?php  echo "required='required'"; ?> id="djd_site_company_contact" name="djd_site_company_contact" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_company_contact."'"; ?>autofocus="autofocus"/>
-			</div>
-			<div class="col-xs-12 col-sm-6">
-				<label for="djd_site_phone">Contact Phone Number</label>
-				<input style="width:100%;" type="text" <?php  echo "required='required'"; ?> id="djd_site_phone" name="djd_site_phone" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_company_phone."'"; ?>autofocus="autofocus"/>
+				<label for="dsp_job_website">Company Website</label>
+				<input style="width:100%;" type="text" <?php  echo "required='required'"; ?> id="dsp_job_website" name="dsp_job_website" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_company_phone."'"; ?>autofocus="autofocus"/>
 			</div>
 		<!-- </div>
 		<div class="row"> -->
 			<div class="col-xs-12 col-sm-6">
-				<label for="djd_site_email">Contact Email</label>
-				<input style="width:100%;" type="email" <?php echo "required='required'"; ?> id="djd_site_email" name="djd_site_email" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_email."'"; ?>autofocus="autofocus"/>
+				<label for="dsp_job_company_contact">Company Contact</label>
+				<input style="width:100%;" type="text" <?php  echo "required='required'"; ?> id="dsp_job_company_contact" name="dsp_job_company_contact" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_company_contact."'"; ?>autofocus="autofocus"/>
 			</div>
 			<div class="col-xs-12 col-sm-6">
-				<label for="djd_site_post_link"><?php echo $postTypeName ?> Link (URL)</label>
-				<input style="width:100%;" type="text" <?php echo "required='required'"; ?> id="djd_site_posting_link" name="djd_site_posting_link" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_link."'"; ?>autofocus="autofocus"/>
+				<label for="dsp_job_phone">Contact Phone Number</label>
+				<input style="width:100%;" type="text" <?php  echo "required='required'"; ?> id="dsp_job_phone" name="dsp_job_phone" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_company_phone."'"; ?>autofocus="autofocus"/>
+			</div>
+		<!-- </div>
+		<div class="row"> -->
+			<div class="col-xs-12 col-sm-6">
+				<label for="dsp_job_email">Contact Email</label>
+				<input style="width:100%;" type="email" <?php echo "required='required'"; ?> id="dsp_job_email" name="dsp_job_email" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_email."'"; ?>autofocus="autofocus"/>
+			</div>
+			<div class="col-xs-12 col-sm-6">
+				<label for="dsp_job_posting_link"><?php echo $postTypeName ?> Link (URL)</label>
+				<input style="width:100%;" type="text" <?php echo "required='required'"; ?> id="dsp_job_posting_link" name="dsp_job_posting_link" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_link."'"; ?>autofocus="autofocus"/>
 			</div>
 		</div>
 		<?php } ?>

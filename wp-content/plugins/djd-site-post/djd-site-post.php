@@ -485,9 +485,7 @@ if (!class_exists("DjdSitePost")) {
 	
 	
 	function handle_display_shortcode($atts, $content = null){
-		
-		
-		
+
 		//global $shortcode_cache, $post, $djd_post_id;
 		
 		$local_atts = shortcode_atts( array(
@@ -498,8 +496,8 @@ if (!class_exists("DjdSitePost")) {
 			'widget' => 'false',
 			'class' => '',
 			'dynamic_post_type' => 'post',
-			'dynamic_post_taxonomy' => 'category',
-			'dynamic_post_taxonomy_terms' => 'all'
+			'dynamic_post_taxonomy' => '',
+			'dynamic_post_taxonomy_terms' => ''
 	    ), $atts );
 		
 		$post_count = $local_atts[ 'post_count' ];
@@ -519,12 +517,8 @@ if (!class_exists("DjdSitePost")) {
 		
 		//echo $dynamic_post_show_dates;
 		//echo $dynamic_post_taxonomy_terms;
-		// extract(shortcode_atts(array(
-//
-// 		), $atts));
-	
+
 		
-		$output = '';
 
 		if($dynamic_post_taxonomy_terms == 'all'){	
 			
@@ -546,25 +540,36 @@ if (!class_exists("DjdSitePost")) {
 		} else {  // if terms not 'all' then show only defined terms in the taxonomy (passed in atts)
 			$terms = $dynamic_post_taxonomy_terms;
 		}
-
-	    $args=array(
-	      'post_type' => $dynamic_post_type,
-	      //'category_name' => $taxonomy,
-	      'post_status' => 'publish',
-	      'posts_per_page' => $post_count,
-	      'orderby' => 'title',
-	      'order' => 'ASC',
-	      'tax_query' => array(
-				array(
-					'taxonomy' => $dynamic_post_taxonomy,
-					 'field' => 'slug',
-					 'terms' => $terms
-				),
-			   )
-		   //'meta_query' => array($meta_array)
-	    );
 		
+		if($dynamic_post_taxonomy != ''){
+		    $args=array(
+		      'post_type' => $dynamic_post_type,
+		      'post_status' => 'publish',
+		      'posts_per_page' => $post_count,
+		      'orderby' => 'title',
+		      'order' => 'ASC',
+		      'tax_query' => array(
+					array(
+						'taxonomy' => $dynamic_post_taxonomy,
+						 'field' => 'slug',
+						 'terms' => $terms
+					),
+				   )
+			   //'meta_query' => array($meta_array)
+		    );
+		}else{
+			$args=array(
+		      'post_type' => $dynamic_post_type,
+		      'post_status' => 'publish',
+		      'posts_per_page' => $post_count,
+		      'orderby' => 'title',
+		      'order' => 'ASC'
+		    );
+		}
 		
+		$output = '';
+		//$output .= 'Tax: ' . $dynamic_post_taxonomy;
+		//$output .= 'Term: ' . $dynamic_post_taxonomy_terms;
 
 		$my_query = null;
 	    $my_query = new WP_Query($args);
@@ -596,14 +601,14 @@ if (!class_exists("DjdSitePost")) {
 					$output .= '<div class="half-block">';
 					$output .= '	<div class="block-copy col-sm-12">';
 					
-					if( get_field('djd_site_website') ):
-						$output .= '		<h2 class="title" style="margin-bottom:5px;"><a href="' .  get_field('djd_site_website') . '">' .  get_field('djd_site_company_name') . '</a></h2>';
+					if( get_field('dsp_job_website') ):
+						$output .= '		<h2 class="title" style="margin-bottom:5px;"><a href="' .  get_field('dsp_job_website') . '">' .  get_field('dsp_job_company_name') . '</a></h2>';
 					else:
-						$output .= '		<h2 class="title" style="margin-bottom:5px;">' .  get_field('djd_site_company_name') . '</h2>';
+						$output .= '		<h2 class="title" style="margin-bottom:5px;">' .  get_field('dsp_job_company_name') . '</h2>';
 					endif;
 					
-					if( get_field('djd_site_posting_link') ):
-						$output .= '		<h4 class="title" style="margin-bottom:5px !important;"><a href="' .  get_field('djd_site_posting_link') . '">' .  get_the_title() . '</a></h4>';
+					if( get_field('dsp_job_posting_link') ):
+						$output .= '		<h4 class="title" style="margin-bottom:5px !important;"><a href="' .  get_field('dsp_job_posting_link') . '">' .  get_the_title() . '</a></h4>';
 					else:
 						$output .= '		<h4 class="title" style="margin-bottom:5px !important;">' .  get_the_title() . '</h4>';
 					endif;	
@@ -615,37 +620,29 @@ if (!class_exists("DjdSitePost")) {
 					$output .= '		<p class="date">' . get_field('my_meta_box_city_text') .  ', ' . $state .  '</p>';
 					$output .= '		<p class="date" style="margin-bottom:10px;">' . $country .  '</p>';
 					
-					
-					$output .= '		<div class="row">';
-					$output .= '			<div class="col-xs-12 col-sm-8"><p class="details">';  
-					$output .= '				<div><strong>Contact Name: </strong>' .  get_field('djd_site_company_contact') . '</div>';
-					$output .= '				<div><strong>Contact Phone: </strong>' .  get_field('djd_site_phone') . '</div>';
-					$output .= '				<div><strong>Contact Email: </strong>' .  get_field('djd_site_email') . '</div>';
-					$output .= '			</div>';
-					$output .= '			<div class="col-xs-12 col-sm-4">';	
-					$output .= '				<div class="pull-right"><a href="' .  get_field('djd_site_posting_link') . '" class="btn btn-blue">View Job Details</a></div>';
-					$output .= '			</div>';
-					$output .= '		</div>';
+					if($dynamic_post_widget == 'false'){
+						$output .= '		<div class="row">';
+						$output .= '			<div class="col-xs-12 col-sm-8"><p class="details">';  
+						//$output .= '				<div><strong>Contact Name: </strong>' .  get_field('dsp_job_company_contact') . '</div>';
+						//$output .= '				<div><strong>Contact Phone: </strong>' .  get_field('dsp_job_phone') . '</div>';
+						//$output .= '				<div><strong>Contact Email: </strong>' .  get_field('dsp_job_email') . '</div>';
+						$output .= '			</div>';
+						$output .= '			<div class="col-xs-12 col-sm-4">';	
+						$output .= '				<div class="pull-right"><a href="' .  get_field('dsp_job_posting_link') . '" class="btn btn-blue">View Job Details</a></div>';
+						$output .= '			</div>';
+						$output .= '		</div>';
+					}
 					$output .= '	</div>';
 					$output .= '</div>';					
 				}else if($dynamic_post_type == 'events'){
-					
-					// <a href="" class="inline-block">
-						// <div class="half-block-img-container col-sm-3"><img src="/wp-content/uploads/2017/06/icon-social-stack.png"></div>
-						// <div class="half-block-copy col-sm-9">
-							// <h6>Stack Overflow</h6>
-							// <p>A full-featured FAQ system</p>
-						// </div>
-					// </a>
-					
-					
+
 					$output .= '<div class="half-block">';
-					if( get_field('event_djd_site_post_link') && $dynamic_post_widget == 'true' ):
-						$output .= '<a href="' .  get_field('event_djd_site_post_link') . '" class="inline-block width:100%;">';
+					if( get_field('dsp_event_link') && $dynamic_post_widget == 'true' ):
+						$output .= '<a href="' .  get_field('dsp_event_link') . '" class="inline-block width:100%;">';
 					endif;
 					$output .= '	<div class="block-copy col-sm-12">';
 					
-					if( get_field('event_djd_site_post_thumb') ){
+					if( get_field('dsp_event_thumb') ){  // currently does not exist
 						$output .= '	<div class="half-block-img-container col-sm-3"><img src="/wp-content/uploads/2017/06/icon-social-stack.png"></div>';
 						$output .= '	<div class="half-block-copy col-sm-9">';
 					}else{
@@ -665,24 +662,26 @@ if (!class_exists("DjdSitePost")) {
 						$output .= '		<div class="row">';
 						//if($dynamic_post_show_dates != 'false' || $dynamic_post_type == 'events'){}
 						$output .= '			<div class="col-xs-12 col-sm-8">';
-						if( get_field('event_djd_site_post_venue') ):
-							$output .= '			<p class="date">Venue: <span>' . get_field('event_djd_site_post_venue', get_the_ID()) . '</span></p>';
+						if( get_field('dsp_event_venue') ):
+							$output .= '			<p class="date">Venue: <span>' . get_field('dsp_event_venue', get_the_ID()) . '</span></p>';
 						endif;
 						$output .= '				<p class="date">' . get_field('my_meta_box_city_text') .  ', ' . $state .  '</p>';
 						$output .= '				<p class="date" style="margin-bottom:10px !important;">' . $country .  '</p>';
 						
 						$output .= '			</div>';
 						$output .= '			<div class="col-xs-12 col-sm-8">';
-						if( get_field('djd_site_post_start_date', get_the_ID()) ):
-							$output .= '			<p class="date">Start date: <span>' . get_field('djd_site_post_start_date', get_the_ID()) . '</span></p>';
+						if( get_field('dsp_event_start_date', get_the_ID()) ):
+							$output .= '			<p class="date">Start date: <span>' . get_field('dsp_event_start_date', get_the_ID()) . '</span></p>';
 						endif;
-						if( get_field('djd_site_post_end_date') ):
-							$output .= '			<p class="date">End date: <span>' . get_field('djd_site_post_end_date', get_the_ID()) . '</span></p>';
+						if( get_field('dsp_event_end_date') ):
+							$output .= '			<p class="date">End date: <span>' . get_field('dsp_event_end_date', get_the_ID()) . '</span></p>';
 						endif;
 						$output .= '			</div>';
-						$output .= '			<div class="col-xs-12 col-sm-4">';	
-						$output .= '				<div class="pull-right"><a href="' .  get_field('djd_site_posting_link') . '" class="btn btn-blue">View Event Details</a></div>';
-						$output .= '			</div>';
+						if( get_field('dsp_event_link') ):
+							$output .= '			<div class="col-xs-12 col-sm-4">';	
+							$output .= '				<div class="pull-right"><a href="' .  get_field('dsp_event_link') . '" class="btn btn-blue">View Event Details</a></div>';
+							$output .= '			</div>';
+						endif;
 						$output .= '		</div>';
 					}
 					
@@ -702,24 +701,22 @@ if (!class_exists("DjdSitePost")) {
 					// djd_site_post_start_date
 					// djd_site_post_end_date
 					// event_djd_site_post_venue
+				} else if($dynamic_post_type == 'members'){ // need to add type detection
+					
+					$output .= '<div class="half-block">';
+					$output .= '	<div class="block-copy col-sm-12">';
+					$output .= '		<p>Organization block</p>';
+					$output .= '	</div>';
+					$output .= '</div>';
+				} else {
+					$output .= '<div class="half-block">';
+					$output .= '	<div class="block-copy col-sm-12">';
+					$output .= '		<p>Something has gone terribly wrong! Move to Alaska immediately.</p>';
+					$output .= '	</div>';
+					$output .= '</div>';
 				}
 	
-				// END IF/ELSE 
-				// START - Post Type Specific fields
 				
-				
-				//$output .= '		<p class="location">Location: <span>' .  . '</span></p>';
-				
-				//if($dynamic_post_type == 'jobs'){    // Evnets Fields
-					
-					//$link = get_post_meta(get_the_ID(), 'djd_site_post_link', true);
-					//$output .= 'link: ' . $link;
-				//}
-
-				// if($dynamic_post_type == 'events'){   // Evnets Fields
-// 					
-				// }
-// 				
 				// if($dynamic_post_link_to_page != 'false'){
 					// $output .= '		<p><a href="' . get_the_permalink(get_the_ID()) . '" class="view-more-link">View Details</a></p>';
 				// }
@@ -732,12 +729,17 @@ if (!class_exists("DjdSitePost")) {
 			$output .= '</div>';
 			return $output;
 		} else {
-			$output = null; //"ERROR: " . print_r($args);
-			echo $output;
+			$output .= '<div class="half-block">';
+			$output .= '	<div class="block-copy col-sm-12">';
+			$output .= '		<p>There are no results that match your input.</p>';
+			$output .= '	</div>';
+			$output .= '</div>';
+			return $output;
 		}	
+		
 	}
 
-
+		
 	/*
 	 * Registers the shortcode that has a required @name param indicating the function which returns the HTML code for the shortcode.
 	 *
@@ -762,7 +764,7 @@ if (!class_exists("DjdSitePost")) {
 		$form_name = 'site_post_form';
 		$djd_options = get_option('djd_site_post_settings');
 		
-		//echo 'dpt' . $dynamic_post_type;
+		//echo 'dpt: ' . $dynamic_post_type;
 		
 		$GLOBALS['djd_post_type'] = $dynamic_post_type;
 		$GLOBALS['dynamic_post_title'] = $dynamic_post_title;
@@ -903,31 +905,56 @@ if (!class_exists("DjdSitePost")) {
 				if($post_success != 0)
 				{
 					if($djd_post_type == 'events') {
-						$eventlink = $_POST["event_djd_site_post_link"];
-						$eventVenue = $_POST["djd_site_post_venue"];
-						$startDate = $_POST["djd_site_post_start_date"];
-						$endDate = $_POST["djd_site_post_end_date"];
+						$eventlink = $_POST["dsp_event_link"];
+						$eventVenue = $_POST["dsp_event_venue"];
+						$startDate = $_POST["dsp_event_start_date"];
+						$endDate = $_POST["dsp_event_end_date"];
+						$contactName = $_POST["dsp_event_name"];
+						$contactEmail = $_POST["dsp_event_email"];
 						
-						update_post_meta ($post_success, 'event_djd_site_post_link', $eventlink);
-						update_post_meta ($post_success, 'event_djd_site_post_venue', $eventVenue);
-						update_post_meta ($post_success, 'djd_site_post_start_date', $startDate);
-				    	update_post_meta ($post_success, 'djd_site_post_end_date', $endDate);
+						update_post_meta ($post_success, 'dsp_event_link', $eventlink);
+						update_post_meta ($post_success, 'dsp_event_venue', $eventVenue);
+						update_post_meta ($post_success, 'dsp_event_start_date', $startDate);
+				    	update_post_meta ($post_success, 'dsp_event_end_date', $endDate);
+						update_post_meta ($post_success, 'dsp_event_name', $contactName);
+				    	update_post_meta ($post_success, 'dsp_event_email', $contactEmail);
 				    }
 					if($djd_post_type == 'jobs') {
-						$companyName = $_POST["djd_site_company_name"];
-						$companyContact = $_POST["djd_site_company_contact"];
-						$companyPhone = $_POST["djd_site_phone"];
-						$companyEmail = $_POST["djd_site_email"];
-						$companyWebsite = $_POST["djd_site_website"];
-						$companyPostingLink = $_POST["djd_site_posting_link"];
+						$companyName = $_POST["dsp_job_company_name"];
+						$companyContact = $_POST["dsp_job_company_contact"];
+						$companyPhone = $_POST["dsp_job_phone"];
+						$companyEmail = $_POST["dsp_job_email"];
+						$companyWebsite = $_POST["dsp_job_website"];
+						$companyPostingLink = $_POST["dsp_job_posting_link"];
 						
-						update_post_meta ($post_success, 'djd_site_company_name', $companyName);
-						update_post_meta ($post_success, 'djd_site_company_contact', $companyContact);
-						update_post_meta ($post_success, 'djd_site_phone', $companyPhone);	
-						update_post_meta ($post_success, 'djd_site_email', $companyEmail);
-						update_post_meta ($post_success, 'djd_site_website', $companyWebsite);
-						update_post_meta ($post_success, 'djd_site_posting_link', $companyPostingLink);
+						update_post_meta ($post_success, 'dsp_job_company_name', $companyName);
+						update_post_meta ($post_success, 'dsp_job_company_contact', $companyContact);
+						update_post_meta ($post_success, 'dsp_job_phone', $companyPhone);	
+						update_post_meta ($post_success, 'dsp_job_email', $companyEmail);
+						update_post_meta ($post_success, 'dsp_job_website', $companyWebsite);
+						update_post_meta ($post_success, 'dsp_job_posting_link', $companyPostingLink);
 					}
+					if($djd_post_type == 'members') {
+						$companyName = $_POST["dsp_consultant_company_name"];
+						$companyContact = $_POST["dsp_consultant_company_contact"];
+						$companyPhone = $_POST["dsp_consultant_phone"];
+						$companyEmail = $_POST["dsp_consultant_email"];
+						$companyWebsite = $_POST["dsp_consultant_website"];
+						
+						//$companyDescription = $_POST["dsp_consultant_company_description"];
+						//$companyServices = $_POST["dsp_consultant_services_offered"];
+						
+						update_post_meta ($post_success, 'dsp_consultant_company_name', $companyName);
+						update_post_meta ($post_success, 'dsp_consultant_company_contact', $companyContact);
+						update_post_meta ($post_success, 'dsp_consultant_phone', $companyPhone);	
+						update_post_meta ($post_success, 'dsp_consultant_email', $companyEmail);
+						update_post_meta ($post_success, 'dsp_consultant_website', $companyWebsite);
+						
+						//update_post_meta ($post_success, 'dsp_consultant_company_description', $companyDescription);
+						//update_post_meta ($post_success, 'dsp_consultant_services_offered', $companyServices);
+					}
+					
+					
 					if($djd_post_type == 'jobs' || $djd_post_type == 'events'){
 						
 						$city = $_POST["djd_site_post_city"];
@@ -1006,11 +1033,17 @@ if (!class_exists("DjdSitePost")) {
 		$djd_options = get_option('djd_site_post_settings'); //Read the plugin's settings out of wpdb table wp_options.
 
 		// Render the form html
-		
-		if ( !empty ($attrs['dynamic_post_type'])){
+
+		if ( !empty ($attrs['dynamic_post_type']) ){
 			$dynamic_post_type = $attrs['dynamic_post_type'];
-			//echo 'dpt: ' . $dynamic_post_type;
-			include_once (sprintf('%s/views/display-' . $dynamic_post_type . '.php', dirname(__FILE__)));
+			$checkFilePath = sprintf('%s/views/display-' . $dynamic_post_type . '.php', dirname(__FILE__));
+			if (file_exists($checkFilePath)) {
+			    // File exists";
+				include_once ($checkFilePath);
+			 } else {
+			    // File does not exist";
+			    include_once (sprintf("%s/views/display.php", dirname(__FILE__)));
+			 }
 		}else{
 			include_once (sprintf("%s/views/display.php", dirname(__FILE__)));
 		} 

@@ -90,7 +90,7 @@ $postTypeName = ucfirst($postTypeNameSingular) . ' ';
 		<a style="float: right;" href="<?php echo wp_login_url( get_permalink() ); ?>" title="Login">Login</a>
 	<?php } ?>
 	<div id="field-wrapper">
-		<h4><?php echo$GLOBALS['dynamic_post_title'] ?></h4>
+		<h4><?php echo $GLOBALS['dynamic_post_title'] ?></h4>
 		<!-- <legend><?php //echo ( $djd_options['djd-form-name'] ? $djd_options['djd-form-name'] : __('Frontend Post', 'djd-site-post') ); ?></legend> -->
 		<label for="djd_site_post_title"><?php echo $postTypeName . ( $djd_options['djd-title'] ? $djd_options['djd-title'] : __('Title', 'djd-site-post') ); ?></label>
 		<input type="text" <?php if ( $djd_options['djd-title-required'] == "1" ) echo "required='required'"; ?> id="djd_site_post_title" name="djd_site_post_title" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_title."'"; ?>autofocus="autofocus"/>
@@ -481,22 +481,31 @@ $postTypeName = ucfirst($postTypeNameSingular) . ' ';
 		<!-- START DATE -->
 		
 			<div class="col-xs-12 col-sm-6">
-				<label for="djd_site_post_venue">Event Venue</label>
-				<input style="width:100%;" type="text" <?php  echo "required='required'"; ?> id="djd_site_post_venue" name="djd_site_post_venue" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_start_date."'"; ?>autofocus="autofocus"/>
+				<label for="dsp_event_venue">Event Venue</label>
+				<input style="width:100%;" type="text" <?php  echo "required='required'"; ?> id="dsp_event_venue" name="dsp_event_venue" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_start_date."'"; ?>autofocus="autofocus"/>
 			</div>
 			<div class="col-xs-12 col-sm-6">
-				<label for="event_djd_site_post_link">Event Link</label>
-				<input style="width:100%;" type="text" <?php  echo "required='required'"; ?> id="event_djd_site_post_link" name="event_djd_site_post_link" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_event_link."'"; ?>autofocus="autofocus"/>
+				<label for="dsp_event_link">Event Link</label>
+				<input style="width:100%;" type="text" <?php  echo "required='required'"; ?> id="dsp_event_link" name="dsp_event_link" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_event_link."'"; ?>autofocus="autofocus"/>
 			</div>	
 			<div class="col-xs-12 col-sm-6">
-				<label for="djd_site_post_start_date">Start Date</label>
-				<input style="width:100%;" type="date" <?php  echo "required='required'"; ?> id="djd_site_post_start_date" name="djd_site_post_start_date" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_start_date."'"; ?>autofocus="autofocus"/>
+				<label for="dsp_event_start_date">Start Date</label>
+				<input style="width:100%;" type="date" <?php  echo "required='required'"; ?> id="dsp_event_start_date" name="dsp_event_start_date" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_start_date."'"; ?>autofocus="autofocus"/>
 			</div>
 			
-		<!-- END DATE -->
+		
 			<div class="col-xs-12 col-sm-6">
-				<label for="djd_site_post_end_date">End Date <?php if($postTypeNameSingular == 'job'){echo '(When job posting will automatically be removed)';} ?></label>
-				<input style="width:100%;" type="date" <?php echo "required='required'"; ?> id="djd_site_post_end_date" name="djd_site_post_end_date" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_end_date."'"; ?>autofocus="autofocus"/>
+				<label for="dsp_event_end_date">End Date </label>
+				<input style="width:100%;" type="date" <?php echo "required='required'"; ?> id="dsp_event_end_date" name="dsp_event_end_date" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_end_date."'"; ?>autofocus="autofocus"/>
+			</div>
+			<!-- END DATE -->
+			<div class="col-xs-12 col-sm-6">
+				<label for="dsp_event_name">Conctact Name</label>
+				<input style="width:100%;" type="text" <?php  echo "required='required'"; ?> id="dsp_event_name" name="dsp_event_name" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_event_contact_name."'"; ?>autofocus="autofocus"/>
+			</div>
+			<div class="col-xs-12 col-sm-6">
+				<label for="dsp_event_email">Contact Email</label>
+				<input style="width:100%;" type="text" <?php  echo "required='required'"; ?> id="dsp_event_email" name="dsp_event_email" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_event_contact_email."'"; ?>autofocus="autofocus"/>
 			</div>
 		</div>
 

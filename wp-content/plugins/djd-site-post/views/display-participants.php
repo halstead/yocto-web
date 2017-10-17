@@ -90,14 +90,14 @@ $postTypeName = ucfirst($postTypeNameSingular) . ' ';
 		<a style="float: right;" href="<?php echo wp_login_url( get_permalink() ); ?>" title="Login">Login</a>
 	<?php } ?>
 	<div id="field-wrapper">
-		<h4><?php echo$GLOBALS['dynamic_post_title'] ?></h4>
+		<h4><?php echo $GLOBALS['dynamic_post_title'] ?></h4>
 		<!-- <legend><?php //echo ( $djd_options['djd-form-name'] ? $djd_options['djd-form-name'] : __('Frontend Post', 'djd-site-post') ); ?></legend> -->
-		<label for="djd_site_post_title"><?php echo $postTypeName . ( $djd_options['djd-title'] ? $djd_options['djd-title'] : __('Title', 'djd-site-post') ); ?></label>
+		<label for="djd_site_post_title">Organization Name <?php //echo $postTypeName . ( $djd_options['djd-title'] ? $djd_options['djd-title'] : __('Title', 'djd-site-post') ); ?></label>
 		<input type="text" <?php if ( $djd_options['djd-title-required'] == "1" ) echo "required='required'"; ?> id="djd_site_post_title" name="djd_site_post_title" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_title."'"; ?>autofocus="autofocus"/>
 		
 		<div class="row">
 			<div class="col-xs-12">
-			<label for="djdsitepostcontent"><?php echo $postTypeName . ( $djd_options['djd-content'] ? $djd_options['djd-content'] : __('Text', 'djd-site-post') ); ?></label>
+			<label for="djdsitepostcontent">Organization Description<?php //echo $postTypeName . ( $djd_options['djd-content'] ? $djd_options['djd-content'] : __('Text', 'djd-site-post') ); ?></label>
 			
 			<?php
 				//$content = '<a href="#" class="meta_field_upload_image_button button">Upload image</a>';
@@ -508,7 +508,7 @@ $postTypeName = ucfirst($postTypeNameSingular) . ' ';
 		
 		<!-- <div class="row"> -->
 			<div class="col-xs-12 col-sm-6">
-				<label for="djd_site_company_name">Company Name</label>
+				<label for="djd_site_company_name">Contact Name</label>
 				<input style="width:100%;" type="text" <?php  echo "required='required'"; ?> id="djd_site_company_name" name="djd_site_company_name" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_company_name."'"; ?>autofocus="autofocus"/>
 			</div>
 			<div class="col-xs-12 col-sm-6">
@@ -517,14 +517,14 @@ $postTypeName = ucfirst($postTypeNameSingular) . ' ';
 			</div>
 		<!-- </div>
 		<div class="row"> -->
-			<div class="col-xs-12 col-sm-6">
+			<!--<div class="col-xs-12 col-sm-6">
 				<label for="djd_site_company_contact">Company Contact</label>
 				<input style="width:100%;" type="text" <?php  echo "required='required'"; ?> id="djd_site_company_contact" name="djd_site_company_contact" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_company_contact."'"; ?>autofocus="autofocus"/>
 			</div>
 			<div class="col-xs-12 col-sm-6">
 				<label for="djd_site_phone">Contact Phone Number</label>
 				<input style="width:100%;" type="text" <?php  echo "required='required'"; ?> id="djd_site_phone" name="djd_site_phone" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_company_phone."'"; ?>autofocus="autofocus"/>
-			</div>
+			</div>-->
 		<!-- </div>
 		<div class="row"> -->
 			<div class="col-xs-12 col-sm-6">
@@ -534,6 +534,13 @@ $postTypeName = ucfirst($postTypeNameSingular) . ' ';
 			<div class="col-xs-12 col-sm-6">
 				<label for="djd_site_post_link"><?php echo $postTypeName ?> Link (URL)</label>
 				<input style="width:100%;" type="text" <?php echo "required='required'"; ?> id="djd_site_posting_link" name="djd_site_posting_link" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_link."'"; ?>autofocus="autofocus"/>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 col-sm-6">
+				<label for="djd_site_post_link">Visibly participating in the Yocto Project community. Please describe your participation in the comments section below.</label>
+				<input type="radio" required="required" id="dsp_participant_publicly_accessible-yes" name="dsp_participant_publicly_accessible" value="yes" /> Yes
+				<input type="radio" required="required" id="dsp_participant_publicly_accessible-no" name="dsp_participant_publicly_accessible" value="no" /> Yes
 			</div>
 		</div>
 		<?php } ?>

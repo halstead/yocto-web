@@ -58,6 +58,7 @@ $valid_requests = array(
 	'http://api-v1.yoctoproject.org',
 	'http://api-v1.yoctoproject.org/commit_plus_cve.json.txt',
 	'http://api-v1.yoctoproject.org/',
+	'http://api-v1.yoctoproject.org/cves.json.txt',
 	'api-v1.yoctoproject.org',
 	'yoctoproject.org',
 	'https://www.yoctoproject.org/documentation-api',

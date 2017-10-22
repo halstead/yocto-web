@@ -83,7 +83,9 @@ $postTypeName = ucfirst($postTypeNameSingular) . ' ';
 <form id="site_post_form" class="djd_site_post_form bordered" method="post" action="<?php echo admin_url('admin-ajax.php'); ?>" enctype="multipart/form-data">
 	<p hidden="hidden" class="form_error_message"></p>
 	<input type="hidden" name="djd-our-id" <?php echo ( $my_post ? "value='".$my_post->ID."'" : "value='".$djd_post_id."'" ); ?> />
-	<input type="hidden" name="djd-our-post-type" <?php  echo "value='" . $GLOBALS['djd_post_type']. "'" ?> />
+	<input type="hidden" name="djd-our-post-type" value="members" />
+	<input type="hidden" name="djd-our-post-taxonomy" <?php  echo "value='" . $GLOBALS['djd_post_type_taxonomy']. "'" ?> />
+	<input type="hidden" name="djd-our-post-term" <?php  echo "value='" . $GLOBALS['djd_post_type_term']. "'" ?> />
 	<input type="hidden" name="djd-our-author" <?php if ( $my_post ) echo "value='".$my_post->post_author."'"; ?> />
 	
 	<?php if (isset($djd_options['djd-login-link'])) { ?>
@@ -504,7 +506,7 @@ $postTypeName = ucfirst($postTypeNameSingular) . ' ';
 		
 		
 		<?php                               //Jobs Fields
-		if($postType  == 'jobs'){ ?>   
+		if($postType  == 'participants'){ ?>   
 		
 		<!-- <div class="row"> -->
 			<div class="col-xs-12 col-sm-6">
@@ -540,7 +542,7 @@ $postTypeName = ucfirst($postTypeNameSingular) . ' ';
 			<div class="col-xs-12 col-sm-6">
 				<label for="djd_site_post_link">Visibly participating in the Yocto Project community. Please describe your participation in the comments section below.</label>
 				<input type="radio" required="required" id="dsp_participant_publicly_accessible-yes" name="dsp_participant_publicly_accessible" value="yes" /> Yes
-				<input type="radio" required="required" id="dsp_participant_publicly_accessible-no" name="dsp_participant_publicly_accessible" value="no" /> Yes
+				<input type="radio" required="required" id="dsp_participant_publicly_accessible-no" name="dsp_participant_publicly_accessible" value="no" /> No
 			</div>
 		</div>
 		<?php } ?>

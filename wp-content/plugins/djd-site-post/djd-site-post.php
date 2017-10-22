@@ -759,7 +759,9 @@ if (!class_exists("DjdSitePost")) {
 			'success_page_id' => 0,
 			'called_from_widget' => '0',
 			'dynamic_post_type' => 'post',
-			'dynamic_post_title' => 'Upload Post'
+			'dynamic_post_title' => 'Upload Post',
+			'dynamic_post_taxonomy' => '',
+			'dynamic_post_term' => ''
 		), $atts));
 		$form_name = 'site_post_form';
 		$djd_options = get_option('djd_site_post_settings');
@@ -768,6 +770,10 @@ if (!class_exists("DjdSitePost")) {
 		
 		$GLOBALS['djd_post_type'] = $dynamic_post_type;
 		$GLOBALS['dynamic_post_title'] = $dynamic_post_title;
+		$GLOBALS['djd_post_type_taxonomy'] = $dynamic_post_taxonomy;
+		$GLOBALS['djd_post_type_term'] = $dynamic_post_term;
+		
+		
 		//$_POST["djd_post_type"] = $dynamic_post_type;
 		
 		//print_r($atts);
@@ -814,7 +820,26 @@ if (!class_exists("DjdSitePost")) {
 				
 			if ( !empty ($_POST["djd-our-post-type"])) $djd_post_type = $_POST["djd-our-post-type"];
 			if ( !empty ($_POST["djd-our-id"])) $djd_post_id = $_POST["djd-our-id"];
+			if ( !empty ($_POST["djd-our-post-taxonomy"])) $dynamic_post_taxonomy = $_POST["djd-our-post-taxonomy"];
+			if ( !empty ($_POST["djd-our-post-term"])) $terms = $_POST["djd-our-post-term"];
 				// Create post object with defaults
+			
+			// Check if the city exists
+			//$city_term = term_exists( $city, 'location', $state_term['term_taxonomy_id'] );
+			
+			$org_term = term_exists( $terms, $dynamic_post_taxonomy, 0 );
+			// Create city if it doesn't exist
+			if ( !$org_term ) {
+			    //$org_term = wp_insert_term( $terms, $dynamic_post_taxonomy, array( 'parent' => $state_term['term_taxonomy_id'] ) );
+				$org_term = wp_insert_term( $terms, $dynamic_post_taxonomy, array( 'parent' => 0 ) );
+			}
+			
+			$custom_tax = array(
+			    $dynamic_post_taxonomy => array(
+			        $org_term['term_taxonomy_id']
+			    )
+			);
+			//if($dynamic_post_taxonomy != ''){
 				$my_post = array(
 					'ID' => $djd_post_id,
 					'post_title' => '',
@@ -825,10 +850,28 @@ if (!class_exists("DjdSitePost")) {
 					'ping_status' => 'open',
 					'post_content' => '',
 					'post_excerpt' => '',
-					'post_type' => $djd_post_type, //$djd_post_type, //$dynamic_post_type,
+					'post_type' => $djd_post_type, 
 					'tags_input' => '',
-					'to_ping' =>  ''
+					'to_ping' =>  '',
+				    'tax_input' => $custom_tax
 				);
+			// }else{
+				// $my_post = array(
+					// 'ID' => $djd_post_id,
+					// 'post_title' => '',
+					// 'post_status' => 'publish',
+					// 'post_author' => '',
+					// 'post_category' => '',
+					// 'comment_status' => 'open',
+					// 'ping_status' => 'open',
+					// 'post_content' => '',
+					// 'post_excerpt' => '',
+					// 'post_type' => $djd_post_type, 
+					// 'tags_input' => '',
+					// 'to_ping' =>  ''
+				// );
+			// }
+				
 				
 				//print_r($my_post);
 				
@@ -941,6 +984,9 @@ if (!class_exists("DjdSitePost")) {
 						$companyEmail = $_POST["dsp_consultant_email"];
 						$companyWebsite = $_POST["dsp_consultant_website"];
 						
+						//Participants field
+						$radioPubliclyAccessible = $_POST["dsp_participant_publicly_accessible"];
+						
 						//$companyDescription = $_POST["dsp_consultant_company_description"];
 						//$companyServices = $_POST["dsp_consultant_services_offered"];
 						
@@ -950,6 +996,7 @@ if (!class_exists("DjdSitePost")) {
 						update_post_meta ($post_success, 'dsp_consultant_email', $companyEmail);
 						update_post_meta ($post_success, 'dsp_consultant_website', $companyWebsite);
 						
+						update_post_meta ($post_success, 'dsp_participant_publicly_accessible', $radioPubliclyAccessible);
 						//update_post_meta ($post_success, 'dsp_consultant_company_description', $companyDescription);
 						//update_post_meta ($post_success, 'dsp_consultant_services_offered', $companyServices);
 					}

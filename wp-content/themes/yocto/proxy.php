@@ -53,7 +53,6 @@ $valid_requests = array(
 	'https://layers.openembedded.org/layerindex/api/layerItems/?format=json',
 	'https://wiki.yoctoproject.org/charts/attribution.json.txt',
 	'http://json-schema.org/example/card.json',
-	// 'http://api-v1.yoctoproject.org/api/downloads?release%5B%5D=59',
 	'http://api-v1.yoctoproject.org/api/downloads',
 	'http://api-v1.yoctoproject.org',
 	'http://api-v1.yoctoproject.org/commit_plus_cve.json.txt',
@@ -62,6 +61,8 @@ $valid_requests = array(
 	'api-v1.yoctoproject.org',
 	'yoctoproject.org',
 	'https://www.yoctoproject.org/documentation-api',
+	'http://api-v1.yoctoproject.org/documentation-api',
+	'http://api-v1.yoctoproject.org/documentation-api/archived',
 	'https://www.yoctoproject.org/',
 	'http://www.yoctoproject.org/'
 );

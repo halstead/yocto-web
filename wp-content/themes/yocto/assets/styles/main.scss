@@ -583,6 +583,31 @@ ul#menu-primary-navigation {
   }
 }
 
+// MOBILE NAV
+
+body nav.in ul#menu-primary-navigation li>a:hover {
+  border-bottom:2px solid transparent !important;
+}
+nav.in ul#menu-primary-navigation {
+  width:100%;
+  margin: 0px !important;
+  li {
+     padding:0px 0px;
+     
+     &.open-menu {
+       background:#eaab00;
+     }
+     &.open-menu .dropdown-menu {
+       background-color: #444 !important;
+       margin-bottom: 12px;
+     }
+  }
+  .dropdown-menu {
+    width:100%;
+    text-align:center;
+  }
+}
+
 
 // HEADER SEARCH AND SEARCH RESULT
 
@@ -700,7 +725,7 @@ ul#menu-primary-navigation {
     
   }
   .row {
-    margin-bottom:30px;
+    margin-bottom:22px;
   
     &:last-child{
       margin-bottom:0px;
@@ -1668,13 +1693,15 @@ footer.content-info .container .conent-inner {
   }
   
   ul#menu-primary-navigation {
-    margin-left:70px;
+    margin:0px;
   }
 }
 
 
 @media only screen and (min-width : 600px){
-
+  ul#menu-primary-navigation {
+    margin-left:70px;
+  }
 }
 
 

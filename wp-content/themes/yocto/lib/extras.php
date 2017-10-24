@@ -70,7 +70,7 @@ function setup_init() {
 add_action( 'add_meta_boxes', __NAMESPACE__ . '\\cd_meta_box_add' );
 
 function cd_meta_box_add($postType) {
-	$types = array('events', 'jobs');
+	$types = array('events', 'jobs', 'members');
 	if(in_array($postType, $types)){
 		add_meta_box(
 				'location-info-meta-box',

@@ -75,12 +75,15 @@ if (isset($_COOKIE["form_ok"])){
 
 $postType = $GLOBALS['djd_post_type'];
 $postTypeNameSingular= rtrim($GLOBALS['djd_post_type'], 's') . '';
-$postTypeName = ucfirst($postTypeNameSingular) . ' ';  
+$postTypeName = ucfirst($postTypeNameSingular) . ' '; 
+$postTaxonomy = $GLOBALS['djd_post_type_taxonomy'];
+$postTaxonomyTerm = $GLOBALS['djd_post_type_term'];
+ 
+//echo "Term: " . $postTaxonomyTerm;
 //echo 'name: ' . $djd_options['djd-title'] . $djd_options['djd-form-name'];
 
 ?>
-<!-- <h2>Participants Form</h2> -->
-<form id="site_post_form" class="djd_site_post_form bordered" method="post" action="<?php echo admin_url('admin-ajax.php'); ?>" enctype="multipart/form-data">
+<form id="site_post_form" class="djd_site_post_form bordered <?php echo ($sr && $cf['form_ok']) ? ' hidden' : 'visilbe'; ?>" method="post" action="<?php echo admin_url('admin-ajax.php'); ?>" enctype="multipart/form-data">
 	<p hidden="hidden" class="form_error_message"></p>
 	<input type="hidden" name="djd-our-id" <?php echo ( $my_post ? "value='".$my_post->ID."'" : "value='".$djd_post_id."'" ); ?> />
 	<input type="hidden" name="djd-our-post-type" <?php  echo "value='" . $GLOBALS['djd_post_type']. "'" ?> />
@@ -94,55 +97,79 @@ $postTypeName = ucfirst($postTypeNameSingular) . ' ';
 	<div id="field-wrapper">
 		<h4><?php echo$GLOBALS['dynamic_post_title'] ?></h4>
 		<!-- <legend><?php //echo ( $djd_options['djd-form-name'] ? $djd_options['djd-form-name'] : __('Frontend Post', 'djd-site-post') ); ?></legend> -->
-		<label for="djd_site_post_title"><?php echo $postTypeName . ( $djd_options['djd-title'] ? $djd_options['djd-title'] : __('Title', 'djd-site-post') ); ?></label>
-		<input type="text" <?php if ( $djd_options['djd-title-required'] == "1" ) echo "required='required'"; ?> id="djd_site_post_title" name="djd_site_post_title" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_title."'"; ?>autofocus="autofocus"/>
 		
 		<div class="row">
-			<div class="col-xs-12">
-			<label for="djdsitepostcontent"><?php echo $postTypeName . ( $djd_options['djd-content'] ? $djd_options['djd-content'] : __('Text', 'djd-site-post') ); ?></label>
-			
-			<?php
-				//$content = '<a href="#" class="meta_field_upload_image_button button">Upload image</a>';
-				//$display = 'none';
-				?>
-				<!-- <div>
-					<?php //echo $content; ?>
-					<input type="hidden" class="widefat" name="imageSlide[]"  />
-					<a href="#" class="meta_field_remove_image_button button" style="display:<?php //echo $display; ?>; margin-top:14px;">Remove Image</a>
-				</div> -->
-			<?php
-			$settings = array(
-				'media_buttons'	=> true, //(boolean) $djd_options['djd-allow-media-upload'],
-				'teeny'			=> false, 
-				'wpautop'		=> false,
-				'tinymce'		=> false,
-				'quicktags'		=> false
-								
-				// 'teeny'			=> $teeny,
-	 			// 'wpautop'		=> true,
-	 			// 'quicktags'		=> $show_quicktags
-			);
-			$editor_content = '';
-			if ( $my_post ) $editor_content = $my_post->post_content;
-			wp_editor($editor_content, 'djdsitepostcontent', $settings );
-			?>
-			
-			<?php if (isset($djd_options['djd-show-excerpt'])) { ?>
-				<label for="djd_site_post_excerpt"><?php echo ( $djd_options['djd-excerpt'] ? $djd_options['djd-excerpt'] : __('Excerpt', 'djd-site-post') ); ?></label>
-				<textarea id="djd_site_post_excerpt" name="djd_site_post_excerpt"><?php if ( $my_post ) echo $my_post->post_excerpt; ?></textarea>
-			<?php } ?>
+			<div class="col-xs-12 col-sm-6">
+				<label for="djd_site_post_title">Organization/Company Name</label>  <?php //echo $postTaxonomy . ( $djd_options['djd-title'] ? $djd_options['djd-title'] : __('Title', 'djd-site-post') ); ?>
+				<input type="text" <?php echo "required='required'"; ?> id="djd_site_post_title" name="djd_site_post_title" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_title."'"; ?>autofocus="autofocus"/>
 			</div>
-		</div>
-		<?php                               //Shared Fields
-		//if($postType  == 'events' || $postType  == 'jobs'){ ?>    
 			
-		<!-- ADDRESS -->
-		<div class="row">
+			<?php if($postTaxonomyTerm  == 'participants'){ ?>  <!-- Participants Fields -->
+				
+			<div class="col-xs-12 col-sm-6">
+				<label for="dsp_participant_organization_url">Organization URL</label>  <?php //echo $postTaxonomy . ( $djd_options['djd-title'] ? $djd_options['djd-title'] : __('Title', 'djd-site-post') ); ?>
+				<input type="text" <?php echo "required='required'"; ?> id="dsp_participant_organization_url" name="dsp_participant_organization_url" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_organization_url."'"; ?>autofocus="autofocus"/>
+			</div>
+			<div class="col-xs-12 col-sm-6">
+				<label for="dsp_participant_contact_name">Contact Name</label>
+				<input style="width:100%;" type="text" <?php  echo "required='required'"; ?> id="dsp_participant_contact_name" name="dsp_participant_contact_name" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_contact_name."'"; ?>autofocus="autofocus"/>
+			</div>
+			<div class="col-xs-12 col-sm-6">
+				<label for="dsp_participant_contact_email">Contact Email</label>
+				<input style="width:100%;" type="text" <?php  echo "required='required'"; ?> id="dsp_participant_contact_email" name="dsp_participant_contact_email" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_contact_email."'"; ?>autofocus="autofocus"/>
+			</div>
+			
+			<?php }elseif($postTaxonomyTerm  == 'compatible'){ ?> <!-- Compatible Fields -->
+				
+			<div class="col-xs-12 col-sm-6">
+				<label for="dsp_ypcompatible_org_url">Organization URL</label>  <?php //echo $postTaxonomy . ( $djd_options['djd-title'] ? $djd_options['djd-title'] : __('Title', 'djd-site-post') ); ?>
+				<input type="text" <?php echo "required='required'"; ?> id="dsp_ypcompatible_org_url" name="dsp_ypcompatible_org_url" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_organization_url."'"; ?>autofocus="autofocus"/>
+			</div>
+			<div class="col-xs-12 col-sm-6">
+				<label for="dsp_ypcompatible_contact_name">Contact Name</label>
+				<input style="width:100%;" type="text" <?php  echo "required='required'"; ?> id="dsp_ypcompatible_contact_name" name="dsp_ypcompatible_contact_name" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_contact_name."'"; ?>autofocus="autofocus"/>
+			</div>
+			<div class="col-xs-12 col-sm-6">
+				<label for="dsp_ypcompatible_contact_email">Contact Email</label>
+				<input style="width:100%;" type="text" <?php  echo "required='required'"; ?> id="dsp_ypcompatible_contact_email" name="dsp_ypcompatible_contact_email" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_contact_email."'"; ?>autofocus="autofocus"/>
+			</div>
+			<div class="col-xs-12 col-sm-6">
+				<label for="dsp_ypcompatible_product_layer_name">Layer Name</label>
+				<input style="width:100%;" type="text" <?php  echo "required='required'"; ?> id="dsp_ypcompatible_product_layer_name" name="dsp_ypcompatible_product_layer_name" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_layer_name."'"; ?>autofocus="autofocus"/>
+			</div>
+			<div class="col-xs-12 col-sm-6">
+				<label for="dsp_ypcompatible_product_layer_url">Layer URL</label>
+				<input style="width:100%;" type="text" <?php  echo "required='required'"; ?> id="dsp_ypcompatible_product_layer_url" name="dsp_ypcompatible_product_layer_url" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_layer_url."'"; ?>autofocus="autofocus"/>
+			</div>
+			
+			<?php }elseif($postTaxonomyTerm  == 'consultants'){ ?>  <!-- Consultants Fields -->
+				
+			<div class="col-xs-12 col-sm-6">
+				<label for="dsp_consultant_website">Company Website</label>
+				<input style="width:100%;" type="text" <?php  echo "required='required'"; ?> id="dsp_consultant_website" name="dsp_consultant_website" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_company_website."'"; ?>autofocus="autofocus"/>
+			</div>
+			<div class="col-xs-12 col-sm-6">
+				<label for="dsp_consultant_contact_name">Contact Name</label>
+				<input style="width:100%;" type="text" <?php echo "required='required'"; ?> id="dsp_consultant_contact_name" name="dsp_consultant_contact_name" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_contact_name."'"; ?>autofocus="autofocus"/>
+			</div>
+			<div class="col-xs-12 col-sm-6">
+				<label for="dsp_consultant_contact_email">Contact Email</label>
+				<input style="width:100%;" type="email" <?php echo "required='required'"; ?> id="dsp_consultant_contact_email" name="dsp_consultant_contact_email" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_contact_email."'"; ?>autofocus="autofocus"/>
+			</div>
+			<div class="col-xs-12 col-sm-6">
+				<label for="dsp_consultant_contact_phone">Contact Phone Number</label>
+				<input style="width:100%;" type="text" <?php  echo "required='required'"; ?> id="dsp_consultant_contact_phone" name="dsp_consultant_contact_phone" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_company_phone."'"; ?>autofocus="autofocus"/>
+			</div>
 
-		<!-- State -->
-			<!--<div class="col-xs-12 col-sm-6">
+			<div class="col-xs-12 col-sm-6">
+				<label for="djd_site_post_city">City<?php //echo ( $djd_options['djd-city'] ? $djd_options['djd-city'] : __('City', 'djd-site-post') ); ?></label>
+				<input type="text" <?php echo "required='required'"; ?> id="djd_site_post_city" name="djd_site_post_city" maxlength="255" value="" <?php //if ( $my_post ) echo "value='".$my_post->post_city."'"; ?>autofocus="autofocus"/>
+			</div>
+
+			<!-- State -->
+			<div class="col-xs-12 col-sm-6">
 				<label for="djd_site_post_state">State<?php //echo ( $djd_options['djd-state'] ? $djd_options['djd-state'] : __('State', 'djd-site-post') ); ?></label>
-				<select name="djd_site_post_state" id="djd_site_post_state" style="width:100%;">
+				<select name="djd_site_post_state" id="djd_site_post_state" style="width:100%;" required="required">
 					<option> - Select Province/State - </option>
 					<option value="None">Not Applicable</option> 
 					<option value="AL">Alabama</option> 
@@ -211,16 +238,12 @@ $postTypeName = ucfirst($postTypeNameSingular) . ' ';
 					<option value="SK">Saskatchewan</option>
 					<option value="YT">Yukon</option>
 				</select>
-			</div>-->
+			</div>
 			
 			<!-- Country -->
 			<div class="col-xs-12 col-sm-6">
-				<label for="dsp_consultant_company_name">Company Name</label>
-				<input style="width:100%;" type="text" <?php  echo "required='required'"; ?> id="dsp_consultant_company_name" name="dsp_consultant_company_name" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_company_name."'"; ?>autofocus="autofocus"/>
-			</div>
-			<div class="col-xs-12 col-sm-6">
 				<label for="djd_site_post_country">Country<?php //echo ( $djd_options['djd-country'] ? $djd_options['djd-country'] : __('Country', 'djd-site-post') ); ?></label>
-				<select name="djd_site_post_country" id="djd_site_post_country" style="width:100%;">
+				<select name="djd_site_post_country" id="djd_site_post_country" required="required" style="width:100%;">
 					<option value="US">United States</option>
 					<option value="AF">Afghanistan</option>
 					<option value="AX">Åland Islands</option>
@@ -473,55 +496,251 @@ $postTypeName = ucfirst($postTypeNameSingular) . ' ';
 					<option value="ZW">Zimbabwe</option>
 				</select>
 			</div>
-		
-		<?php //} ?>
-		
-
-		<?php                               // Consultants Fields
-		?>   
-		
-		<!-- <div class="row"> -->
 			
-			<div class="col-xs-12 col-sm-6">
-				<label for="dsp_consultant_email">Contact Email</label>
-				<input style="width:100%;" type="email" <?php echo "required='required'"; ?> id="dsp_consultant_email" name="dsp_consultant_email" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_email."'"; ?>autofocus="autofocus"/>
+			
+			<?php } ?>
+		</div>
+		<div class="row">
+			<div class="col-xs-12">
+			<?php if($postTaxonomyTerm  == 'participants' || $postTaxonomyTerm  == 'compatible'){ ?>
+				<label for="djdsitepostcontent">Product/layer Description</label>
+			<?php }elseif($postTaxonomyTerm  == 'consultants') {  ?>
+				<label for="djdsitepostcontent">Company Description</label>
+			<?php } ?>
+			<?php
+				//$content = '<a href="#" class="meta_field_upload_image_button button">Upload image</a>';
+				//$display = 'none';
+				?>
+				<!-- <div>
+					<?php //echo $content; ?>
+					<input type="hidden" class="widefat" name="imageSlide[]"  />
+					<a href="#" class="meta_field_remove_image_button button" style="display:<?php //echo $display; ?>; margin-top:14px;">Remove Image</a>
+				</div> -->
+			<?php
+			$settings = array(
+				'media_buttons'	=> false, //  Change to show media uplaod  //(boolean) $djd_options['djd-allow-media-upload'],
+				'teeny'			=> false, 
+				'wpautop'		=> false,
+				'tinymce'		=> false,
+				'quicktags'		=> false
+								
+				// 'teeny'			=> $teeny,
+	 			// 'wpautop'		=> true,
+	 			// 'quicktags'		=> $show_quicktags
+			);
+			$editor_content = '';
+			if ( $my_post ) $editor_content = $my_post->post_content;
+			wp_editor($editor_content, 'djdsitepostcontent', $settings );  //uncomment to show media upload
+			?>
+			
+			<?php if (isset($djd_options['djd-show-excerpt'])) { // Currently set to false in admin settings   ?> 
+				<label for="djd_site_post_excerpt"><?php echo ( $djd_options['djd-excerpt'] ? $djd_options['djd-excerpt'] : __('Excerpt', 'djd-site-post') ); ?></label>
+				<textarea id="djd_site_post_excerpt" name="djd_site_post_excerpt"><?php if ( $my_post ) echo $my_post->post_excerpt; ?></textarea>
+			<?php } ?>
 			</div>
-			<div class="col-xs-12 col-sm-6">
-				<label for="dsp_consultant_website">Company Website</label>
-				<input style="width:100%;" type="text" <?php  echo "required='required'"; ?> id="dsp_consultant_website" name="dsp_consultant_website" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_company_phone."'"; ?>autofocus="autofocus"/>
-			</div>
-		<!-- </div>
-		<div class="row"> -->
-			<div class="col-xs-12 col-sm-6">
-				<label for="dsp_consultant_company_contact">Company Contact</label>
-				<input style="width:100%;" type="text" <?php  echo "required='required'"; ?> id="dsp_consultant_company_contact" name="dsp_consultant_company_contact" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_company_contact."'"; ?>autofocus="autofocus"/>
-			</div>
-			<div class="col-xs-12 col-sm-6">
-				<label for="dsp_consultant_phone">Contact Phone Number</label>
-				<input style="width:100%;" type="text" <?php  echo "required='required'"; ?> id="dsp_consultant_phone" name="dsp_consultant_phone" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_company_phone."'"; ?>autofocus="autofocus"/>
+		</div>
+		
+		<?php if($postTaxonomyTerm  == 'participants'){ ?>    <!-- Participants Fields -->
+		
+		<div class="row">
+			<div class="col-xs-12">
+				<label for="dsp_participant_visibly_participating">1. Visibly participating in the Yocto Project community. Please describe your participation in the comments section below.</label>
+				<input type="radio" required="required" id="dsp_participant_visibly_participating-yes" name="dsp_participant_visibly_participating" value="yes" /> Yes
+				<input type="radio" required="required" id="dsp_participant_visibly_participating-no" name="dsp_participant_visibly_participating" value="no" /> No
+			</div>	
+		</div>		
+		<div class="row">
+			<div class="col-xs-12">
+				<label for="dsp_participant_supporting_objectives">2. Working towards and supporting the aims and objectives of the Yocto Project. These include decreasing the fragmentation of embedded ecosystem and focusing around a common shared set of tools, formats and best practices. We want to avoid multiple groups of people repeating the same work and have one set of great tools rather than multiple tools with drawbacks.</label>
+				<input type="radio" required="required" id="dsp_participant_supporting_objectives-yes" name="dsp_participant_supporting_objectives" value="yes" /> Yes
+				<input type="radio" required="required" id="dsp_participant_supporting_objectives-no" name="dsp_participant_supporting_objectives" value="no" /> No
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-xs-12 col-sm-6">
-				<label for="djd_site_post_link">Visibly participating in the Yocto Project community. Please describe your participation in the comments section below.</label>
+			<div class="col-xs-12">
+				<label for="dsp_participant_commited_to_promoting">3. Committed to promoting the OpenEmbedded architecture, layer model, and BSP format.</label>
+				<input type="radio" required="required" id="dsp_participant_commited_to_promoting-yes" name="dsp_participant_commited_to_promoting" value="yes" /> Yes
+				<input type="radio" required="required" id="dsp_participant_commited_to_promoting-no" name="dsp_participant_commited_to_promoting" value="no" /> No
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12">
+				<label for="dsp_participant_publicly_accessible">4. Publicly accessible layers for this project/organization are listed in the OpenEmbedded Layers index (http://layers.openembedded.org).</label>
 				<input type="radio" required="required" id="dsp_participant_publicly_accessible-yes" name="dsp_participant_publicly_accessible" value="yes" /> Yes
 				<input type="radio" required="required" id="dsp_participant_publicly_accessible-no" name="dsp_participant_publicly_accessible" value="no" /> No
 			</div>
 		</div>
-		<?php //} 
-		// Need to add these fields
+		<div class="row">
+			<div class="col-xs-12">
+				<label for="dsp_participant_committed_to_sending">5. Committed to sending to the open source community any patches to OpenEmbedded-Core, BitBake and other Yocto Project layers.</label>
+				<input type="radio" required="required" id="dsp_participant_committed_to_sending-yes" name="dsp_participant_committed_to_sending" value="yes" /> Yes
+				<input type="radio" required="required" id="dsp_participant_committed_to_sending-no" name="dsp_participant_committed_to_sending" value="no" /> No
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12">
+				<label for="dsp_participant_aiming_for_compatibility">6. Prioritizing compatibility and interoperability among different metadata layers.</label>
+				<input type="radio" required="required" id="dsp_participant_aiming_for_compatibility-yes" name="dsp_participant_aiming_for_compatibility" value="yes" /> Yes
+				<input type="radio" required="required" id="dsp_participant_aiming_for_compatibility-no" name="dsp_participant_aiming_for_compatibility" value="no" /> No
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 ">
+				<label for="dsp_participant_non_profit">7. Organization is a small business (up to 60 employees total), non-profit project, or existing Yocto Project member organization.</label>
+				<input type="radio" required="required" id="dsp_participant_non_profit-yes" name="dsp_participant_non_profit" value="yes" /> Yes
+				<input type="radio" required="required" id="dsp_participant_non_profit-no" name="dsp_participant_non_profit" value="no" /> No
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 ">
+				<label for="dsp_participant_explanation">Comments/Explanation.</label>
+				<textarea id="dsp_participant_explanation" name="dsp_participant_explanation" style="width:100%;" rows="8"><?php if ( $my_post ) echo $my_post->dsp_participant_explanation; ?></textarea>
+			</div>
+		</div>
 		
-		// CHECKBOX dsp_consultant_company_description - professional-services  - training - board-support - other
-		// TEXT AREA dsp_consultant_services_offered		
+		<?php }elseif($postTaxonomyTerm  == 'compatible') {  ?> <!-- Compatible Fields -->
 		
-		?>
+		<div class="row">
+			<div class="col-xs-12 ">
+				<label for="dsp_ypcompatible_org_is_eligble">1. Organization is a Yocto Project member at Platinum, Gold, Silver, or Bronze level, or a non-profit open source project.</label>
+				<input type="radio" required="required" id="dsp_ypcompatible_org_is_eligble-yes" name="dsp_ypcompatible_org_is_eligble" value="yes" /> Yes
+				<input type="radio" required="required" id="dsp_ypcompatible_org_is_eligble-no" name="dsp_ypcompatible_org_is_eligble" value="no" /> No
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 ">
+				<label for="dsp_ypcompatible_working_toward_goals">2. Working towards and supporting the aims and objectives of the Yocto Project. These include decreasing the fragmentation of embedded ecosystem and focus around a common shared set of tools, formats and best practices. We want to avoid multiple groups of people repeating the same work and have one set of great tools rather than multiple tools with drawbacks.</label>
+				<input type="radio" required="required" id="dsp_ypcompatible_working_toward_goals-yes" name="dsp_ypcompatible_working_toward_goals" value="yes" /> Yes
+				<input type="radio" required="required" id="dsp_ypcompatible_working_toward_goals-no" name="dsp_ypcompatible_working_toward_goals" value="no" /> No
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 ">
+				<label for="dsp_ypcompatible_promoting">3. Promoting the OpenEmbedded architecture, layer model, and BSP format.</label>
+				<input type="radio" required="required" id="dsp_ypcompatible_promoting-yes" name="dsp_ypcompatible_promoting" value="yes" /> Yes
+				<input type="radio" required="required" id="dsp_ypcompatible_promoting-no" name="dsp_ypcompatible_promoting" value="no" /> No
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 ">
+				<label for="dsp_ypcompatible_contributes">4. Organization makes visible contributions in the OpenEmbedded and component projects of the Yocto Project. Please describe your participation in the comments section below.</label>
+				<input type="radio" required="required" id="dsp_ypcompatible_contributes-yes" name="dsp_ypcompatible_contributes" value="yes" /> Yes
+				<input type="radio" required="required" id="dsp_ypcompatible_contributes-no" name="dsp_ypcompatible_contributes" value="no" /> No
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 ">
+				<label for="dsp_ypcompatible_publicly_listed">5. All publicly accessible layers are listed in the OpenEmbedded Layers index (http://layers.openembedded.org).</label>
+				<input type="radio" required="required" id="dsp_ypcompatible_publicly_listed-yes" name="dsp_ypcompatible_publicly_listed" value="yes" /> Yes
+				<input type="radio" required="required" id="dsp_ypcompatible_publicly_listed-no" name="dsp_ypcompatible_publicly_listed" value="no" /> No
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 ">
+				<label for="dsp_ypcompatible_included_build_systems">6. If the project includes build system functionality, BitBake and OpenEmbedded-Core included as components.</label>
+				<input type="radio" required="required" id="dsp_ypcompatible_included_build_systems-yes" name="dsp_ypcompatible_included_build_systems" value="yes" /> Yes
+				<input type="radio" required="required" id="dsp_ypcompatible_included_build_systems-no" name="dsp_ypcompatible_included_build_systems" value="no" /> No
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 ">
+				<label for="dsp_ypcompatible_build_systems_compliant">7. If present, the directories containing BitBake and OpenEmbedded-Core can be clearly identified within the system and only contain those components.</label>
+				<input type="radio" required="required" id="dsp_ypcompatible_build_systems_compliant-yes" name="dsp_ypcompatible_build_systems_compliant" value="yes" /> Yes
+				<input type="radio" required="required" id="dsp_ypcompatible_build_systems_compliant-no" name="dsp_ypcompatible_build_systems_compliant" value="no" /> No
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 ">
+				<label for="dsp_ypcompatible_build_patches_applied">8. All patches applied to BitBake and OpenEmbedded-Core (if present) have been submitted to the open source community.</label>
+				<input type="radio" required="required" id="dsp_ypcompatible_build_patches_applied-yes" name="dsp_ypcompatible_build_patches_applied" value="yes" /> Yes
+				<input type="radio" required="required" id="dsp_ypcompatible_build_patches_applied-no" name="dsp_ypcompatible_build_patches_applied" value="no" /> No
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 ">
+				<label for="dsp_ypcompatible_have_readme">9. All layers contain a README file which details the origin of the layer, its maintainer, where to submit changes, and any dependencies or version requirements.</label>
+				<input type="radio" required="required" id="dsp_ypcompatible_have_readme-yes" name="dsp_ypcompatible_have_readme" value="yes" /> Yes
+				<input type="radio" required="required" id="dsp_ypcompatible_have_readme-no" name="dsp_ypcompatible_have_readme" value="no" /> No
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 ">
+				<label for="dsp_ypcompatible_listed_in_readme">10. All layers build without errors against OpenEmbedded-Core, with only the dependencies/requirements listed in their README file?</label>
+				<input type="radio" required="required" id="dsp_ypcompatible_listed_in_readme-yes" name="dsp_ypcompatible_listed_in_readme" value="yes" /> Yes
+				<input type="radio" required="required" id="dsp_ypcompatible_listed_in_readme-no" name="dsp_ypcompatible_listed_in_readme" value="no" /> No
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 ">
+				<label for="dsp_ypcompatible_successfully_passed">11. All layers have successfully passed the test script yocto-compat-layer.py.</label>
+				<input type="radio" required="required" id="dsp_ypcompatible_successfully_passed-yes" name="dsp_ypcompatible_successfully_passed" value="yes" /> Yes
+				<input type="radio" required="required" id="dsp_ypcompatible_successfully_passed-no" name="dsp_ypcompatible_successfully_passed" value="no" /> No
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 ">
+				<label for="dsp_ypcompatible_bsp_format">12. (For BSPs) The BSP layer follows the format defined in the Yocto Project Board Support Package (BSP) Developers Guide.</label>
+				<input type="radio" required="required" id="dsp_ypcompatible_bsp_format-yes" name="dsp_ypcompatible_bsp_format" value="yes" /> Yes
+				<input type="radio" required="required" id="dsp_ypcompatible_bsp_format-no" name="dsp_ypcompatible_bsp_format" value="no" /> No
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 ">
+				<label for="dsp_ypcompatible_hardware_support">13. Hardware support, configuration (distro) policy, and recipe metadata are separated into different layers which do not depend on each other.</label>
+				<input type="radio" required="required" id="dsp_ypcompatible_hardware_support-yes" name="dsp_ypcompatible_hardware_support" value="yes" /> Yes
+				<input type="radio" required="required" id="dsp_ypcompatible_hardware_support-no" name="dsp_ypcompatible_hardware_support" value="no" /> No
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 ">
+				<label for="dsp_ypcompatible_test_support">14. A test report document is included showing which combinations of layers, recipes, and machines have been tested.</label>
+				<input type="radio" required="required" id="dsp_ypcompatible_test_support-yes" name="dsp_ypcompatible_test_support" value="yes" /> Yes
+				<input type="radio" required="required" id="dsp_ypcompatible_test_support-no" name="dsp_ypcompatible_test_support" value="no" /> No
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 ">
+				<label for="dsp_ypcompatible_linux_kernels">15. Linux kernels are either based around LTSI kernel versions or a Yocto Project kernel version (recommended).</label>
+				<input type="radio" required="required" id="dsp_ypcompatible_linux_kernels-yes" name="dsp_ypcompatible_linux_kernels" value="yes" /> Yes
+				<input type="radio" required="required" id="dsp_ypcompatible_linux_kernels-no" name="dsp_ypcompatible_linux_kernels" value="no" /> No
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 ">
+				<label for="dsp_ypcompatible_builds_with_toolchain">16. Everything builds successfully with the standard toolchain from OE-Core, where the architecture is one supported by OE-Core as standard. This is to ensure that your layers are compatible with OE-Core. It is not required that the OE-Core toolchain be provided to customers or any downstream projects. (recommended)</label>
+				<input type="radio" required="required" id="dsp_ypcompatible_builds_with_toolchain-yes" name="dsp_ypcompatible_builds_with_toolchain" value="yes" /> Yes
+				<input type="radio" required="required" id="dsp_ypcompatible_builds_with_toolchain-no" name="dsp_ypcompatible_builds_with_toolchain" value="no" /> No
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 ">
+				<label for="dsp_ypcompatible_builds_discrepancies">17. Any discrepancies between the layer and the recommendations in documentation or in this form are captured in the test report.</label>
+				<input type="radio" required="required" id="dsp_ypcompatible_builds_discrepancies-yes" name="dsp_ypcompatible_builds_discrepancies" value="yes" /> Yes
+				<input type="radio" required="required" id="dsp_ypcompatible_builds_discrepancies-no" name="dsp_ypcompatible_builds_discrepancies" value="no" /> No
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 ">
+				<label for="dsp_ypcompatible_builds_comments">Comments/Explanation.</label>
+				<textarea id="dsp_ypcompatible_builds_comments" name="dsp_ypcompatible_builds_comments" style="width:100%;" rows="8"><?php if ( $my_post ) echo $my_post->dsp_ypcompatible_builds_comments; ?></textarea>
+			</div>
+		</div>
 		
-		<!-- Link -->
+		<?php }elseif($postTaxonomyTerm  == 'consultants') {  ?> <!-- Consultants Fields -->
 		
+		<div class="row">
+			<div class="col-xs-12">
+				<label for="dsp_consultant_services_offered">Services offered</label>
+				<input type="checkbox" id="professional-services" name="dsp_consultant_services_offered[]" value="professional-services" /> Professional Services
+				<input type="checkbox" id="training" name="dsp_consultant_services_offered[]" value="training" /> Training
+				<input type="checkbox" id="board-support" name="dsp_consultant_services_offered[]" value="board-support" /> Board Support
+				<input type="checkbox" id="other" name="dsp_consultant_services_offered[]" value="other" /> Other
+			</div>
+		</div>
+		<?php } ?>
 		
-		
+	
 		<?php
-		
 
 		if ( is_user_logged_in() || isset($djd_options['djd-guest-cat-select']) ){
 		
@@ -603,7 +822,7 @@ $postTypeName = ucfirst($postTypeNameSingular) . ' ';
 			<?php endif;
 		}
 
-		if ( ($djd_options['djd-guest-info']) && (!is_user_logged_in()) ){ ?>
+		if ( (isset($djd_options['djd-guest-info'])) && (!is_user_logged_in()) ){ ?>
 			<label for="djd_site_post_guest_name"><?php _e('Your Name', 'djd-site-post'); ?></label>
 			<input type="text" required="required" id="djd_site_post_guest_name" name="djd_site_post_guest_name" maxlength="40" />
 
@@ -632,12 +851,15 @@ $postTypeName = ucfirst($postTypeNameSingular) . ' ';
 			</select><br><br>
 		<?php }
 	} ?>
+	<br><br>
 	<button type="submit" class="send-button" id="submit"><?php echo ( $djd_options['djd-send-button'] ? $djd_options['djd-send-button'] : __('Publish', 'djd-site-post') ); ?></button>
-	<button id="refresher" type="reset" onclick="RefreshPage()" class="send-button <?php echo ($sr && $cf['form_ok']) ? 'visible' : ''; ?>"><?php _e('New Post', 'djd-site-post'); ?></button>
-	<p id="success" class="<?php echo ($sr && $cf['form_ok']) ? 'visible' : ''; ?>"><?php echo $djd_options['djd-post-confirmation']; ?></p>
 	<p id="error" class="<?php echo ($sr && !$cf['form_ok']) ? 'visible' : ''; ?>"><?php echo $djd_options['djd-post-fail']; ?></p>
 	</div> <!-- field-wrapper -->
 </form>
+<div>
+	<p id="success" class="<?php echo ($sr && $cf['form_ok']) ? 'visible' : ''; ?>"><?php echo $djd_options['djd-post-confirmation']; ?></p>
+	<button id="refresher" type="reset" onclick="RefreshPage()" class="btn-blue btn send-button <?php echo ($sr && $cf['form_ok']) ? 'visible' : ''; ?>"><?php _e('Submit Another', 'djd-site-post'); ?></button>
+</div>
 <!--<div id="feedback"></div>-->
 <?php } ?>
 <script>

@@ -978,27 +978,118 @@ if (!class_exists("DjdSitePost")) {
 						update_post_meta ($post_success, 'dsp_job_posting_link', $companyPostingLink);
 					}
 					if($djd_post_type == 'members') {
-						$companyName = $_POST["dsp_consultant_company_name"];
-						$companyContact = $_POST["dsp_consultant_company_contact"];
-						$companyPhone = $_POST["dsp_consultant_phone"];
-						$companyEmail = $_POST["dsp_consultant_email"];
-						$companyWebsite = $_POST["dsp_consultant_website"];
+						if($terms == "participants"){
+							// Text Fields
+							$participantsContactName = $_POST["dsp_participant_contact_name"];
+							$participantscontactEmail = $_POST["dsp_participant_contact_email"];
+							$participantsOrgUrl = $_POST["dsp_participant_organization_url"];
+							// Radio Fields
+							$radioParticipantsVisiblyParticipating = $_POST["dsp_participant_visibly_participating"];
+							$radioParticipantsSupportingObjectives = $_POST["dsp_participant_supporting_objectives"];
+							$radioParticipantsCommitedPromoting = $_POST["dsp_participant_commited_to_promoting"];
+							$radioParticipantsPubliclyAccessible = $_POST["dsp_participant_publicly_accessible"];
+							$radioParticipantsCommittedSending = $_POST["dsp_participant_committed_to_sending"];
+							$radioParticipantsAimingCompatibility = $_POST["dsp_participant_aiming_for_compatibility"];
+							$radioParticipantsNonProfit = $_POST["dsp_participant_non_profit"];
+							// Textarea Fields
+							$textAreaParticipantsExplanation = $_POST["dsp_participant_explanation"];
+							
+							// Update  Postmeta Fields
+							update_post_meta ($post_success, 'dsp_participant_contact_name', $participantsContactName);
+							update_post_meta ($post_success, 'dsp_participant_contact_email', $participantscontactEmail);
+							update_post_meta ($post_success, 'dsp_participant_organization_url', $participantsOrgUrl);
+							update_post_meta ($post_success, 'dsp_participant_visibly_participating', $radioParticipantsVisiblyParticipating);
+							update_post_meta ($post_success, 'dsp_participant_supporting_objectives', $radioParticipantsSupportingObjectives);
+							update_post_meta ($post_success, 'dsp_participant_commited_to_promoting', $radioParticipantsCommitedPromoting);
+							update_post_meta ($post_success, 'dsp_participant_publicly_accessible', $radioParticipantsPubliclyAccessible);
+							update_post_meta ($post_success, 'dsp_participant_committed_to_sending', $radioParticipantsCommittedSending);
+							update_post_meta ($post_success, 'dsp_participant_aiming_for_compatibility', $radioParticipantsAimingCompatibility);
+							update_post_meta ($post_success, 'dsp_participant_non_profit', $radioParticipantsNonProfit);
+							update_post_meta ($post_success, 'dsp_participant_explanation', $textAreaParticipantsExplanation);
+							
+
+						}elseif($terms == "compatible"){
+							// Text Fields
+							$compatibleContactName = $_POST["dsp_ypcompatible_contact_name"];
+							$compatibleContactEmail = $_POST["dsp_ypcompatible_contact_email"];
+							$compatibleOrgUrl = $_POST["dsp_ypcompatible_org_url"];
+							$compatibleLayerName = $_POST["dsp_ypcompatible_product_layer_name"];
+							$compatibleLayerUrl = $_POST["dsp_ypcompatible_product_layer_url"];
+							// Radio Fields
+							$radioCompatibleEligible = $_POST["dsp_ypcompatible_org_is_eligble"];
+							$radioCompatibleTowardGoals = $_POST["dsp_ypcompatible_working_toward_goals"];
+							$radioCompatiblePromoting = $_POST["dsp_ypcompatible_promoting"];
+							$radioCompatibleContributes = $_POST["dsp_ypcompatible_contributes"];
+							$radioCompatiblePubliclyListed = $_POST["dsp_ypcompatible_publicly_listed"];
+							$radioCompatibleBuildSystemsIncluded = $_POST["dsp_ypcompatible_included_build_systems"];
+							$radioCompatibleBuildSystemsCompliant = $_POST["dsp_ypcompatible_build_systems_compliant"];
+							$radioCompatiblePatchesApplied = $_POST["dsp_ypcompatible_build_patches_applied"];
+							$radioCompatibleHaveReadme = $_POST["dsp_ypcompatible_have_readme"];
+							$radioCompatibleListedReadme = $_POST["dsp_ypcompatible_listed_in_readme"];
+							$radioCompatibleSuccessfullPassed = $_POST["dsp_ypcompatible_successfully_passed"];
+							$radioCompatibleBspFormat = $_POST["dsp_ypcompatible_bsp_format"];
+							$radioCompatibleHardwareSupport = $_POST["dsp_ypcompatible_hardware_support"];
+							$radioCompatibleTestSupport = $_POST["dsp_ypcompatible_test_support"];
+							$radioLinuxKernels = $_POST["dsp_ypcompatible_linux_kernels"];
+							$radioCompatibleBuildToolchain = $_POST["dsp_ypcompatible_builds_with_toolchain"];
+							$radioCompatibleBuildsDiscrepancies = $_POST["dsp_ypcompatible_builds_discrepancies"];
+							// Textarea Fields
+							$textareaCompatibleExplanation = $_POST["dsp_ypcompatible_builds_comments"];
+							
+							// Update  Postmeta Fields
+							update_post_meta ($post_success, 'dsp_ypcompatible_contact_name', $compatibleContactName);
+							update_post_meta ($post_success, 'dsp_ypcompatible_contact_email', $compatibleContactEmail);
+							update_post_meta ($post_success, 'dsp_ypcompatible_org_url', $compatibleOrgUrl);
+							update_post_meta ($post_success, 'dsp_ypcompatible_product_layer_name', $compatibleLayerName);
+							update_post_meta ($post_success, 'dsp_ypcompatible_product_layer_url', $compatibleLayerUrl);
+							
+							update_post_meta ($post_success, 'dsp_ypcompatible_org_is_eligble', $radioCompatibleEligible);
+							update_post_meta ($post_success, 'dsp_ypcompatible_working_toward_goals', $radioCompatibleTowardGoals);
+							update_post_meta ($post_success, 'dsp_ypcompatible_promoting', $radioCompatiblePromoting);
+							update_post_meta ($post_success, 'dsp_ypcompatible_contributes', $radioCompatibleContributes);
+							update_post_meta ($post_success, 'dsp_ypcompatible_publicly_listed', $radioCompatiblePubliclyListed);
+							update_post_meta ($post_success, 'dsp_ypcompatible_included_build_systems', $radioCompatibleBuildSystemsIncluded);
+							update_post_meta ($post_success, 'dsp_ypcompatible_build_systems_compliant', $radioCompatibleBuildSystemsCompliant);
+							update_post_meta ($post_success, 'dsp_ypcompatible_build_patches_applied', $radioCompatiblePatchesApplied);
+							update_post_meta ($post_success, 'dsp_ypcompatible_have_readme', $radioCompatibleHaveReadme);
+							update_post_meta ($post_success, 'dsp_ypcompatible_listed_in_readme', $radioCompatibleListedReadme);
+							update_post_meta ($post_success, 'dsp_ypcompatible_successfully_passed', $radioCompatibleSuccessfullPassed);
+							update_post_meta ($post_success, 'dsp_ypcompatible_bsp_format', $radioCompatibleBspFormat);
+							update_post_meta ($post_success, 'dsp_ypcompatible_hardware_support', $radioCompatibleHardwareSupport);
+							update_post_meta ($post_success, 'dsp_ypcompatible_test_support', $radioCompatibleTestSupport);
+							update_post_meta ($post_success, 'dsp_ypcompatible_linux_kernels', $radioLinuxKernels);
+							update_post_meta ($post_success, 'dsp_ypcompatible_builds_with_toolchain', $radioCompatibleBuildToolchain);
+							update_post_meta ($post_success, 'dsp_ypcompatible_builds_discrepancies', $radioCompatibleBuildsDiscrepancies);
+							
+							update_post_meta ($post_success, 'dsp_ypcompatible_builds_comments', $textareaCompatibleExplanation);
 						
-						//Participants field
-						$radioPubliclyAccessible = $_POST["dsp_participant_publicly_accessible"];
+						}elseif($terms == "consultants"){
+							// Text Fields
+							$consultantsContactName = $_POST["dsp_consultant_contact_name"];
+							$consultantsContactEmail = $_POST["dsp_consultant_contact_email"];
+							$consultantsContactPhone = $_POST["dsp_consultant_contact_phone"];
+							$consultantsWebsite = $_POST["dsp_consultant_website"];
+							// Address
+							$city = $_POST["djd_site_post_city"];
+							$state = $_POST["djd_site_post_state"];
+							$country = $_POST["djd_site_post_country"];
+							// Checkbox
+							$consultantsServicesOffered = $_POST["dsp_consultant_services_offered"];
+							
+							// Update  Postmeta Fields
+							update_post_meta ($post_success, 'dsp_consultant_contact_name', $consultantsContactName);
+							update_post_meta ($post_success, 'dsp_consultant_contact_email', $consultantsContactEmail);
+							update_post_meta ($post_success, 'dsp_consultant_contact_phone', $consultantsContactPhone);	
+							update_post_meta ($post_success, 'dsp_consultant_website', $consultantsWebsite);
+							
+							update_post_meta ($post_success, 'my_meta_box_city_text', $city);
+					    	update_post_meta ($post_success, 'my_meta_box_state_select', $state);
+					    	update_post_meta ($post_success, 'my_meta_box_country_select', $country);
+					    
+							update_post_meta ($post_success, 'dsp_consultant_services_offered', $consultantsServicesOffered);
 						
-						//$companyDescription = $_POST["dsp_consultant_company_description"];
-						//$companyServices = $_POST["dsp_consultant_services_offered"];
 						
-						update_post_meta ($post_success, 'dsp_consultant_company_name', $companyName);
-						update_post_meta ($post_success, 'dsp_consultant_company_contact', $companyContact);
-						update_post_meta ($post_success, 'dsp_consultant_phone', $companyPhone);	
-						update_post_meta ($post_success, 'dsp_consultant_email', $companyEmail);
-						update_post_meta ($post_success, 'dsp_consultant_website', $companyWebsite);
-						
-						update_post_meta ($post_success, 'dsp_participant_publicly_accessible', $radioPubliclyAccessible);
-						//update_post_meta ($post_success, 'dsp_consultant_company_description', $companyDescription);
-						//update_post_meta ($post_success, 'dsp_consultant_services_offered', $companyServices);
+						}
 					}
 					
 					

@@ -1,8 +1,8 @@
 function ProcessFormAjax() {
-
+	
 	var errorNotice = jQuery('#error'),
-		successNotice = jQuery('#success')
-		refresher = jQuery('#refresher')
+		successNotice = jQuery('#success'),
+		refresher = jQuery('#refresher'),
 		submit = jQuery('#submit');
 	
 	var theLanguage = jQuery('html').attr('lang');
@@ -12,7 +12,6 @@ function ProcessFormAjax() {
 		var btnMsg = 'Update';
 	}
 	
-
 	jQuery("label#quiz_error").hide();
 	if (jQuery("input#djd_quiz").val() !== jQuery("input#djd_quiz_hidden").val()) {
 		jQuery("label#quiz_error").show();

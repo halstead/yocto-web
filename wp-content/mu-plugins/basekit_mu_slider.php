@@ -765,6 +765,116 @@ class BASEKIT_Function_Slider {
 	 //////------>> START - DISPLAY SLIDER FUNCTION <<------//////
 	 public function display_slider_fucntions() {
 	 	
+		function custom_post_slider_function($atts) {
+			$local_atts = shortcode_atts( array(
+				'post_count' => -1,
+		        'post_type' => 'post',
+		        'taxonomy' => 'category',
+		        'terms' => 'uncategorized'
+		    ), $atts );
+			
+			$post_count = $local_atts[ 'post_count' ];
+			$post_type = $local_atts[ 'post_type' ];
+			$post_taxonomy = $local_atts[ 'taxonomy' ];
+			$post_taxonomy_terms = $local_atts[ 'terms' ];
+			
+			if($post_taxonomy == 'uncategorized'){	
+				global $wp_version;	
+				if ( $wp_version < 4.5 ) {
+					$terms = get_terms( $post_taxonomy, array(
+					    'hide_empty' => false,
+					    'fields' => 'id=>slug'
+					    )
+					);
+				}else {
+					$terms = get_terms( array(
+					    'taxonomy' => $post_taxonomy,
+					    'hide_empty' => false,
+					    'fields' => 'id=>slug'
+					    )
+					);
+				}
+			} else {  // if terms not 'all' then show only defined terms in the taxonomy (passed in atts)
+				$terms = $post_taxonomy_terms;
+			}
+			
+			if($post_taxonomy != ''){
+			    $args=array(
+			      'post_type' => $post_type,
+			      'post_status' => 'publish',
+			      'posts_per_page' => $post_count,
+			      'orderby' => 'title',
+			      'order' => 'ASC',
+			      'tax_query' => array(
+						array(
+							'taxonomy' => $post_taxonomy,
+							 'field' => 'slug',
+							 'terms' => $post_taxonomy_terms
+						),
+					   )
+				   //'meta_query' => array($meta_array)
+			    );
+			}else{
+				$args=array(
+			      'post_type' => $post_type,
+			      'post_status' => 'publish',
+			      'posts_per_page' => $post_count,
+			      'orderby' => 'title',
+			      'order' => 'ASC'
+			    );
+			}
+			
+			$obj = get_post_type_object( $post_type );
+			$post_type_singular_name =  $obj->labels->singular_name;
+			$counter = 0;
+			$activeClass = '';
+			$output = '';
+			$my_query = null;
+		    $my_query = new WP_Query($args);
+		    if( $my_query->have_posts() ) {
+		    	$output .= '<div id="carousel-header-' . $post_type . '-' . $post_taxonomy . '" class="carousel slide" data-ride="carousel" style="overflow:hidden">';
+
+				$output .= '<ol class="carousel-indicators">';
+				while ($my_query->have_posts()) : $my_query->the_post();
+				$activeClass = ($counter == 0) ? 'active' : '';
+					$output .= '<li data-target="#carousel-header-' . $post_type . '-' . $post_taxonomy . '" data-slide-to="' . $counter . '"  class="' . $activeClass . '"></li>';
+					//$output .= '<div>' . get_the_title() . '</div>';
+				
+				$counter++;
+				endwhile;
+				$output .= '</ol>';
+				$counter = 0;
+				
+				$output .= '<div class="carousel-inner" role="listbox">';
+				while ($my_query->have_posts()) : $my_query->the_post();
+					$activeClass = ($counter == 0) ? 'active' : '';
+					$output .= '<div class="item ' . $activeClass . '">';
+					$output .= '  	<div class="item-content" style="overflow:hidden;">';
+					$output .= '		<h5>' . get_the_title() . '</h5>';
+					$output .= '		<p>' . get_the_excerpt() . '</p>';
+					if(get_field('dsp_job_posting_link') ){
+						$output .= '				<div class="widgete-link"><a href="' .  get_field('dsp_job_posting_link') . '" class="blue-link" target="_blank">View Job Details</a></div>';
+					}
+					$output .= '		<span class="tag tab-blue">' . $post_type_singular_name . '</span>';
+					$output .= '	</div>';
+					$output .= '</div>';
+				
+				$counter++;
+				endwhile;
+				$output .= '</div>';
+				
+				
+				$output .= '</div>';
+			}else{
+				
+			}
+			
+			wp_reset_postdata();
+			wp_reset_query();
+			return $output;
+		}
+		
+	 	
 		function custom_slider_function($atts) {
 				
 			global $post;
@@ -779,12 +889,12 @@ class BASEKIT_Function_Slider {
 			$output = '';
 			
 			//$output .= "POST: " . $post->ID;
-			$output .= '<div id="carousel-header" class="carousel slide" data-ride="carousel" style="background:#333; overflow:hidden">';
+			$output .= '<div id="carousel-header-' . $slider_id . '" class="carousel slide" data-ride="carousel" style="background:#333; overflow:hidden">';
 			if ( $repeatable_project_fields ) :
 				$output .= '<ol class="carousel-indicators">';
 				foreach ( $repeatable_project_fields as $key => $field ) {
 					$activeClass = ($key == 0) ? 'active' : '';
-					$output .= '<li data-target="#carousel-header" data-slide-to="' . $key . '"  class="' . $activeClass . '"></li>';
+					$output .= '<li data-target="#carousel-header-' . $slider_id . '" data-slide-to="' . $key . '"  class="' . $activeClass . '"></li>';
 				}
 				$output .= '</ol>';
 				
@@ -890,6 +1000,15 @@ class BASEKIT_Function_Slider {
 		}
 		
 		add_shortcode('custom_slider', 'custom_slider_function');
+		add_shortcode('custom_post_slider', 'custom_post_slider_function');
+		
+		
+		//[custom_post_slider post_type="jobs" taxonomy="category"]
+		//[custom_post_slider post_type="events" terms="learn" taxonomy="event-type"] 'post_count' => '-1',
+		        // 'post_type' => 'post',
+		        // 'taxonomy' => 'category',
+		        // 'terms' => 'uncategorized'
+		
 		//add_shortcode('custom_slider', 'custom_slider_function');
 		//add_shortcode('custom_slider', __NAMESPACE__ . '\\custom_slider_function');  //--if in sage them
 		//-->> USAGE EXAMPLE : [custom_slider id="33" transition="slide"]

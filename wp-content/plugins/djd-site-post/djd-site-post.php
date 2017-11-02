@@ -1088,7 +1088,38 @@ if (!class_exists("DjdSitePost")) {
 					    
 							update_post_meta ($post_success, 'dsp_consultant_services_offered', $consultantsServicesOffered);
 						
-						
+						}elseif($terms == "members"){
+							// Text Fields
+							$membersContactName = $_POST["dsp_member_company_contact"];
+							$membersContactEmail = $_POST["dsp_member_company_email"];
+							$membersContactEmail = $_POST["dsp_member_company_phone"];
+							$membersWebsite = $_POST["dsp_member_company_website"];
+							// Address
+							$city = $_POST["djd_site_post_city"];
+							$state = $_POST["djd_site_post_state"];
+							$country = $_POST["djd_site_post_country"];
+							// Radio
+							$radioMembersCompanySize = $_POST["dsp_member_company_size"];
+							$radioMembersCorporateMember = $_POST["dsp_member_corporate_member"];
+							// Text Areas
+							$textAreaMembersUseProject = $_POST["dsp_member_use_project"];
+							$textAreaMembersMembershipHelp = $_POST["dsp_member_membership_help"];
+							
+							
+							update_post_meta ($post_success, 'dsp_member_company_contact', $membersContactName);
+							update_post_meta ($post_success, 'dsp_member_company_email', $membersContactEmail);
+							update_post_meta ($post_success, 'dsp_member_company_phone', $membersContactEmail);
+							update_post_meta ($post_success, 'dsp_member_company_website', $membersWebsite);
+							
+							update_post_meta ($post_success, 'dsp_member_company_size', $radioMembersCompanySize);
+							update_post_meta ($post_success, 'dsp_member_corporate_member', $radioMembersCorporateMember);
+							
+							update_post_meta ($post_success, 'dsp_member_use_project', $textAreaMembersUseProject);
+							update_post_meta ($post_success, 'dsp_member_membership_help', $textAreaMembersMembershipHelp);
+							
+							update_post_meta ($post_success, 'my_meta_box_city_text', $city);
+					    	update_post_meta ($post_success, 'my_meta_box_state_select', $state);
+					    	update_post_meta ($post_success, 'my_meta_box_country_select', $country);
 						}
 					}
 					

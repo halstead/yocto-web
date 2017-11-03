@@ -765,6 +765,23 @@ class BASEKIT_Function_Slider {
 	 //////------>> START - DISPLAY SLIDER FUNCTION <<------//////
 	 public function display_slider_fucntions() {
 	 	
+		
+		function get_custom_excerpt($limit, $source = null){ // Custom Excerpt function by character count
+		    if($source == "content" ? ($excerpt = get_the_content()) : ($excerpt = get_the_excerpt()));
+			    $excerpt = preg_replace(" (\[.*?\])",'',$excerpt);
+			    $excerpt = strip_shortcodes($excerpt);
+			    //$excerpt = strip_tags($excerpt);
+			    if(strlen($excerpt) > $limit){
+			    	$excerpt = substr($excerpt, 0, $limit);
+					$excerpt = substr($excerpt, 0, strripos($excerpt, " "));
+			    	$excerpt = trim(preg_replace( '/\s+/', ' ', $excerpt));
+			    	//$excerpt = $excerpt.'... <a href="'.get_permalink($post->ID).'">more</a>';
+					$excerpt = $excerpt . '...';
+				}
+		    return $excerpt;
+		}
+		
+	 	
 		function custom_post_slider_function($atts) {
 			$local_atts = shortcode_atts( array(
 				'post_count' => -1,
@@ -845,17 +862,20 @@ class BASEKIT_Function_Slider {
 				$output .= '</ol>';
 				$counter = 0;
 				
+				
+				
 				$output .= '<div class="carousel-inner" role="listbox">';
 				while ($my_query->have_posts()) : $my_query->the_post();
+					$excerpt = get_custom_excerpt(85);
 					$activeClass = ($counter == 0) ? 'active' : '';
 					$output .= '<div class="item ' . $activeClass . '">';
 					$output .= '  	<div class="item-content" style="overflow:hidden;">';
 					$output .= '		<h5>' . get_the_title() . '</h5>';
-					$output .= '		<p>' . get_the_excerpt() . '</p>';
+					$output .= '		<p>' . $excerpt . '</p>'; //get_the_excerpt() 
 					if(get_field('dsp_job_posting_link') ){
 						$output .= '				<div class="widgete-link"><a href="' .  get_field('dsp_job_posting_link') . '" class="blue-link" target="_blank">View Job Details</a></div>';
 					}
-					$output .= '		<span class="tag tab-blue">' . $post_type_singular_name . '</span>';
+					$output .= '		<span class="tag tag-blue">' . $post_type_singular_name . '</span>';
 					$output .= '	</div>';
 					$output .= '</div>';
 				

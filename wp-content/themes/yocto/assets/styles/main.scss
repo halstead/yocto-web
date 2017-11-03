@@ -58,12 +58,11 @@ p {
   }
 }
 
-
-
 a {
   font-family: 'Lato', sans-serif;
   &:active, &:visited, &:focus, &:hover {
       text-decoration:none !important;
+      color:inherit;
       h6, p, div {
         text-decoration:none !important;
       }
@@ -81,8 +80,6 @@ p{
     font-weight:700;
   }
 }
-
-
 
 h1,h2,h3,h4,h5,h6 {
   font-family: 'Lato', sans-serif;
@@ -219,7 +216,6 @@ header.banner {
 .padding-block-50-150 {
   padding:0px 150px 0px 50px;
 }
-  
 
 h2.header-large {
   font-size:21px;
@@ -267,7 +263,10 @@ h2.header-large {
     
   &.tag-blue {
     background:$brand-blue;
-    
+    background:#0098db;
+    position: absolute;
+    top: 0px;
+    right: 0px;
   }
 }
 
@@ -857,6 +856,28 @@ a.btn-block h6 {
 #carousel-header span.glyphicon {
   display:none;
 }
+
+/* Experienced Developer */
+
+.home .content-block form {
+    padding:0px;
+    box-sizing: border-box;
+    background: #fff;
+    border: 0px none;
+}
+
+a.btn-light-blue h6:first-child {
+  color:#37424a !important;
+}
+
+.chart {
+  width: 100%; 
+  min-height: 250px;
+}
+
+#carousel-header span.glyphicon {
+  display:none;
+}
 .experienced-developers .shortcode {
   width: 33.3333333333%;
   float:right;
@@ -885,15 +906,26 @@ a.btn-block h6 {
 }
 
 .experienced-developers .carousel {
-  border:2px solid #0098db;
+  border:2px solid $brand-blue;
   
   .item-content{
-    min-height:116px;
+    min-height: 116px;
+    text-align: center;
+    width: 100%;
+    margin: 0px auto;
+    position:relative;
+    padding:0px 12px;
   }
   
-  .overlay-container h5, .experienced-developers .item-content h5 {
+  .overlay-container h5, .item-content h5 {
     margin-top:3%;
     margin-bottom:2px;
+    font-size:22px;
+  }
+  
+  .item-content p {
+    font-size:14px;
+    line-height:17px;
   }
 }
 
@@ -973,65 +1005,6 @@ span.Low {
 
 .activity-block h2.block-title {
         font-size:16px;
-}
-
-/* Experienced Developer */
-
-.home .content-block form {
-    padding:0px;
-    box-sizing: border-box;
-    background: #fff;
-    border: 0px none;
-}
-
-a.btn-light-blue h6:first-child {
-  color:#37424a !important;
-}
-
-.chart {
-  width: 100%; 
-  min-height: 250px;
-}
-
-#carousel-header span.glyphicon {
-  display:none;
-}
-.experienced-developers .shortcode {
-  width: 33.3333333333%;
-  float:right;
-  position: relative;
-  min-height: 1px;
-  padding-left: 15px;
-  padding-right: 15px;
-}
-
-.experienced-developers .content {
-    width: 66.6666666667%;
-    float:left;
-}
-
-.carousel div.active {
-  border-bottom:0px;
-}
-
-.experienced-developers .carousel-control, .experienced-developers .carousel-indicators {
-  display:none;
-}
-
-.experienced-developers .carousel {
-  border:2px solid $brand-blue;
-  
-  .item-content{
-    min-height:116px;
-    text-align:center;
-    width:92%;
-  }
-  
-  .overlay-container h5, .experienced-developers .item-content h5 {
-    margin-top:3%;
-    margin-bottom:2px;
-    font-size:22px;
-  }
 }
 
 

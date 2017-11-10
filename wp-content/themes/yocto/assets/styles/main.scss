@@ -54,7 +54,8 @@ p {
   a {
     text-transform:capitalize;
     font-weight:300;
-    font-size:16px;
+    font-size:14px;
+    color:$brand-blue;
   }
 }
 
@@ -62,7 +63,7 @@ a {
   font-family: 'Lato', sans-serif;
   &:active, &:visited, &:focus, &:hover {
       text-decoration:none !important;
-      color:inherit;
+      color:$brand-blue;
       h6, p, div {
         text-decoration:none !important;
       }
@@ -166,6 +167,13 @@ header.banner {
 
 #carousel-header {
   max-height:340px;
+}
+
+// COLORBOX OVERWRITES
+
+#cboxContent {
+  border:1px solid #c3c3c3;
+  box-sizing:border-box;
 }
 
 
@@ -295,6 +303,10 @@ a.btn-blue, input[type="submit"] {
   &:hover {
     color:$white;
     opacity: 0.7;
+  }
+  
+  &:visited, &:active {
+    color:$white;
   }
   
   h6 {
@@ -458,7 +470,12 @@ img.center {
 
 // HOME CAROUSEL
 
-#carousel-header {
+.home-header .carousel {
+  
+  span.glyphicon {
+    display:none;
+  }
+
   .carousel-control {
     background-image:none;
   }
@@ -715,8 +732,20 @@ nav.in ul#menu-primary-navigation {
   
   p {
     font-size:14px;
-    color: $text-grey !important;
+    color: $text-grey;
     text-transform: none;
+    
+    a {
+      color: $brand-blue;
+      font-size:14px;
+      &.blue-link {
+        font-size:12px;
+      }
+    }
+  }
+  
+  span.blue-link {
+    font-size:12px;
   }
 }
 
@@ -920,12 +949,13 @@ a.btn-light-blue h6:first-child {
   .overlay-container h5, .item-content h5 {
     margin-top:3%;
     margin-bottom:2px;
-    font-size:22px;
+    font-size:15px;
   }
   
   .item-content p {
-    font-size:14px;
+    font-size:13px;
     line-height:17px;
+    margin-bottom:6px;
   }
 }
 
@@ -934,14 +964,34 @@ a.btn-light-blue h6:first-child {
 
 .activity-block {
   padding-top:0px;
+  
+  .div.table-row {
+    padding-top: 11px;
+    padding-bottom: 11px;
+  }
+  
+  div.row-header {
+    border-top:1px solid $brand-gray;
+    padding-top:0px;
+    padding-bottom:0px;
+  }
+  
+  div.table-row {
+    margin-bottom:0px;
+    padding:11px 10px;
+    border-bottom:1px solid $brand-gray;
+    border-left:1px solid $brand-gray;
+    border-right:1px solid $brand-gray;
+    overflow:hidden;
+  }
 }
 
 .activity-table-tab-container {
   margin-left:14px;
   padding-top:3px;
   
-  .active {
-    border-bottom:2px solid $brand-blue;
+  a.active {
+    border-bottom:2px solid $brand-blue !important;
   }
   
   .activity-table-tab {
@@ -952,20 +1002,6 @@ a.btn-light-blue h6:first-child {
   }
 }
 
-div.row-header {
-  border-top:1px solid $brand-gray;
-  padding-top:0px;
-  padding-bottom:0px;
-}
-
-div.table-row {
-  margin-bottom:0px;
-  padding:12px 10px;
-  border-bottom:1px solid $brand-gray;
-  border-left:1px solid $brand-gray;
-  border-right:1px solid $brand-gray;
-  overflow:hidden;
-}
 
 .activity-table div.table-row a {
   color:#0098db;
@@ -1201,7 +1237,7 @@ select.header-select{
   text-transform: uppercase;
   font-weight: 700;  
   margin-left:6px;
-   background:$brand-grey-background;
+  background:$brand-grey-background;
    
   &.white-background {
     background:$white;
@@ -1610,14 +1646,18 @@ div#footer {
 div.table-row {
   margin-bottom:0px;
   padding:0px 10px;
-  border-bottom:1px solid #ccced0;
+  border-bottom:1px solid $brand-gray;
   overflow:hidden;
-  padding-top: 20px;
-  padding-bottom: 20px;
+  padding-top: 18px;
+  padding-bottom: 18px;
+  
+  &:first-child {
+    border-top:1px solid $brand-gray;
+  }
 }
 
 div.table-row a {
-  color:#0098db;
+  color:$brand-blue;
 }
 div.table-row p {
   font-size:12px;
@@ -1924,6 +1964,7 @@ footer.content-info .container .conent-inner {
 
 
 }
+
   
 /* Medium Devices, Desktops */
 @media only screen and (min-width : 992px){
@@ -1946,7 +1987,7 @@ footer.content-info .container .conent-inner {
   }
     
   .narrow-double-block {
-    padding:10px 140px;
+    padding:10px 90px;
   }   
   
   .narrow-block {

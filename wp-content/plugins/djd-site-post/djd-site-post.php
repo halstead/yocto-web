@@ -628,7 +628,7 @@ if (!class_exists("DjdSitePost")) {
 						//$output .= '				<div><strong>Contact Email: </strong>' .  get_field('dsp_job_email') . '</div>';
 						$output .= '			</div>';
 						$output .= '			<div class="col-xs-12 col-sm-4">';	
-						$output .= '				<div class="pull-right"><a href="' .  get_field('dsp_job_posting_link') . '" class="btn btn-blue">View Job Details</a></div>';
+						$output .= '				<div class="pull-right"><a href="' .  get_field('dsp_job_posting_link') . '" class="btn btn-blue" target="_blank">View Job Details</a></div>';
 						$output .= '			</div>';
 						$output .= '		</div>';
 					}
@@ -638,7 +638,7 @@ if (!class_exists("DjdSitePost")) {
 
 					$output .= '<div class="half-block">';
 					if( get_field('dsp_event_link') && $dynamic_post_widget == 'true' ):
-						$output .= '<a href="' .  get_field('dsp_event_link') . '" class="inline-block width:100%;">';
+						$output .= '<a href="' .  get_field('dsp_event_link') . '" class="inline-block width:100%;" target="_blank">';
 					endif;
 					$output .= '	<div class="block-copy col-sm-12">';
 					

@@ -564,6 +564,9 @@
 		jQuery.getJSON( url, { csurl: docsURL}, function(data){ //, dataType: "json"
 			buildSections(data);
 		});
+      },
+      finalize: function() {
+        // JavaScript to be fired on the home page, after the init JS
       }
     },
     // downloads
@@ -847,6 +850,296 @@
 			});
 		}	
 		
+      },
+      finalize: function() {
+        // JavaScript to be fired on the home page, after the init JS
+      }
+    },
+    // downloads archive
+    'archived-releases': { 
+      init: function() {
+      	console.log("Download Archive Page");
+      	//// Release Scripts ////
+		new Clipboard('.btn');
+
+ 		var url = '/wp-content/themes/yocto/proxy.php';
+  		var releaseURL = 'http://api-v1.yoctoproject.org/api/downloads?release%5B%5D=57';
+		
+		var releaseObjectArray = [];
+		var releaseCurrentVersion = '';
+
+
+		function buildDropdown(tableData){
+			var selectHtml = '';
+			var hasResults = false;
+			
+			selectHtml += '<h2 style="display:inline-block;" class="block-title">Release</h2><select id="releaseSelect" name="release-select" class="header-select white-background" style="font-size:18px; height:36px; margin-left:0px; display:inline-block;">';
+			jQuery.each(tableData.nodes, function(i, obj) {
+				if(i === 0) {
+					releaseCurrentVersion = obj.node.field_release_number;
+				}
+	            var releaseNumber = obj.node.field_release_number + ' '.trim();
+				var releaseNumberClass = 'ver-' + releaseNumber.split('.').join('-');
+				
+				var release = {releaseTitle:obj.node.title, releaseVersion:obj.node.field_release_number, releaseVersionClass:releaseNumberClass, releaseGitURL:obj.node.field_git_url,  releaseDownloadURL:obj.node.field_download_urls, releaseDate:obj.node.releasedate, releaseInfo:obj.node.field_errata};
+				releaseObjectArray[i] = release;
+				
+				var releaseDate = releaseObjectArray[i].releaseDate;
+				var currentReleaseDateArray = releaseDate.split(" ");
+				releaseDate =  currentReleaseDateArray[0].replace(/-/g, '.');
+				selectHtml += '<option poky-version="field_poky_version" data-release-number="' + obj.node.field_release_number + '" value="' + obj.node.title + '">' + obj.node.title + ' - ' + releaseDate + '</option>';
+			});
+			selectHtml += '</select>';
+			
+			jQuery("#dropdownContainer").html(selectHtml);
+			jQuery("#versionCloneInput").val(releaseObjectArray[0].releaseGitURL);
+			jQuery("#versionDownloadButton").attr('href', releaseObjectArray[0].releaseDownloadURL);
+			jQuery("#versionDownloadButton").find('span').text('Download ' + releaseObjectArray[0].releaseTitle );
+			
+			jQuery("#versonInfoButton").find('span').text('Release Information - ' + releaseObjectArray[0].releaseTitle );
+			jQuery("#versonInfoButton").attr('data-target', releaseObjectArray[0].releaseVersionClass);
+		}
+	
+		
+		jQuery('#dropdownContainer').on('change', 'select#releaseSelect', function(){
+			var releaseNumber = jQuery(this).find(':selected').data('release-number');
+            releaseNumber = releaseNumber + ' '.trim();
+			var releaseNumberClass = 'ver-' + releaseNumber.split('.').join('-');
+			var numOfReleases = releaseObjectArray.length;
+			
+			jQuery( ".tool-blocks" ).hide();
+			jQuery( "." + releaseNumberClass).show();
+
+			//console.log(releaseNumberClass);
+			for (var i = 0; i < numOfReleases; i++) {
+			    if(releaseObjectArray[i].releaseVersion === releaseNumber){
+					jQuery("#versionCloneInput").val(releaseObjectArray[i].releaseGitURL);
+					jQuery("#versionDownloadButton").attr('href', releaseObjectArray[i].releaseDownloadURL);
+					jQuery("#versionDownloadButton").find('span').text('Download ' + releaseObjectArray[i].releaseTitle);
+					
+					jQuery("#versonInfoButton").find('span').text('Release Information - ' + releaseObjectArray[i].releaseTitle );
+					jQuery("#versonInfoButton").attr('data-target', releaseObjectArray[i].releaseVersionClass);
+			    }
+			}
+		});
+		
+		
+		jQuery('.release-section').on('click', '#versonInfoButton', function(e){
+			e.preventDefault();
+			var selectedReleaseVersionClass = jQuery(this).attr('data-target');
+			var numOfReleases = releaseObjectArray.length;
+			for (var i = 0; i < numOfReleases; i++) {
+				if(releaseObjectArray[i].releaseVersionClass === selectedReleaseVersionClass){
+ 					 //var releaseInfoConverted = releaseObjectArray[i].releaseInfo.replace(/(?:\\r\\n|\\r|\\n)/g, '<br />');// if used in blockbuilder 
+					 var releaseInfoConverted = releaseObjectArray[i].releaseInfo.replace(/(?:\r\n|\r|\n)/g, '<br />'); // if used in theme
+					 jQuery("#releaseInfoContainer h3, #releaseInfoContainer p").empty();
+					 jQuery("#releaseInfoContainer h3").text(releaseObjectArray[i].releaseTitle);
+					 jQuery("#releaseInfoContainer p").html(releaseInfoConverted);
+					 jQuery.colorbox({inline:true, href:'#releaseInfoContainer', width:"80%"});
+				}
+			} 
+		});
+		
+		
+ 		jQuery.getJSON( url, { csurl: releaseURL}, function(data){ //, dataType: "json"
+			buildDropdown(data);
+		});
+		
+		
+		//// Tools Scripts ////
+		
+		
+		//var url = '/wp-content/themes/yocto/proxy.php';
+		var toolsURL = 'http://api-v1.yoctoproject.org/tools-api';
+		var toolsObjectArray = [];
+		
+		
+		function trimText(input, limit){
+			var text = input.trim();
+			var maxLength = limit; //300;
+			var output = '';
+			if(text.length > maxLength){
+	            output = text.substring(0, maxLength);
+				output = output + '... <a href="/" class="tools-read-more blue-link">Read More &raquo;</a>';
+			}else{
+				output = text;
+			}	
+			return output;
+		}
+		
+		
+		jQuery('#downloadToolsContainer').on('click', '.tools-read-more', function(e){
+			e.preventDefault();
+			
+			
+			var releaseNotesFull = jQuery(this).closest('.grid-block').find('.releaseNotesFull');
+			//jQuery.colorbox({inline:true, href:'#releaseInfoContainer'});
+			jQuery.colorbox({inline:true, href:releaseNotesFull, width:"80%"});
+		
+	    });
+		
+
+		function buildToolsSection(tableData){		
+			var linkHtml = '';
+			var latestVersion = '';
+			var toolsObjectArray = [];
+		
+			jQuery.each(tableData.nodes, function(i, obj) {
+				var showAmount = 100;
+				if(i < showAmount){
+
+					var releaseVersionClean = obj.node.field_yocto_version.trim();
+					var releaseVersionArray = releaseVersionClean.split(' ');
+					var releaseVersion = releaseVersionArray[2];
+					var releaseClass = 'ver-' + releaseVersion.split('.').join('-');
+					var releaseNotes = obj.node.field_release_notes.trim();
+					//console.log('Version' + releaseVersion);
+				
+					var toolItem = {docTitle:obj.node.Tool, docDownloadLink:obj.node.field_download_urls, docVersion:releaseVersion, docClass:releaseClass, docReleaseNotes:releaseNotes};
+					toolsObjectArray[i] = toolItem;
+				}
+			});
+
+
+			function addToolBlocks(sectionArray, sectionContainerID){
+				var toolsHtml = "";
+				var excerpt = '';
+				var sectionArrayLength = sectionArray.length;
+				
+				for (var i = 0; i < sectionArrayLength; i++) {
+					excerpt  = trimText(sectionArray[i].docReleaseNotes, 150);
+					toolsHtml += '<div class="col-xs-12 col-sm-6 col-md-3 documents tool-blocks custom-block ' + sectionArray[i].docClass + '">';	
+					toolsHtml += '		<div class="grid-block"><div class="grid-featured-image-container"></div>';			
+					toolsHtml += '			<div class="grid-block-copy" style="position:relative;">';
+					toolsHtml += '				<h6>' + sectionArray[i].docTitle + '</h6>';			
+					toolsHtml += '				<p>' + excerpt + '</p>';
+					toolsHtml += '				<a href="' + sectionArray[i].docDownloadLink + '" class="btn btn-blue" target="_blank" style="display:block; width:100%; padding:4px; position:absolute; left:0px; bottom:0px;"><img src="/wp-content/uploads/2017/08/icon-btn-download.png" style="width:auto !important;"/> Download</a>';	
+					toolsHtml += '			</div>';
+					toolsHtml += '			<div class="hide"><div class="releaseNotesFull" style="max-width:740px; padding:20px;"><p>' + sectionArray[i].docReleaseNotes + '</p><a href="' + sectionArray[i].docDownloadLink + '" class="btn btn-blue" target="_blank" style="padding:4px 20px;"><img src="/wp-content/uploads/2017/08/icon-btn-download.png" style="width:auto !important;"/> Download</a></div></div>';	
+					toolsHtml += '		</div>';
+					toolsHtml += '</div>';
+				}
+				jQuery("#" + sectionContainerID).html(toolsHtml);
+			}
+			
+			addToolBlocks(toolsObjectArray, 'downloadToolsContainer');
+			
+			// initial config
+			releaseCurrentVersion = (releaseCurrentVersion + ' ').trim();
+			var documentClass = 'ver-' + releaseCurrentVersion.split('.').join('-');
+			jQuery( ".tool-blocks" ).hide();
+			jQuery( "." + documentClass).show();
+		}
+		
+		
+		jQuery.getJSON( url, { csurl: toolsURL}, function(data){ //, dataType: "json"
+			buildToolsSection(data);
+		});
+		
+		
+		//// Layers Scripts ////
+		
+		
+ 		//var url = '/wp-content/themes/yocto/proxy.php';
+  		var layersURL = 'https://layers.openembedded.org/layerindex/api/layerItems/?format=json';      
+ 		var jsonData;
+		
+		function buildTable(layerData, searchTerm){
+			var layerTableHtml = '';
+			var hasResults = false;
+			//if(searchTerm !== 'all'){
+				//var searchTitleString = '<h3>Search Results For: ' + searchTerm + '</h3>'
+				//jQuery('.search-title').html(searchTitleString);
+				//}
+			jQuery.each(layerData, function(i, obj) {
+			  var LayerType = '';
+  			  switch (obj.layer_type) { 
+  			  	case 'A': 
+  					LayerType = 'Base';
+  			  		break;
+  			  	case 'B': 
+  			  		LayerType = 'Machine (BSP)';
+  			  		break;
+  			  	case 'M': 
+  			  		LayerType = 'Miscellaneous';
+  			  		break;
+  			  	case 'D': 
+  			  		LayerType = 'Distribution';
+  			  		break;
+  			  	case 'S': 
+  			  		LayerType = 'Software';
+  			  		break;
+  			  	default:
+  			  		LayerType = obj.layer_type;
+  			  }
+			  if(searchTerm === 'all'){
+				  hasResults = true;
+				  layerTableHtml += '<div class="table-row" style="border-bottom:1px solid #ccced0;">';
+				  layerTableHtml += '	<div class="col-xs-12 col-sm-2"><a href="' + obj.vcs_web_url + '">' + obj.name + '</a></div>';
+				  layerTableHtml += '	<div class="col-xs-12 col-sm-4"><p>' + obj.summary + '</p></div>';
+				  layerTableHtml += '	<div class="col-xs-12 col-sm-2"><p>' + LayerType + '</p></div>';
+				  layerTableHtml += '	<div class="col-xs-12 col-sm-4"><p>' + obj.vcs_url + '</p></div>';
+				  layerTableHtml += '</div>';
+			  }else{
+				  searchTerm = searchTerm.toLowerCase();
+				  //if ((obj.name.toLowerCase().indexOf(searchTerm) >= 0) || (obj.summary.toLowerCase().indexOf(searchTerm) >= 0) || (obj.vcs_url.toLowerCase().indexOf(searchTerm) >= 0) || (LayerType.toLowerCase().indexOf(searchTerm) >= 0)){
+					if (LayerType.toLowerCase().indexOf(searchTerm) >= 0){
+					  hasResults = true;
+					  layerTableHtml += '<div class="table-row" style="border-bottom:1px solid #ccced0;">';
+					  layerTableHtml += '	<div class="col-xs-12 col-sm-2"><a href="' + obj.vcs_web_url + '">' + obj.name + '</a></div>';
+					  layerTableHtml += '	<div class="col-xs-12 col-sm-4"><p>' + obj.summary + '</p></div>';
+					  layerTableHtml += '	<div class="col-xs-12 col-sm-2"><p>' + LayerType + '</p></div>';
+					  layerTableHtml += '	<div class="col-xs-12 col-sm-4"><p>' + obj.vcs_url + '</p></div>';
+					  layerTableHtml += '</div>';
+				  }  
+			  }
+			  
+			  
+			});
+			if(hasResults === false){
+			 layerTableHtml += '<div class="table-row" style="border-bottom:1px solid #ccced0;">No Search Results for '+ searchTerm + '.</div>';
+			}
+			jQuery('#layerTable').html(layerTableHtml);
+		}
+
+		
+		var getUrlParameter = function getUrlParameter(sParam) {
+		    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+		        sURLVariables = sPageURL.split('&'),
+		        sParameterName,
+		        i;
+
+		    for (i = 0; i < sURLVariables.length; i++) {
+		        sParameterName = sURLVariables[i].split('=');
+
+		        if (sParameterName[0] === sParam) {
+		            return sParameterName[1] === undefined ? true : sParameterName[1];
+		        }
+		    }
+		};
+		
+		var searchTerm = 'bsp';//getUrlParameter('searchTerm'); 
+		
+		if(searchTerm !== undefined){
+			jQuery.getJSON({ dataType: 'json', url: layersURL}, function(data){
+				buildTable(data, searchTerm);
+			})
+			.fail(function(jqXHR, textStatus, errorThrown) {
+			       console.log("error " + textStatus);
+			       console.log("incoming Text " + jqXHR.responseText);
+			});
+		}else{
+			jQuery.getJSON({ dataType: 'json', url: layersURL}, function(data){
+				buildTable(data, 'all');
+			  })
+			.fail(function(jqXHR, textStatus, errorThrown) {
+			       console.log("error " + textStatus);
+			       console.log("incoming Text " + jqXHR.responseText);
+			});
+		}
+      },
+      finalize: function() {
+        // JavaScript to be fired on the home page, after the init JS
       }
     }
   };

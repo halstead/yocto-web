@@ -76,7 +76,7 @@ a {
 p{
   strong{
     color:$header-black;
-    margin-bottom: 24px;
+    // margin-bottom: 24px;
     display: inline-block;
     font-weight:700;
   }
@@ -1066,6 +1066,10 @@ select.header-select{
   margin-left:6px;
 }
 
+ body.archived-releases select.header-select {
+  color: #bc1913;
+}
+
 
 /* Layer styles*/
 
@@ -1336,6 +1340,10 @@ div.gsst_b, div.gsst_a div.gscb_a {
    padding: 0px !important;
  }
 
+body.archived-documents select.header-select {
+  color: #bc1913;
+}
+
 
 // PAGE - COMMUNITY
 
@@ -1477,6 +1485,7 @@ div.member-level-block{
   
   .custom-block{
     margin-bottom:15px;
+    min-height:195px;
   }
 }
 
@@ -1493,7 +1502,7 @@ div.platinum-member .container {
 }
 div.platinum-member .grid-featured-image-container img {
   width:100%;
-  max-width:243px;
+  max-width:283px;
   display:block;
   margin:0px auto;
 }

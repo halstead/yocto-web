@@ -464,9 +464,6 @@ if (!class_exists("DjdSitePost")) {
 	}
 
 	
-	
-	
-	
 	////// SHORTCODES //////
 	
 	function get_custom_excerpt($limit, $source = null){ // Custom Excerpt function by character count
@@ -591,49 +588,63 @@ if (!class_exists("DjdSitePost")) {
 				
 				if($dynamic_post_type == 'jobs'){
 					
-					//get_the_title()
-					// djd_site_company_name
-					// djd_site_company_contact
-					// djd_site_phone
-					// djd_site_website
-					// djd_site_email
-					// djd_site_posting_link
-					$output .= '<div class="half-block">';
-					$output .= '	<div class="block-copy col-sm-12">';
+					$status;
+					$datePublished = get_the_date( 'Y-m-d' );
+					$dateCurrent = date("Y-m-d");
 					
-					if( get_field('dsp_job_website') ):
-						$output .= '		<h2 class="title" style="margin-bottom:5px;"><a href="' .  get_field('dsp_job_website') . '">' .  get_field('dsp_job_company_name') . '</a></h2>';
-					else:
-						$output .= '		<h2 class="title" style="margin-bottom:5px;">' .  get_field('dsp_job_company_name') . '</h2>';
-					endif;
 					
-					if( get_field('dsp_job_posting_link') ):
-						$output .= '		<h4 class="title" style="margin-bottom:5px !important;"><a href="' .  get_field('dsp_job_posting_link') . '">' .  get_the_title() . '</a></h4>';
-					else:
-						$output .= '		<h4 class="title" style="margin-bottom:5px !important;">' .  get_the_title() . '</h4>';
-					endif;	
-					
+					if(strtotime($datePublished) > strtotime('-30 days')) {
+					    $status = "keep";
+						//get_the_title()
+						// djd_site_company_name
+						// djd_site_company_contact
+						// djd_site_phone
+						// djd_site_website
+						// djd_site_email
+						// djd_site_posting_link
+						$output .= '<div class="half-block">';
+						$output .= '	<div class="block-copy col-sm-12">';
+						
+						if( get_field('dsp_job_website') ):
+							$output .= '		<h3 class="title" style="margin-bottom:5px;"><a href="' .  get_field('dsp_job_website') . '">' .  get_field('dsp_job_company_name') . '</a></h2>';
+						else:
+							$output .= '		<h3 class="title" style="margin-bottom:5px;">' .  get_field('dsp_job_company_name') . '</h2>';
+						endif;
+						
+						if( get_field('dsp_job_posting_link') ):
+							$output .= '		<h3 class="title" style="margin-bottom:5px !important;"><a href="' .  get_field('dsp_job_posting_link') . '">' .  get_the_title() . '</a></h4>';
+						else:
+							$output .= '		<h3 class="title" style="margin-bottom:5px !important;">' .  get_the_title() . '</h4>';
+						endif;	
+						
+						
+						//$output .= '		<p>Published Date: ' . $datePublished . '</p>';
+						//$output .= '		<p>Current Date: ' . $dateCurrent . '</p>';
+						//$output .= '		<p>Status: ' . $status . '</p>';
+						$output .= '		<p>' . get_the_excerpt() . '</p>';
+						
 	
-					$output .= '		<p>' . get_the_excerpt() . '</p>';
-					
-
-					$output .= '		<p class="date">' . get_field('my_meta_box_city_text') .  ', ' . $state .  '</p>';
-					$output .= '		<p class="date" style="margin-bottom:10px;">' . $country .  '</p>';
-					
-					if($dynamic_post_widget == 'false'){
-						$output .= '		<div class="row">';
-						$output .= '			<div class="col-xs-12 col-sm-8"><p class="details">';  
-						//$output .= '				<div><strong>Contact Name: </strong>' .  get_field('dsp_job_company_contact') . '</div>';
-						//$output .= '				<div><strong>Contact Phone: </strong>' .  get_field('dsp_job_phone') . '</div>';
-						//$output .= '				<div><strong>Contact Email: </strong>' .  get_field('dsp_job_email') . '</div>';
-						$output .= '			</div>';
-						$output .= '			<div class="col-xs-12 col-sm-4">';	
-						$output .= '				<div class="pull-right"><a href="' .  get_field('dsp_job_posting_link') . '" class="btn btn-blue" target="_blank">View Job Details</a></div>';
-						$output .= '			</div>';
-						$output .= '		</div>';
+						$output .= '		<p class="date">' . get_field('my_meta_box_city_text') .  ', ' . $state .  '</p>';
+						$output .= '		<p class="date" style="margin-bottom:10px;">' . $country .  '</p>';
+						
+						if($dynamic_post_widget == 'false'){
+							$output .= '		<div class="row">';
+							$output .= '			<div class="col-xs-12 col-sm-8"><p class="details">';  
+							//$output .= '				<div><strong>Contact Name: </strong>' .  get_field('dsp_job_company_contact') . '</div>';
+							//$output .= '				<div><strong>Contact Phone: </strong>' .  get_field('dsp_job_phone') . '</div>';
+							//$output .= '				<div><strong>Contact Email: </strong>' .  get_field('dsp_job_email') . '</div>';
+							$output .= '			</div>';
+							$output .= '			<div class="col-xs-12 col-sm-4">';	
+							$output .= '				<div class="pull-right"><a href="' .  get_field('dsp_job_posting_link') . '" class="btn btn-blue" target="_blank">View Job Details</a></div>';
+							$output .= '			</div>';
+							$output .= '		</div>';
+						}
+						$output .= '	</div>';
+						$output .= '</div>';
+					}else{
+						$status = "remove";
 					}
-					$output .= '	</div>';
-					$output .= '</div>';					
+					
 				}else if($dynamic_post_type == 'events'){
 
 					$output .= '<div class="half-block">';

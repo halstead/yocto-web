@@ -594,8 +594,9 @@
 				}
 	            var releaseNumber = obj.node.field_release_number + ' '.trim();
 				var releaseNumberClass = 'ver-' + releaseNumber.split('.').join('-');
+				var releaseInfoCombined = obj.node.field_errata + obj.node.field_security_fixes + obj.node.field_features + obj.node.field_package_updates;
 				
-				var release = {releaseTitle:obj.node.title, releaseVersion:obj.node.field_release_number, releaseVersionClass:releaseNumberClass, releaseGitURL:obj.node.field_git_url,  releaseDownloadURL:obj.node.field_download_urls, releaseDate:obj.node.releasedate, releaseInfo:obj.node.field_errata};
+				var release = {releaseTitle:obj.node.title, releaseVersion:obj.node.field_release_number, releaseVersionClass:releaseNumberClass, releaseGitURL:obj.node.field_git_url,  releaseDownloadURL:obj.node.field_download_urls, releaseDate:obj.node.releasedate, releaseInfo:releaseInfoCombined};
 				releaseObjectArray[i] = release;
 				
 				var releaseDate = releaseObjectArray[i].releaseDate;
@@ -880,8 +881,9 @@
 				}
 	            var releaseNumber = obj.node.field_release_number + ' '.trim();
 				var releaseNumberClass = 'ver-' + releaseNumber.split('.').join('-');
+				var releaseInfoCombined = obj.node.field_errata + obj.node.field_security_fixes + obj.node.field_features + obj.node.field_package_updates;
 				
-				var release = {releaseTitle:obj.node.title, releaseVersion:obj.node.field_release_number, releaseVersionClass:releaseNumberClass, releaseGitURL:obj.node.field_git_url,  releaseDownloadURL:obj.node.field_download_urls, releaseDate:obj.node.releasedate, releaseInfo:obj.node.field_errata};
+				var release = {releaseTitle:obj.node.title, releaseVersion:obj.node.field_release_number, releaseVersionClass:releaseNumberClass, releaseGitURL:obj.node.field_git_url,  releaseDownloadURL:obj.node.field_download_urls, releaseDate:obj.node.releasedate, releaseInfo:releaseInfoCombined};
 				releaseObjectArray[i] = release;
 				
 				var releaseDate = releaseObjectArray[i].releaseDate;

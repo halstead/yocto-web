@@ -79,7 +79,6 @@ $postTypeName = ucfirst($postTypeNameSingular) . ' ';
 //echo 'name: ' . $djd_options['djd-title'] . $djd_options['djd-form-name'];
 
 ?>
-<h2>Jobs Form</h2>
 <form id="site_post_form" class="djd_site_post_form bordered" method="post" action="<?php echo admin_url('admin-ajax.php'); ?>" enctype="multipart/form-data">
 	<p hidden="hidden" class="form_error_message"></p>
 	<input type="hidden" name="djd-our-id" <?php echo ( $my_post ? "value='".$my_post->ID."'" : "value='".$djd_post_id."'" ); ?> />
@@ -90,7 +89,7 @@ $postTypeName = ucfirst($postTypeNameSingular) . ' ';
 		<a style="float: right;" href="<?php echo wp_login_url( get_permalink() ); ?>" title="Login">Login</a>
 	<?php } ?>
 	<div id="field-wrapper">
-		<h4><?php echo$GLOBALS['dynamic_post_title'] ?></h4>
+		<h4><?php echo $GLOBALS['dynamic_post_title'] ?></h4>
 		<!-- <legend><?php //echo ( $djd_options['djd-form-name'] ? $djd_options['djd-form-name'] : __('Frontend Post', 'djd-site-post') ); ?></legend> -->
 		<label for="djd_site_post_title"><?php echo $postTypeName . ( $djd_options['djd-title'] ? $djd_options['djd-title'] : __('Title', 'djd-site-post') ); ?></label>
 		<input type="text" <?php if ( $djd_options['djd-title-required'] == "1" ) echo "required='required'"; ?> id="djd_site_post_title" name="djd_site_post_title" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_title."'"; ?>autofocus="autofocus"/>
@@ -596,14 +595,15 @@ $postTypeName = ucfirst($postTypeNameSingular) . ' ';
 				</select>
 			<?php endif;
 		}
-
-		if ( ($djd_options['djd-guest-info']) && (!is_user_logged_in()) ){ ?>
-			<label for="djd_site_post_guest_name"><?php _e('Your Name', 'djd-site-post'); ?></label>
-			<input type="text" required="required" id="djd_site_post_guest_name" name="djd_site_post_guest_name" maxlength="40" />
-
-			<label for="djd_site_post_guest_email"><?php _e('Your Email', 'djd-site-post'); ?></label>
-			<input type="email" required="required" id="djd_site_post_guest_email" name="djd_site_post_guest_email" maxlength="40" /><br><br>
-		<?php } ?>
+		if (isset($djd_options['djd-guest-info'])) { 
+			if ( ($djd_options['djd-guest-info']) && (!is_user_logged_in()) ){ ?>
+				<label for="djd_site_post_guest_name"><?php _e('Your Name', 'djd-site-post'); ?></label>
+				<input type="text" required="required" id="djd_site_post_guest_name" name="djd_site_post_guest_name" maxlength="40" />
+	
+				<label for="djd_site_post_guest_email"><?php _e('Your Email', 'djd-site-post'); ?></label>
+				<input type="email" required="required" id="djd_site_post_guest_email" name="djd_site_post_guest_email" maxlength="40" /><br><br>
+			<?php } 
+		} ?>
 
 	<!--<span id="loading"></span>-->
 	<input type="hidden" name="action" value="process_site_post_form"/>

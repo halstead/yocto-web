@@ -79,7 +79,6 @@ $postTypeName = ucfirst($postTypeNameSingular) . ' ';
 //echo 'name: ' . $djd_options['djd-title'] . $djd_options['djd-form-name'];
 
 ?>
-<h2>Events Form</h2>
 <form id="site_post_form" class="djd_site_post_form bordered" method="post" action="<?php echo admin_url('admin-ajax.php'); ?>" enctype="multipart/form-data">
 	<p hidden="hidden" class="form_error_message"></p>
 	<input type="hidden" name="djd-our-id" <?php echo ( $my_post ? "value='".$my_post->ID."'" : "value='".$djd_post_id."'" ); ?> />

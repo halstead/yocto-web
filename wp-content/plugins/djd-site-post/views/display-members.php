@@ -627,7 +627,7 @@ $postTaxonomyTerm = $GLOBALS['djd_post_type_term'];
 			</div>
 			
 			<?php }elseif($postTaxonomyTerm  == 'compatible') {  ?> <!-- Compatible Fields -->
-			
+			<p>The following is a checklist showing the prerequisites for Yocto Project Compatible status. Please check Yes or No for each. If the answer to any of these is No, please provide an explanation in the Comments section and your application will be considered. (all answers required) *</p>
 			<div class="row">
 				<div class="col-xs-12 ">
 					<label for="dsp_ypcompatible_org_is_eligble">1. Organization is a Yocto Project member at Platinum, Gold, Silver, or Bronze level, or a non-profit open source project.</label>

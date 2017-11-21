@@ -213,6 +213,13 @@
 		var docsNoneObjectArray = [];
 		var releaseCurrentVersion = '';
 		
+		function initialDocsSetup() {
+			releaseCurrentVersion = (releaseCurrentVersion + ' ').trim();
+			var documentClass = 'ver-' + releaseCurrentVersion.split('.').join('-');
+			jQuery( ".dynamic-documents" ).hide();
+			jQuery( "." + documentClass).show();		
+		}
+		
 		function buildDropdown(tableData){
 			var selectHtml = '';
 			var hasResults = false;
@@ -235,7 +242,7 @@
 		jQuery.getJSON( url, { csurl: downloadsURL}, function(data){
 			buildDropdown(data);
 		});
-
+		
 		
 		jQuery('#dropdownContainer').on('change', 'select#releaseSelect', function(){
 			var releaseNumber = jQuery(this).find(':selected').data('release-number');
@@ -335,6 +342,7 @@
 					docsHtml += '</div>';
 				}
 				jQuery("#" + sectionContainerID).html(docsHtml);
+				initialDocsSetup();
 			}
 			
 			
@@ -362,11 +370,6 @@
 			buildUpperSection(docsQuickStartObjectArray, 'quickstart');
 			buildUpperSection(docsSDKObjectArray, 'sdk');
 	
-			
-			releaseCurrentVersion = (releaseCurrentVersion + ' ').trim();
-			var documentClass = 'ver-' + releaseCurrentVersion.split('.').join('-');
-			jQuery( ".dynamic-documents" ).hide();
-			jQuery( "." + documentClass).show();
 		}
 		
 		jQuery.getJSON( url, { csurl: docsURL}, function(data){ //, dataType: "json"
@@ -451,7 +454,16 @@
 		var docsNoneObjectArray = [];
 		var docsClassArray = [];
 		var releaseCurrentVersion = '';
-
+		
+		
+		function initialDocsSetup() {
+			// initial config
+			releaseCurrentVersion = (releaseCurrentVersion + ' ').trim();
+			var documentClass = 'ver-' + releaseCurrentVersion.split('.').join('-');
+			jQuery( ".dynamic-documents" ).hide();
+			jQuery( "." + documentClass).show();	
+		}
+		
 
 		function buildDropdown(tableData){
 			var selectHtml = '';
@@ -545,6 +557,7 @@
 					docsHtml += '</div>';
 				}
 				jQuery("#" + sectionContainerID).html(docsHtml);
+				initialDocsSetup();
 			}
 			
 			
@@ -553,11 +566,6 @@
 			buildSection(docsReferenceObjectArray, 'docsReferenceContainer');
 			buildSection(docsNoneObjectArray, 'docsNoneContainer');
 
-			// initial config
-			releaseCurrentVersion = (releaseCurrentVersion + ' ').trim();
-			var documentClass = 'ver-' + releaseCurrentVersion.split('.').join('-');
-			jQuery( ".dynamic-documents" ).hide();
-			jQuery( "." + documentClass).show();
 		}
 		
 		
@@ -581,7 +589,14 @@
 		
 		var releaseObjectArray = [];
 		var releaseCurrentVersion = '';
-
+		
+		function initialToolsSetup() {
+			// initial config
+			releaseCurrentVersion = (releaseCurrentVersion + ' ').trim();
+			var documentClass = 'ver-' + releaseCurrentVersion.split('.').join('-');
+			jQuery( ".tool-blocks" ).hide();
+			jQuery( "." + documentClass).show();
+		}
 
 		function buildDropdown(tableData){
 			var selectHtml = '';
@@ -718,6 +733,7 @@
 					toolsHtml += '</div>';
 				}
 				jQuery("#" + sectionContainerID).html(toolsHtml);
+				initialToolsSetup();
 			}
 		
 			jQuery.each(tableData.nodes, function(i, obj) {
@@ -737,12 +753,6 @@
 			});
 		
 			addToolBlocks(toolsObjectArray, 'downloadToolsContainer');
-			
-			// initial config
-			releaseCurrentVersion = (releaseCurrentVersion + ' ').trim();
-			var documentClass = 'ver-' + releaseCurrentVersion.split('.').join('-');
-			jQuery( ".tool-blocks" ).hide();
-			jQuery( "." + documentClass).show();
 		}
 		
 		
@@ -857,7 +867,7 @@
       }
     },
     // downloads archive
-    'archived-releases': { 
+    'archived_releases': { 
       init: function() {
       	console.log("Download Archive Page");
       	//// Release Scripts ////
@@ -869,7 +879,16 @@
 		var releaseObjectArray = [];
 		var releaseCurrentVersion = '';
 
-
+		
+		function initialToolsSetup() {
+			// initial config
+			releaseCurrentVersion = (releaseCurrentVersion + ' ').trim();
+			var documentClass = 'ver-' + releaseCurrentVersion.split('.').join('-');
+			jQuery( ".tool-blocks" ).hide();
+			jQuery( "." + documentClass).show();
+		}
+		
+		
 		function buildDropdown(tableData){
 			var selectHtml = '';
 			var hasResults = false;
@@ -1022,15 +1041,10 @@
 					toolsHtml += '</div>';
 				}
 				jQuery("#" + sectionContainerID).html(toolsHtml);
+				initialToolsSetup();
 			}
 			
 			addToolBlocks(toolsObjectArray, 'downloadToolsContainer');
-			
-			// initial config
-			releaseCurrentVersion = (releaseCurrentVersion + ' ').trim();
-			var documentClass = 'ver-' + releaseCurrentVersion.split('.').join('-');
-			jQuery( ".tool-blocks" ).hide();
-			jQuery( "." + documentClass).show();
 		}
 		
 		

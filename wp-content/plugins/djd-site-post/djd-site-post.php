@@ -156,9 +156,6 @@ if (!class_exists("DjdSitePost")) {
 		register_widget( 'djd_site_post_widget' );
 	} // end register_form_widget
 	
-	
-	
-	
 	/*
 	 * Hook into WP's admin_init action hook
 	 */
@@ -581,6 +578,7 @@ if (!class_exists("DjdSitePost")) {
 			while ($my_query->have_posts()) : $my_query->the_post();
 				
 				// Global Variables //
+				$cityField = get_field('my_meta_box_city_text');
 				$stateField = get_field('my_meta_box_state_select');
 				$counteryField = get_field('my_meta_box_country_select');
 				$state = convertState($stateField, $strFormat='name');
@@ -606,15 +604,15 @@ if (!class_exists("DjdSitePost")) {
 						$output .= '	<div class="block-copy col-sm-12">';
 						
 						if( get_field('dsp_job_website') ):
-							$output .= '		<h3 class="title" style="margin-bottom:5px;"><a href="' .  get_field('dsp_job_website') . '">' .  get_field('dsp_job_company_name') . '</a></h2>';
+							$output .= '		<h3 class="title" style="margin-bottom:5px;"><a href="' .  get_field('dsp_job_website') . '">' .  get_field('dsp_job_company_name') . '</a></h3>';
 						else:
-							$output .= '		<h3 class="title" style="margin-bottom:5px;">' .  get_field('dsp_job_company_name') . '</h2>';
+							$output .= '		<h3 class="title" style="margin-bottom:5px;">' .  get_field('dsp_job_company_name') . '</h3>';
 						endif;
 						
 						if( get_field('dsp_job_posting_link') ):
-							$output .= '		<h3 class="title" style="margin-bottom:5px !important;"><a href="' .  get_field('dsp_job_posting_link') . '">' .  get_the_title() . '</a></h4>';
+							$output .= '		<h3 class="title" style="margin-bottom:5px !important;"><a href="' .  get_field('dsp_job_posting_link') . '">' .  get_the_title() . '</a></h3>';
 						else:
-							$output .= '		<h3 class="title" style="margin-bottom:5px !important;">' .  get_the_title() . '</h4>';
+							$output .= '		<h3 class="title" style="margin-bottom:5px !important;">' .  get_the_title() . '</h3>';
 						endif;	
 						
 						
@@ -712,13 +710,69 @@ if (!class_exists("DjdSitePost")) {
 					// djd_site_post_start_date
 					// djd_site_post_end_date
 					// event_djd_site_post_venue
-				} else if($dynamic_post_type == 'members'){ // need to add type detection
-					
-					$output .= '<div class="half-block">';
-					$output .= '	<div class="block-copy col-sm-12">';
-					$output .= '		<p>Organization block</p>';
-					$output .= '	</div>';
-					$output .= '</div>';
+				} else if($dynamic_post_type == 'members'){ 
+				
+		
+					if($dynamic_post_taxonomy == 'organization-type' && $dynamic_post_taxonomy_terms == 'consultants'){
+						//dsp_consultant_contact_name
+						//dsp_consultant_contact_phone
+						//dsp_consultant_website
+						//dsp_consultant_contact_email
+						//dsp_consultant_services_offered
+						
+						//professional-services
+						//board-support
+						//training
+						//other
+
+						$optionsArray = get_field('dsp_consultant_services_offered');
+						 
+						$professionalServices = (is_array($optionsArray) && in_array( 'professional-services', $optionsArray)) ? 'X' : ' ';
+						$training = (is_array($optionsArray) && in_array( 'training', $optionsArray)) ? 'X' : ' ';
+						$boardSupport = (is_array($optionsArray) && in_array( 'board-support', $optionsArray)) ? 'X' : ' ';
+						$other = (is_array($optionsArray) && in_array( 'other', $optionsArray)) ? 'X' : ' ';
+						
+						$output .= '<div>';
+						$output .= '	<div class="table-row seven-cols">';
+						$output .= '		<div class="col-xs-12 col-sm-1"><h5>Country</h5></div>';
+						$output .= '		<div class="col-xs-12 col-sm-1"><h5>Consultant</h5></div>';		
+						$output .= '		<div class="col-xs-12 col-sm-1"><h5>Company</h5></div>';
+						$output .= '		<div class="col-xs-12 col-sm-1"><h5>Pofessional Services</h5></div>';
+						$output .= '		<div class="col-xs-12 col-sm-1"><h5>Training Services</h5></div>';
+						$output .= '		<div class="col-xs-12 col-sm-1"><h5>Board Support Package Services</h5></div>';
+						$output .= '		<div class="col-xs-12 col-sm-1"><h5>Other Services</h5></div>';
+						$output .= '	</div>';
+						$output .= '</div>';
+						
+						$output .= '<div class="table-row seven-cols" style="border-bottom:1px solid #ccced0;">';
+						$output .= '	<div class="col-xs-12 col-sm-1"><p>' . $counteryField . '</p></div>'; //$country
+						$output .= '	<div class="col-xs-12 col-sm-1">';
+						$output .= '		<strong>' . get_field('dsp_consultant_contact_name') . '</strong><br>';
+						//$output .= '		<strong>123 Intel Way</strong><br>';
+						$output .= '		<strong>' . $cityField . ', ' . $state . '</strong><br>';
+						$output .= '		<strong>' . get_field('dsp_consultant_contact_phone') . '</strong><br>';
+						$output .= '		<a href="mailto:' . get_field('dsp_consultant_contact_email') . '" target="_blank">' . get_field('dsp_consultant_contact_email') . '</a>';
+						$output .= '	</div>';
+						$output .= '	<div class="col-xs-12 col-sm-1"><p>' .  get_the_title() . '</p></div>';
+						$output .= '	<div class="col-xs-12 col-sm-1"><p>' . $professionalServices . '</p></div>';
+						$output .= '	<div class="col-xs-12 col-sm-1"><p>' . $training . '</p></div>';
+						$output .= '	<div class="col-xs-12 col-sm-1"><p>' . $boardSupport . '</p></div>';
+						$output .= '	<div class="col-xs-12 col-sm-1"><p>' . $other . '</p></div>';
+						$output .= '</div>';
+						// $output .= '<div class="half-block">';
+						// $output .= '	<div class="block-copy col-sm-12">';
+						// $output .= '		<h3 class="title" style="margin-bottom:5px !important;">' .  get_the_title() . '</h3>';
+						// $output .= '		<p>' . get_the_excerpt() . '</p>';
+						// $output .= '	</div>';
+						// $output .= '</div>';
+					}else {
+						$output .= '<div class="half-block">';
+						$output .= '	<div class="block-copy col-sm-12">';
+						$output .= '		<p>Organization block</p>';
+						$output .= '	</div>';
+						$output .= '</div>';
+					}
+
 				} else {
 					$output .= '<div class="half-block">';
 					$output .= '	<div class="block-copy col-sm-12">';

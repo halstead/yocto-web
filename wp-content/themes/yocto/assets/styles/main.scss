@@ -45,7 +45,7 @@ body.home {
 
 p {
   font-family: 'Lato', sans-serif;
-  font-weight:300;
+  // font-weight:300;
   margin-bottom:16px;
   font-size:16px;
   Line-height:20px; 
@@ -53,7 +53,7 @@ p {
   
   a {
     text-transform:capitalize;
-    font-weight:300;
+    // font-weight:300;
     font-size:14px;
     color:$brand-blue;
   }
@@ -126,7 +126,7 @@ li {
     
     li {
       list-style: decimal !important;
-      color:#858685;
+      color:$brand-copy;
       font-size:16px;
     }
   }
@@ -139,9 +139,14 @@ li {
     
     li {
       list-style: disc;
-      color:#858685;
+      color:$brand-copy;
       font-size:16px;
     }
+  }
+  
+  h4 {
+    margin-top:32px;
+    margin-bottom:10px !important;
   }
 }
 

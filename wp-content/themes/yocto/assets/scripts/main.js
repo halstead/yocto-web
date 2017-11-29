@@ -138,50 +138,226 @@
         // JavaScript to be fired on the home page
         // HOME NAVIGATION
 
-		//jQuery(function($) {
-			//if ( $( ".home" ).length ) {
-				var navVisible = false;
-				var navActive = false;
-				$(window).scroll(function() {
-					  var $element = $("body, html");
-					  var windowOffset = Math.abs(parseInt($element.offset().top) - parseInt($(window).scrollTop()));
-					  var sliderHeight = $('.carousel-inner').outerHeight();
-					  var headerHeight = $('.banner').outerHeight();
-					  var navigationOffset = parseInt(sliderHeight) - parseInt(headerHeight);
-					  //console.log(navigationOffset);
-					  //console.log(windowOffset);
-					  if(windowOffset > 40) {  //navigationOffset
-					    
-					    $('.banner').css('background-color', '#2b3034');
-					    $('ul.dropdown-menu').css('background-color', '#2b3034');
-						navVisible = true;
-					  }else{
-					  	if(navActive === false){
-					  		$('.banner').css('background-color', 'transparent');
-					    	$('ul.dropdown-menu').css('background-color', 'transparent');
-							navVisible = false;
-					  	}
-					  } 
-				});
-				
-				$( ".banner" ).hover(
-				  function() {
-				  	navActive = true;
-				    $('.banner').css('background-color', '#2b3034');
-				    $('ul.dropdown-menu').css('background-color', '#2b3034');
-				   
-				  }, function() {
-				  	navActive = false;
-					if(navVisible === false){
-				  		$('.banner').css('background-color', 'transparent');
-				  	    $('ul.dropdown-menu').css('background-color', 'transparent');
-					}
-				  }
-				);
+		var navVisible = false;
+		var navActive = false;
+		$(window).scroll(function() {
+			  var $element = $("body, html");
+			  var windowOffset = Math.abs(parseInt($element.offset().top) - parseInt($(window).scrollTop()));
+			  var sliderHeight = $('.carousel-inner').outerHeight();
+			  var headerHeight = $('.banner').outerHeight();
+			  var navigationOffset = parseInt(sliderHeight) - parseInt(headerHeight);
+			  //console.log(navigationOffset);
+			  //console.log(windowOffset);
+			  if(windowOffset > 40) {  //navigationOffset
+			    
+			    $('.banner').css('background-color', '#2b3034');
+			    $('ul.dropdown-menu').css('background-color', '#2b3034');
+				navVisible = true;
+			  }else{
+			  	if(navActive === false){
+			  		$('.banner').css('background-color', 'transparent');
+			    	$('ul.dropdown-menu').css('background-color', 'transparent');
+					navVisible = false;
+			  	}
+			  } 
+		});
+		
+		$( ".banner" ).hover(
+		  function() {
+		  	navActive = true;
+		    $('.banner').css('background-color', '#2b3034');
+		    $('ul.dropdown-menu').css('background-color', '#2b3034');
+		   
+		  }, function() {
+		  	navActive = false;
+			if(navVisible === false){
+		  		$('.banner').css('background-color', 'transparent');
+		  	    $('ul.dropdown-menu').css('background-color', 'transparent');
+			}
+		  }
+		);
+		
+		
+		// Experienced Developers Section
+		
+		var url = '/wp-content/themes/yocto/proxy.php';
+		var chart1URL = 'http://api-v1.yoctoproject.org/api/downloads?release%5B%5D=59';
 
+		
+		function buildButtons(tableData){
+			var versionHtml = '';
+			var linkHtml = '';
+			var hasResults = false;
+			
+			var releaseObjectArray = [];
+			jQuery.each(tableData.nodes, function(i, obj) {
+				var showAmount = 4;
+				if(i < showAmount){
+					var release = {releaseTitle:obj.node.title, releaseVersion:obj.node.field_release_number, releaseGitURL:obj.node.field_git_url,  releaseDownloadURL:obj.node.field_download_urls, releaseDate:obj.node.releasedate};
+					releaseObjectArray[i] = release;
+				}
+			});
+			
+			var currentVersion = releaseObjectArray[0].releaseTitle;
+			var currentGetURL = releaseObjectArray[0].releaseGitURL;
+			var currentDownloadURL = releaseObjectArray[0].releaseDownloadURL;
+			var currentReleaseDate = releaseObjectArray[0].releaseDate;
+	
+			var currentReleaseDateArray = currentReleaseDate.split(" ");
+			currentReleaseDate =  currentReleaseDateArray[0].replace(/-/g, '.');
+			
+			jQuery("#version-date").html(currentReleaseDate);
+			jQuery("#version-title").html(currentVersion);
+			jQuery("#version-link").html(linkHtml);
+		} 
+		
+		jQuery.getJSON( url, { csurl: chart1URL}, function(data){ //, dataType: "json"
+			//alert(data);
+			buildButtons(data);
+		});
+		
+		
+		// Dynamic Activity Table
+		
+  		var sourceURLBugs = 'https://wiki.yoctoproject.org/charts/attribution.json.txt';   
+		var sourceURLCommits = 'http://api-v1.yoctoproject.org/commit_plus_cve.json.txt';  
+		var sourceURLCVE = 'http://api-v1.yoctoproject.org/cves.json.txt';
+		
+		var CommitsTableHasResults = false;
+		var CVETableHasResults = false;
+ 		var BugsTableHasResults = false;
+
+		
+		function buildCommitsTable(tableData){
+			var layerTableCommitsHtml = '';
+			var layerTableCVEHtml = '';
+			//var CVEcounter = 0;
+			
+			jQuery.each(tableData, function(i, obj) {
+				var showAmount = 5;
+				if(i < showAmount){
 					
-			//}
-		//});
+  				 var myArr = [[obj.when, moment().format()]];
+				 var date = moment(myArr[0][0]);
+				 var newDate = date.clone().subtract(7, 'hours');
+				  newDate = newDate.fromNow();
+
+	  			  layerTableCommitsHtml += '<div class="table-row" style="border-bottom:1px solid #ccced0;">';
+				  layerTableCommitsHtml += '	<div class="col-xs-12 col-sm-2">' + newDate + '</div>'; 
+	  			  //layerTableHtml += '	<div class="col-xs-12 col-sm-2">' + obj.committer + '</div>'; //obj.datetime   + i + 
+	  			  layerTableCommitsHtml += '	<div class="col-xs-12 col-sm-6"><p><img src="/wp-content/uploads/2017/07/hexagon-blue.png" class="hexagon"/><a href="' + obj.link + '" target="_blank">' + obj.summary + '</a></p></div>';
+	  			  layerTableCommitsHtml += '	<div class="col-xs-12 col-sm-2"><p><a target="_blank" href="' + obj.link + '">' + obj.repo + '</a></p></div>';
+	  			  layerTableCommitsHtml += '	<div class="col-xs-12 col-sm-2"><p>' + obj.author + '</p></div>';
+	  			  layerTableCommitsHtml += '</div>';
+				}
+			});
+
+			if(CommitsTableHasResults === false){
+			 layerTableCommitsHtml += '<div class="table-row" style="border-bottom:1px solid #ccced0;">No Activity Results for Bugs</div>';
+			}
+			jQuery('#commitsContainer').html(layerTableCommitsHtml);
+		}
+		
+		
+		function buildCVETable(tableData){
+			var layerTableCVEHtml = '';
+			jQuery.each(tableData, function(i, obj) {
+				var showAmount = 5;
+				if(i < showAmount){
+	  			  var priorityClass = obj.priority;
+
+				  var myArr = [[obj.when, moment().format()]];
+				  var date = moment(myArr[0][0]);
+
+                  var newDate = date.clone().subtract(7, 'hours');
+				  newDate = newDate.fromNow();
+				  
+  				  var dynamicUrl = obj.link; //jQuery(this).find('a:first').attr('href');
+				  var urlPartsArray = dynamicUrl.split('/');
+				  var repo = urlPartsArray[5];
+
+	  			  layerTableCVEHtml += '<div class="table-row" style="border-bottom:1px solid #ccced0;">';
+	  			  layerTableCVEHtml += '	<div class="col-xs-12 col-sm-2">' + newDate + '</div>'; //obj.datetime   + i +
+	  			  layerTableCVEHtml += '	<div class="col-xs-12 col-sm-6"><p><img src="/wp-content/uploads/2017/07/hexagon-red-1.png" class="hexagon"/><a href="' + obj.nist + '" target="_blank">' + obj.CVE + '</a></p></div>';
+				  //layerTableCVEHtml += '	<div class="col-xs-12 col-sm-6"><p><img src="/wp-content/uploads/2017/07/hexagon-red-1.png" class="hexagon"/>' + obj.CVE + ' | ' + '<a href="' + obj.nist + '" target="_blank">' + obj.nist + '</a></p></div>';
+	  			  layerTableCVEHtml += '	<div class="col-xs-12 col-sm-2"><p>' + obj.status + '</p></div>';
+	  			  layerTableCVEHtml += '	<div class="col-xs-12 col-sm-2"><p><a target="_blank" href="' + obj.link + '">' + repo + '</a></p></div>';
+	  			  layerTableCVEHtml += '</div>';
+				}
+			  
+			});
+
+			if(CVETableHasResults === false){
+			 layerTableCVEHtml += '<div class="table-row" style="border-bottom:1px solid #ccced0;">No Activity Results for CVE </div>';
+			}
+			jQuery('#cveContainer').html(layerTableCVEHtml);
+		}
+		
+		
+		function buildBugsTable(tableData){
+			var layerTableHtml = '';
+			jQuery.each(tableData, function(i, obj) {
+				var showAmount = 5;
+				if(i < showAmount){
+	  			  var priorityClass = obj.priority; 
+				  
+				  var myArr = [[obj.datetime, moment().format()]];   //"2017-09-18T08:15:17", obj.datetime
+				  var date = moment(myArr[0][0]);
+				  
+				  var newDate = date.clone().subtract(8, 'hours');
+				  newDate = newDate.fromNow();
+			  
+	  			  if (priorityClass.substring(priorityClass.length-1) === "+") {
+  			          priorityClass = priorityClass.substring(0, priorityClass.length-1);
+  			      }
+				
+	  			  layerTableHtml += '<div class="table-row" style="border-bottom:1px solid #ccced0;">';
+	  			  layerTableHtml += '	<div class="col-xs-12 col-sm-2">' + newDate + '</div>'; //obj.datetime   + i + 
+	  			  layerTableHtml += '	<div class="col-xs-12 col-sm-6"><p><img src="/wp-content/uploads/2017/07/hexagon-yellow.png" class="hexagon"/><a href="' + obj.link + '" target="_blank">' + obj.description + '</a> <span class="priority ' + priorityClass + '">' + obj.priority + '</span></p></div>';
+	  			  layerTableHtml += '	<div class="col-xs-12 col-sm-2"><p>' + obj.status + '</p></div>';
+	  			  layerTableHtml += '	<div class="col-xs-12 col-sm-2"><p>' + obj.assignee + '</p></div>';
+	  			  layerTableHtml += '</div>';
+				}
+			  
+			});
+
+			if(BugsTableHasResults === false){
+			 layerTableHtml += '<div class="table-row" style="border-bottom:1px solid #ccced0;">No Activity Results for Bugs</div>';
+			}
+			jQuery('#bugsContainer').html(layerTableHtml);
+		}
+		
+
+ 		jQuery.getJSON( url, { csurl: sourceURLCommits, dataType: "json"}, function(data){
+			//alert(data)
+			CommitsTableHasResults = true;
+			buildCommitsTable(data);
+			
+ 		});
+ 		jQuery.getJSON( url, { csurl: sourceURLCVE, dataType: "json"}, function(data){
+			//alert(data)
+			CVETableHasResults = true;
+			buildCVETable(data);
+
+ 		});
+ 		jQuery.getJSON( url, { csurl: sourceURLBugs, dataType: "json"}, function(data){
+			//alert(data)
+			BugsTableHasResults = true;
+			buildBugsTable(data);
+ 		});
+		
+		
+		jQuery('.activity-table-tab').click(function(e) {
+			e.preventDefault();
+			var currentID = jQuery(this).attr('id');
+			jQuery('.activity-table-tab').removeClass('active');
+			jQuery('.activity-table').addClass('hide');
+			jQuery(this).addClass('active');
+			jQuery('#' + currentID + '-container').removeClass('hide');
+			//alert(currentID);
+		});
+
+
       },
       finalize: function() {
         // JavaScript to be fired on the home page, after the init JS
@@ -212,38 +388,30 @@
 		var docsSDKObjectArray = [];
 		var docsNoneObjectArray = [];
 		var releaseCurrentVersion = '';
+		var initialVersionClass = '';
 		
 		function initialDocsSetup() {
 			releaseCurrentVersion = (releaseCurrentVersion + ' ').trim();
-			var documentClass = 'ver-' + releaseCurrentVersion.split('.').join('-');
-			jQuery( ".dynamic-documents" ).hide();
-			jQuery( "." + documentClass).show();		
+			//var documentClass = 'ver-' + releaseCurrentVersion.split('.').join('-');
 		}
 		
 		function buildDropdown(tableData){
 			var selectHtml = '';
 			var hasResults = false;
-			
 			selectHtml += '<select id="releaseSelect" name="release-select" class="header-select">';
 			jQuery.each(tableData.nodes, function(i, obj) {
-				var showAmount = 4;
-				if(i < showAmount){
-					if(i === 0) {
-						releaseCurrentVersion = obj.node.field_release_number;
-					}
-					selectHtml += '<option poky-version="field_poky_version" data-release-number="' + obj.node.field_release_number + '" value="' + obj.node.title + '">' + obj.node.title + '</option>';
+				if(i === 0) {
+					releaseCurrentVersion = obj.node.field_release_number;
+					var versionClassClean = (releaseCurrentVersion + ' ').trim();
+					initialVersionClass = 'ver-' + versionClassClean.split('.').join('-');
 				}
+				selectHtml += '<option poky-version="field_poky_version" data-release-number="' + obj.node.field_release_number + '" value="' + obj.node.title + '">' + obj.node.title + '</option>';
 			});
-			
 			selectHtml += '</select>';
 			jQuery("#dropdownContainer").html(selectHtml);
 		}
 		
-		jQuery.getJSON( url, { csurl: downloadsURL}, function(data){
-			buildDropdown(data);
-		});
-		
-		
+
 		jQuery('#dropdownContainer').on('change', 'select#releaseSelect', function(){
 			var releaseNumber = jQuery(this).find(':selected').data('release-number');
 			releaseNumber = (releaseNumber + ' ').trim();
@@ -268,7 +436,6 @@
 		   		 	jQuery('.featured-doc-blocks').find('.custom-block').first().find('.grid-block-copy h6').text(docsQuickStartObjectArray[j].docTitle);
 				}
 			}
-	
 		});
 		
 		
@@ -293,7 +460,7 @@
 			jQuery.each(tableData.nodes, function(i, obj) {
 				var showAmount = 100;
 				if(i < showAmount){
-		
+
 					var documentVersionArray = obj.node.term_node_tid.split(' ');
 					var documentVersion = documentVersionArray[2];
 					var documentClass = 'ver-' + documentVersion.split('.').join('-');
@@ -303,7 +470,7 @@
 					
 					//documentCategory = docsObjectArray[i].docCategory.replace(/\\n/g, ' '); // if used in block builder
 					documentCategory = docsObjectArray[i].docCategory.replace(/\n/g, ' ');
-	
+
 					switch(documentCategory) {
 					    case "Tool":
 					        docsToolObjectArray.push(docItem);
@@ -326,27 +493,40 @@
 				}
 			});
 			
+			
 			function buildSection(sectionArray, sectionContainerID){
 				var docsHtml = "";
 				var sectionArrayLength = sectionArray.length;
 				for (var i = 0; i < sectionArrayLength; i++) {
-					docsHtml += '<div class="col-xs-12 col-sm-6 col-md-3 documents dynamic-documents custom-block ' + sectionArray[i].docCategory + ' ' + sectionArray[i].docClass + '">';
-					docsHtml += '	<a href="' + sectionArray[i].docHTMLFile + '" class="inline-block full-width" target="_blank">';		
-					docsHtml += '		<div class="grid-block"><div class="grid-featured-image-container"></div>';			
-					docsHtml += '			<div class="grid-block-copy">';
-					docsHtml += '				<h6>' + sectionArray[i].docTitle + '</h6>';
-					docsHtml += '				<p>' + sectionArray[i].docBody + '</p>';			
-					docsHtml += '			</div>';		
-					docsHtml += '		</div>';
-					docsHtml += '	</a>';
-					docsHtml += '</div>';
+					if(sectionArray[i].docClass === initialVersionClass){
+						docsHtml += '<div class="col-xs-12 col-sm-6 col-md-3 documents dynamic-documents custom-block ' + sectionArray[i].docCategory + ' ' + sectionArray[i].docClass + '">';
+						docsHtml += '	<a href="' + sectionArray[i].docHTMLFile + '" class="inline-block full-width" target="_blank">';		
+						docsHtml += '		<div class="grid-block"><div class="grid-featured-image-container"></div>';			
+						docsHtml += '			<div class="grid-block-copy">';
+						docsHtml += '				<h6>' + sectionArray[i].docTitle + '</h6>';
+						docsHtml += '				<p>' + sectionArray[i].docBody + '</p>';			
+						docsHtml += '			</div>';		
+						docsHtml += '		</div>';
+						docsHtml += '	</a>';
+						docsHtml += '</div>';
+					}else{
+						docsHtml += '<div class="col-xs-12 col-sm-6 col-md-3 documents dynamic-documents custom-block ' + sectionArray[i].docCategory + ' ' + sectionArray[i].docClass + '" style="display:none;">';
+						docsHtml += '	<a href="' + sectionArray[i].docHTMLFile + '" class="inline-block full-width" target="_blank">';		
+						docsHtml += '		<div class="grid-block"><div class="grid-featured-image-container"></div>';			
+						docsHtml += '			<div class="grid-block-copy">';
+						docsHtml += '				<h6>' + sectionArray[i].docTitle + '</h6>';
+						docsHtml += '				<p>' + sectionArray[i].docBody + '</p>';			
+						docsHtml += '			</div>';		
+						docsHtml += '		</div>';
+						docsHtml += '	</a>';
+						docsHtml += '</div>';
+					}
 				}
 				jQuery("#" + sectionContainerID).html(docsHtml);
-				initialDocsSetup();
 			}
 			
 			
-			function buildUpperSection(sectionArray, section){  //, sectionContainerID
+			function buildUpperSection(sectionArray, section){
 				var sectionArrayLength = sectionArray.length;
 				for (var i = 0; i < sectionArrayLength; i++) {
 					if(i === 0){
@@ -369,12 +549,22 @@
 			
 			buildUpperSection(docsQuickStartObjectArray, 'quickstart');
 			buildUpperSection(docsSDKObjectArray, 'sdk');
+			initialDocsSetup();
 	
 		}
 		
-		jQuery.getJSON( url, { csurl: docsURL}, function(data){ //, dataType: "json"
-			buildSections(data);
+		function buildDocsSections() {
+			jQuery.getJSON( url, { csurl: docsURL}, function(data){ //, dataType: "json"
+				buildSections(data);
+			});
+		}
+		
+		jQuery.getJSON( url, { csurl: downloadsURL}, function(data){
+			buildDropdown(data);
+			buildDocsSections();
 		});
+		
+		
       },
       finalize: function() {
         // JavaScript to be fired on the home page, after the init JS
@@ -425,7 +615,6 @@
 			var searchTerm = getUrlParameter('section');
 				
 			if(searchTerm !== undefined){
-				//console.log('kickit!');
 				if(searchTerm === 'featured-doc-blocks'){
 					animateBody(searchTerm, 45);	
 				}else{
@@ -454,14 +643,12 @@
 		var docsNoneObjectArray = [];
 		var docsClassArray = [];
 		var releaseCurrentVersion = '';
-		
+		var initialVersionClass = '';
 		
 		function initialDocsSetup() {
 			// initial config
 			releaseCurrentVersion = (releaseCurrentVersion + ' ').trim();
-			var documentClass = 'ver-' + releaseCurrentVersion.split('.').join('-');
-			jQuery( ".dynamic-documents" ).hide();
-			jQuery( "." + documentClass).show();	
+			
 		}
 		
 
@@ -471,22 +658,17 @@
 			
 			selectHtml += '<select id="releaseSelect" name="release-select" class="header-select">';
 			jQuery.each(tableData.nodes, function(i, obj) {
-				var showAmount = 500;
-				if(i < showAmount){
-					if(i === 0) {
-						releaseCurrentVersion = obj.node.field_release_number;
-					}
-					selectHtml += '<option poky-version="field_poky_version" data-release-number="' + obj.node.field_release_number + '" value="' + obj.node.title + '">' + obj.node.title + '</option>';
+				if(i === 0) {
+					releaseCurrentVersion = obj.node.field_release_number;
+					var versionClassClean = (releaseCurrentVersion + ' ').trim();
+					initialVersionClass = 'ver-' + versionClassClean.split('.').join('-');
+					//console.log("Set intial Class: " + initialVersionClass);
 				}
+				selectHtml += '<option poky-version="field_poky_version" data-release-number="' + obj.node.field_release_number + '" value="' + obj.node.title + '">' + obj.node.title + '</option>';	
 			});
 			selectHtml += '</select>';
 			jQuery("#dropdownContainer").html(selectHtml);
 		}
-		
-		
-		jQuery.getJSON( url, { csurl: downloadsURL}, function(data){
-			buildDropdown(data);
-		});
 		
 		
 		jQuery('#dropdownContainer').on('change', 'select#releaseSelect', function(){
@@ -544,20 +726,35 @@
 			function buildSection(sectionArray, sectionContainerID){
 				var docsHtml = "";
 				var sectionArrayLength = sectionArray.length;
+				//console.log('init Class: ' + initialVersionClass);
 				for (var i = 0; i < sectionArrayLength; i++) {
-					docsHtml += '<div class="col-xs-12 col-sm-6 col-md-3 documents dynamic-documents custom-block ' + sectionArray[i].docCategory + ' ' + sectionArray[i].docClass + '">';
-					docsHtml += '	<a href="' + sectionArray[i].docHTMLFile + '" class="inline-block full-width" target="_blank">';		
-					docsHtml += '		<div class="grid-block"><div class="grid-featured-image-container"></div>';			
-					docsHtml += '			<div class="grid-block-copy">';
-					docsHtml += '				<h6>' + sectionArray[i].docTitle + '</h6>';
-					docsHtml += '				<p>' + sectionArray[i].docBody + '</p>';			
-					docsHtml += '			</div>';		
-					docsHtml += '		</div>';
-					docsHtml += '	</a>';
-					docsHtml += '</div>';
+					if(sectionArray[i].docClass === initialVersionClass){
+						console.log('match: ' + sectionArray[i].docClass);
+						docsHtml += '<div class="col-xs-12 col-sm-6 col-md-3 documents dynamic-documents custom-block ' + sectionArray[i].docCategory + ' ' + sectionArray[i].docClass + '">';
+						docsHtml += '	<a href="' + sectionArray[i].docHTMLFile + '" class="inline-block full-width" target="_blank">';		
+						docsHtml += '		<div class="grid-block"><div class="grid-featured-image-container"></div>';			
+						docsHtml += '			<div class="grid-block-copy">';
+						docsHtml += '				<h6>' + sectionArray[i].docTitle + '</h6>';
+						docsHtml += '				<p>' + sectionArray[i].docBody + '</p>';			
+						docsHtml += '			</div>';		
+						docsHtml += '		</div>';
+						docsHtml += '	</a>';
+						docsHtml += '</div>';
+					}else{
+						console.log('no match: ' + sectionArray[i].docClass);
+						docsHtml += '<div class="col-xs-12 col-sm-6 col-md-3 documents dynamic-documents custom-block ' + sectionArray[i].docCategory + ' ' + sectionArray[i].docClass + '" style="display:none;">';
+						docsHtml += '	<a href="' + sectionArray[i].docHTMLFile + '" class="inline-block full-width" target="_blank">';		
+						docsHtml += '		<div class="grid-block"><div class="grid-featured-image-container"></div>';			
+						docsHtml += '			<div class="grid-block-copy">';
+						docsHtml += '				<h6>' + sectionArray[i].docTitle + '</h6>';
+						docsHtml += '				<p>' + sectionArray[i].docBody + '</p>';			
+						docsHtml += '			</div>';		
+						docsHtml += '		</div>';
+						docsHtml += '	</a>';
+						docsHtml += '</div>';
+					}
 				}
 				jQuery("#" + sectionContainerID).html(docsHtml);
-				initialDocsSetup();
 			}
 			
 			
@@ -565,13 +762,22 @@
 			buildSection(docsDevelopmentObjectArray, 'docsDevelopmentContainer');
 			buildSection(docsReferenceObjectArray, 'docsReferenceContainer');
 			buildSection(docsNoneObjectArray, 'docsNoneContainer');
-
+			initialDocsSetup();
 		}
 		
+		function buildDocsSections() {
+			jQuery.getJSON( url, { csurl: docsURL}, function(data){ //, dataType: "json"
+				buildSections(data);
+			});
+		}
+
 		
-		jQuery.getJSON( url, { csurl: docsURL}, function(data){ //, dataType: "json"
-			buildSections(data);
+		jQuery.getJSON( url, { csurl: downloadsURL}, function(data) {
+			buildDropdown(data);
+			buildDocsSections();
 		});
+		
+		
       },
       finalize: function() {
         // JavaScript to be fired on the home page, after the init JS
@@ -589,13 +795,11 @@
 		
 		var releaseObjectArray = [];
 		var releaseCurrentVersion = '';
+		var initialVersionClass = '';
 		
 		function initialToolsSetup() {
 			// initial config
 			releaseCurrentVersion = (releaseCurrentVersion + ' ').trim();
-			var documentClass = 'ver-' + releaseCurrentVersion.split('.').join('-');
-			jQuery( ".tool-blocks" ).hide();
-			jQuery( "." + documentClass).show();
 		}
 
 		function buildDropdown(tableData){
@@ -606,6 +810,9 @@
 			jQuery.each(tableData.nodes, function(i, obj) {
 				if(i === 0) {
 					releaseCurrentVersion = obj.node.field_release_number;
+					var versionClassClean = (releaseCurrentVersion + ' ').trim();
+					initialVersionClass = 'ver-' + versionClassClean.split('.').join('-');
+					//console.log("Set intial Class: " + initialVersionClass);
 				}
 	            var releaseNumber = obj.node.field_release_number + ' '.trim();
 				var releaseNumberClass = 'ver-' + releaseNumber.split('.').join('-');
@@ -670,12 +877,6 @@
 			} 
 		});
 		
-		
- 		jQuery.getJSON( url, { csurl: releaseURL}, function(data){ //, dataType: "json"
-			buildDropdown(data);
-		});
-		
-		
 		//// Tools Scripts ////
 		
 		
@@ -700,12 +901,8 @@
 		
 		jQuery('#downloadToolsContainer').on('click', '.tools-read-more', function(e){
 			e.preventDefault();
-			
-			
 			var releaseNotesFull = jQuery(this).closest('.grid-block').find('.releaseNotesFull');
-			//jQuery.colorbox({inline:true, href:'#releaseInfoContainer'});
 			jQuery.colorbox({inline:true, href:releaseNotesFull, width:"80%"});
-		
 	    });
 		
 
@@ -720,45 +917,62 @@
 				var sectionArrayLength = sectionArray.length;
 				
 				for (var i = 0; i < sectionArrayLength; i++) {
-					excerpt = trimText(sectionArray[i].docReleaseNotes, 150);
-					toolsHtml += '<div class="col-xs-12 col-sm-6 col-md-3 documents tool-blocks custom-block ' + sectionArray[i].docClass + '">';	
-					toolsHtml += '		<div class="grid-block"><div class="grid-featured-image-container"></div>';			
-					toolsHtml += '			<div class="grid-block-copy" style="position:relative;">';
-					toolsHtml += '				<h6>' + sectionArray[i].docTitle + '</h6>';			
-					toolsHtml += '				<p>' + excerpt + '</p>';
-					toolsHtml += '				<a href="' + sectionArray[i].docDownloadLink + '" class="btn btn-blue" target="_blank" style="display:block; width:100%; padding:4px; position:absolute; left:0px; bottom:0px;"><img src="/wp-content/uploads/2017/08/icon-btn-download.png" style="width:auto !important;"/> Download</a>';	
-					toolsHtml += '			</div>';
-					toolsHtml += '			<div class="hide"><div class="releaseNotesFull" style="max-width:740px; padding:20px;"><p>' + sectionArray[i].docReleaseNotes + '</p><a href="' + sectionArray[i].docDownloadLink + '" class="btn btn-blue" target="_blank" style="padding:4px 20px;"><img src="/wp-content/uploads/2017/08/icon-btn-download.png" style="width:auto !important;"/> Download</a></div></div>';	
-					toolsHtml += '		</div>';
-					toolsHtml += '</div>';
+					if(sectionArray[i].docClass === initialVersionClass){
+						excerpt = trimText(sectionArray[i].docReleaseNotes, 150);
+						toolsHtml += '<div class="col-xs-12 col-sm-6 col-md-3 documents tool-blocks custom-block ' + sectionArray[i].docClass + '">';	
+						toolsHtml += '		<div class="grid-block"><div class="grid-featured-image-container"></div>';			
+						toolsHtml += '			<div class="grid-block-copy" style="position:relative;">';
+						toolsHtml += '				<h6>' + sectionArray[i].docTitle + '</h6>';			
+						toolsHtml += '				<p>' + excerpt + '</p>';
+						toolsHtml += '				<a href="' + sectionArray[i].docDownloadLink + '" class="btn btn-blue" target="_blank" style="display:block; width:100%; padding:4px; position:absolute; left:0px; bottom:0px;"><img src="/wp-content/uploads/2017/08/icon-btn-download.png" style="width:auto !important;"/> Download</a>';	
+						toolsHtml += '			</div>';
+						toolsHtml += '			<div class="hide"><div class="releaseNotesFull" style="max-width:740px; padding:20px;"><p>' + sectionArray[i].docReleaseNotes + '</p><a href="' + sectionArray[i].docDownloadLink + '" class="btn btn-blue" target="_blank" style="padding:4px 20px;"><img src="/wp-content/uploads/2017/08/icon-btn-download.png" style="width:auto !important;"/> Download</a></div></div>';	
+						toolsHtml += '		</div>';
+						toolsHtml += '</div>';
+					}else{
+						excerpt = trimText(sectionArray[i].docReleaseNotes, 150);
+						toolsHtml += '<div class="col-xs-12 col-sm-6 col-md-3 documents tool-blocks custom-block ' + sectionArray[i].docClass + '" style="display:none;"">';	
+						toolsHtml += '		<div class="grid-block"><div class="grid-featured-image-container"></div>';			
+						toolsHtml += '			<div class="grid-block-copy" style="position:relative;">';
+						toolsHtml += '				<h6>' + sectionArray[i].docTitle + '</h6>';			
+						toolsHtml += '				<p>' + excerpt + '</p>';
+						toolsHtml += '				<a href="' + sectionArray[i].docDownloadLink + '" class="btn btn-blue" target="_blank" style="display:block; width:100%; padding:4px; position:absolute; left:0px; bottom:0px;"><img src="/wp-content/uploads/2017/08/icon-btn-download.png" style="width:auto !important;"/> Download</a>';	
+						toolsHtml += '			</div>';
+						toolsHtml += '			<div class="hide"><div class="releaseNotesFull" style="max-width:740px; padding:20px;"><p>' + sectionArray[i].docReleaseNotes + '</p><a href="' + sectionArray[i].docDownloadLink + '" class="btn btn-blue" target="_blank" style="padding:4px 20px;"><img src="/wp-content/uploads/2017/08/icon-btn-download.png" style="width:auto !important;"/> Download</a></div></div>';	
+						toolsHtml += '		</div>';
+						toolsHtml += '</div>';
+					}
 				}
 				jQuery("#" + sectionContainerID).html(toolsHtml);
-				initialToolsSetup();
 			}
 		
 			jQuery.each(tableData.nodes, function(i, obj) {
-				var showAmount = 100;
-				if(i < showAmount){
-
-					var releaseVersionClean = obj.node.field_yocto_version.trim();
-					var releaseVersionArray = releaseVersionClean.split(' ');
-					var releaseVersion = releaseVersionArray[2];
-					var releaseClass = 'ver-' + releaseVersion.split('.').join('-');
-					var releaseNotes = obj.node.field_release_notes.trim();
-					//console.log('Version' + releaseVersion);
-				
-					var toolItem = {docTitle:obj.node.Tool, docDownloadLink:obj.node.field_download_urls, docVersion:releaseVersion, docClass:releaseClass, docReleaseNotes:releaseNotes};
-					toolsObjectArray[i] = toolItem;
-				}
+				var releaseVersionClean = obj.node.field_yocto_version.trim();
+				var releaseVersionArray = releaseVersionClean.split(' ');
+				var releaseVersion = releaseVersionArray[2];
+				var releaseClass = 'ver-' + releaseVersion.split('.').join('-');
+				var releaseNotes = obj.node.field_release_notes.trim();
+				//console.log('Version' + releaseVersion);
+			
+				var toolItem = {docTitle:obj.node.Tool, docDownloadLink:obj.node.field_download_urls, docVersion:releaseVersion, docClass:releaseClass, docReleaseNotes:releaseNotes};
+				toolsObjectArray[i] = toolItem;
 			});
-		
 			addToolBlocks(toolsObjectArray, 'downloadToolsContainer');
+			initialToolsSetup();
 		}
 		
 		
-		jQuery.getJSON( url, { csurl: toolsURL}, function(data){ //, dataType: "json"
-			buildToolsSection(data);
+		function buildToolsSections() {
+			jQuery.getJSON( url, { csurl: toolsURL}, function(data){ //, dataType: "json"
+				buildToolsSection(data);
+			});
+		}
+		
+		jQuery.getJSON( url, { csurl: releaseURL}, function(data){ //, dataType: "json"
+			buildDropdown(data);
+			buildToolsSections();
 		});
+		
 		
 		
 		//// Layers Scripts ////
@@ -878,7 +1092,7 @@
 		
 		var releaseObjectArray = [];
 		var releaseCurrentVersion = '';
-
+		var initialVersionClass = '';
 		
 		function initialToolsSetup() {
 			// initial config
@@ -897,6 +1111,9 @@
 			jQuery.each(tableData.nodes, function(i, obj) {
 				if(i === 0) {
 					releaseCurrentVersion = obj.node.field_release_number;
+					var versionClassClean = (releaseCurrentVersion + ' ').trim();
+					initialVersionClass = 'ver-' + versionClassClean.split('.').join('-');
+					//console.log("Set intial Class: " + initialVersionClass);
 				}
 	            var releaseNumber = obj.node.field_release_number + ' '.trim();
 				var releaseNumberClass = 'ver-' + releaseNumber.split('.').join('-');
@@ -962,11 +1179,6 @@
 		});
 		
 		
- 		jQuery.getJSON( url, { csurl: releaseURL}, function(data){ //, dataType: "json"
-			buildDropdown(data);
-		});
-		
-		
 		//// Tools Scripts ////
 		
 		
@@ -991,12 +1203,8 @@
 		
 		jQuery('#downloadToolsContainer').on('click', '.tools-read-more', function(e){
 			e.preventDefault();
-			
-			
 			var releaseNotesFull = jQuery(this).closest('.grid-block').find('.releaseNotesFull');
-			//jQuery.colorbox({inline:true, href:'#releaseInfoContainer'});
 			jQuery.colorbox({inline:true, href:releaseNotesFull, width:"80%"});
-		
 	    });
 		
 
@@ -1028,30 +1236,52 @@
 				var sectionArrayLength = sectionArray.length;
 				
 				for (var i = 0; i < sectionArrayLength; i++) {
-					excerpt  = trimText(sectionArray[i].docReleaseNotes, 150);
-					toolsHtml += '<div class="col-xs-12 col-sm-6 col-md-3 documents tool-blocks custom-block ' + sectionArray[i].docClass + '">';	
-					toolsHtml += '		<div class="grid-block"><div class="grid-featured-image-container"></div>';			
-					toolsHtml += '			<div class="grid-block-copy" style="position:relative;">';
-					toolsHtml += '				<h6>' + sectionArray[i].docTitle + '</h6>';			
-					toolsHtml += '				<p>' + excerpt + '</p>';
-					toolsHtml += '				<a href="' + sectionArray[i].docDownloadLink + '" class="btn btn-blue" target="_blank" style="display:block; width:100%; padding:4px; position:absolute; left:0px; bottom:0px;"><img src="/wp-content/uploads/2017/08/icon-btn-download.png" style="width:auto !important;"/> Download</a>';	
-					toolsHtml += '			</div>';
-					toolsHtml += '			<div class="hide"><div class="releaseNotesFull" style="max-width:740px; padding:20px;"><p>' + sectionArray[i].docReleaseNotes + '</p><a href="' + sectionArray[i].docDownloadLink + '" class="btn btn-blue" target="_blank" style="padding:4px 20px;"><img src="/wp-content/uploads/2017/08/icon-btn-download.png" style="width:auto !important;"/> Download</a></div></div>';	
-					toolsHtml += '		</div>';
-					toolsHtml += '</div>';
+					if(sectionArray[i].docClass === initialVersionClass){
+						excerpt  = trimText(sectionArray[i].docReleaseNotes, 150);
+						toolsHtml += '<div class="col-xs-12 col-sm-6 col-md-3 documents tool-blocks custom-block ' + sectionArray[i].docClass + '">';	
+						toolsHtml += '		<div class="grid-block"><div class="grid-featured-image-container"></div>';			
+						toolsHtml += '			<div class="grid-block-copy" style="position:relative;">';
+						toolsHtml += '				<h6>' + sectionArray[i].docTitle + '</h6>';			
+						toolsHtml += '				<p>' + excerpt + '</p>';
+						toolsHtml += '				<a href="' + sectionArray[i].docDownloadLink + '" class="btn btn-blue" target="_blank" style="display:block; width:100%; padding:4px; position:absolute; left:0px; bottom:0px;"><img src="/wp-content/uploads/2017/08/icon-btn-download.png" style="width:auto !important;"/> Download</a>';	
+						toolsHtml += '			</div>';
+						toolsHtml += '			<div class="hide"><div class="releaseNotesFull" style="max-width:740px; padding:20px;"><p>' + sectionArray[i].docReleaseNotes + '</p><a href="' + sectionArray[i].docDownloadLink + '" class="btn btn-blue" target="_blank" style="padding:4px 20px;"><img src="/wp-content/uploads/2017/08/icon-btn-download.png" style="width:auto !important;"/> Download</a></div></div>';	
+						toolsHtml += '		</div>';
+						toolsHtml += '</div>';
+					}else{
+						excerpt  = trimText(sectionArray[i].docReleaseNotes, 150);
+						toolsHtml += '<div class="col-xs-12 col-sm-6 col-md-3 documents tool-blocks custom-block ' + sectionArray[i].docClass + '" style="display:none;">';	
+						toolsHtml += '		<div class="grid-block"><div class="grid-featured-image-container"></div>';			
+						toolsHtml += '			<div class="grid-block-copy" style="position:relative;">';
+						toolsHtml += '				<h6>' + sectionArray[i].docTitle + '</h6>';			
+						toolsHtml += '				<p>' + excerpt + '</p>';
+						toolsHtml += '				<a href="' + sectionArray[i].docDownloadLink + '" class="btn btn-blue" target="_blank" style="display:block; width:100%; padding:4px; position:absolute; left:0px; bottom:0px;"><img src="/wp-content/uploads/2017/08/icon-btn-download.png" style="width:auto !important;"/> Download</a>';	
+						toolsHtml += '			</div>';
+						toolsHtml += '			<div class="hide"><div class="releaseNotesFull" style="max-width:740px; padding:20px;"><p>' + sectionArray[i].docReleaseNotes + '</p><a href="' + sectionArray[i].docDownloadLink + '" class="btn btn-blue" target="_blank" style="padding:4px 20px;"><img src="/wp-content/uploads/2017/08/icon-btn-download.png" style="width:auto !important;"/> Download</a></div></div>';	
+						toolsHtml += '		</div>';
+						toolsHtml += '</div>';
+					}
 				}
 				jQuery("#" + sectionContainerID).html(toolsHtml);
-				initialToolsSetup();
+				
 			}
-			
 			addToolBlocks(toolsObjectArray, 'downloadToolsContainer');
+			initialToolsSetup();
 		}
 		
 		
-		jQuery.getJSON( url, { csurl: toolsURL}, function(data){ //, dataType: "json"
-			buildToolsSection(data);
-		});
+		function buildToolsSections() {
+			jQuery.getJSON( url, { csurl: toolsURL}, function(data){ //, dataType: "json"
+				buildToolsSection(data);
+			});
+		}
 		
+				
+ 		jQuery.getJSON( url, { csurl: releaseURL}, function(data){ //, dataType: "json"
+			buildDropdown(data);
+			buildToolsSections();
+		});
+
 		
 		//// Layers Scripts ////
 		

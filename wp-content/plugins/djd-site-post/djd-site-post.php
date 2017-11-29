@@ -541,6 +541,7 @@ if (!class_exists("DjdSitePost")) {
 		      'post_status' => 'publish',
 		      'posts_per_page' => $post_count,
 		      'orderby' => 'title',
+		      'posts_per_page' => -1,
 		      'order' => 'ASC',
 		      'tax_query' => array(
 					array(
@@ -557,11 +558,13 @@ if (!class_exists("DjdSitePost")) {
 		      'post_status' => 'publish',
 		      'posts_per_page' => $post_count,
 		      'orderby' => 'title',
+		      'posts_per_page' => -1,
 		      'order' => 'ASC'
 		    );
 		}
 		
 		$output = '';
+		$postCount = 0;
 		//$output .= 'Tax: ' . $dynamic_post_taxonomy;
 		//$output .= 'Term: ' . $dynamic_post_taxonomy_terms;
 
@@ -589,7 +592,6 @@ if (!class_exists("DjdSitePost")) {
 					$status;
 					$datePublished = get_the_date( 'Y-m-d' );
 					$dateCurrent = date("Y-m-d");
-					
 					
 					if(strtotime($datePublished) > strtotime('-30 days')) {
 					    $status = "keep";
@@ -621,8 +623,12 @@ if (!class_exists("DjdSitePost")) {
 						//$output .= '		<p>Status: ' . $status . '</p>';
 						$output .= '		<p>' . get_the_excerpt() . '</p>';
 						
-	
-						$output .= '		<p class="date">' . get_field('my_meta_box_city_text') .  ', ' . $state .  '</p>';
+						if($cityField != "" && $state != ""){
+							$output .= '		<p class="date">' . $cityField .  ', ' . $state . '</p>';
+						}elseif($state != ""){
+							$output .= '		<p class="date">' . $state . '</p>';
+						}
+						
 						$output .= '		<p class="date" style="margin-bottom:10px;">' . $country .  '</p>';
 						
 						if($dynamic_post_widget == 'false'){
@@ -644,72 +650,80 @@ if (!class_exists("DjdSitePost")) {
 					}
 					
 				}else if($dynamic_post_type == 'events'){
+					
+					$status;
+					$datePublished = get_the_date( 'Y-m-d' );
+					$dateCurrent = date("Y-m-d");
+					
+					if(strtotime(get_field('dsp_event_end_date', get_the_ID())) > strtotime('-2 day')) {
+					    $status = "keep";
 
-					$output .= '<div class="half-block">';
-					if( get_field('dsp_event_link') && $dynamic_post_widget == 'true' ):
-						$output .= '<a href="' .  get_field('dsp_event_link') . '" class="inline-block width:100%;" target="_blank">';
-					endif;
-					$output .= '	<div class="block-copy col-sm-12">';
-					
-					if( get_field('dsp_event_thumb') ){  // currently does not exist
-						$output .= '	<div class="half-block-img-container col-sm-3"><img src="/wp-content/uploads/2017/06/icon-social-stack.png"></div>';
-						$output .= '	<div class="half-block-copy col-sm-9">';
-					}else{
-						$output .= '	<div class="half-block-copy col-sm-12">';
-					}
-					
-					//if( get_field('event_djd_site_post_link') ):
-						//$output .= '	<h3 class="title" style="margin-top:0px; margin-bottom:5px !important;"><a href="' .  get_field('event_djd_site_post_link') . '">' .  get_the_title() . '</a></h3>';
-					//else:
-						$output .= '	<h3 class="title" style="margin-top:0px; margin-bottom:5px !important;">' .  get_the_title() . '</h3>';
-					//endif;
-					
-					$output .= '	<p>' . get_the_excerpt() . '</p>';
-					
-					
-					if($dynamic_post_widget == 'false'){
-						$output .= '		<div class="row">';
-						//if($dynamic_post_show_dates != 'false' || $dynamic_post_type == 'events'){}
-						$output .= '			<div class="col-xs-12 col-sm-8">';
-						if( get_field('dsp_event_venue') ):
-							$output .= '			<p class="date">Venue: <span>' . get_field('dsp_event_venue', get_the_ID()) . '</span></p>';
+						$output .= '<div class="half-block">';
+						if( get_field('dsp_event_link') && $dynamic_post_widget == 'true' ):
+							$output .= '<a href="' .  get_field('dsp_event_link') . '" class="inline-block width:100%;" target="_blank">';
 						endif;
-						$output .= '				<p class="date">' . get_field('my_meta_box_city_text') .  ', ' . $state .  '</p>';
-						$output .= '				<p class="date" style="margin-bottom:10px !important;">' . $country .  '</p>';
+						$output .= '	<div class="block-copy col-sm-12">';
 						
-						$output .= '			</div>';
-						$output .= '			<div class="col-xs-12 col-sm-8">';
-						if( get_field('dsp_event_start_date', get_the_ID()) ):
-							$output .= '			<p class="date">Start date: <span>' . get_field('dsp_event_start_date', get_the_ID()) . '</span></p>';
-						endif;
-						if( get_field('dsp_event_end_date') ):
-							$output .= '			<p class="date">End date: <span>' . get_field('dsp_event_end_date', get_the_ID()) . '</span></p>';
-						endif;
-						$output .= '			</div>';
-						if( get_field('dsp_event_link') ):
-							$output .= '			<div class="col-xs-12 col-sm-4">';	
-							$output .= '				<div class="pull-right"><a href="' .  get_field('dsp_event_link') . '" class="btn btn-blue">View Event Details</a></div>';
+						if( get_field('dsp_event_thumb') ){  // currently does not exist
+							$output .= '	<div class="half-block-img-container col-sm-3"><img src="/wp-content/uploads/2017/06/icon-social-stack.png"></div>';
+							$output .= '	<div class="half-block-copy col-sm-9">';
+						}else{
+							$output .= '	<div class="half-block-copy col-sm-12">';
+						}
+						
+						//if( get_field('event_djd_site_post_link') ):
+							//$output .= '	<h3 class="title" style="margin-top:0px; margin-bottom:5px !important;"><a href="' .  get_field('event_djd_site_post_link') . '">' .  get_the_title() . '</a></h3>';
+						//else:
+							$output .= '	<h3 class="title" style="margin-top:0px; margin-bottom:5px !important;">' .  get_the_title() . '</h3>';
+						//endif;
+						
+						$output .= '	<p>' . get_the_excerpt() . '</p>';
+						
+						
+						if($dynamic_post_widget == 'false'){
+							$output .= '		<div class="row">';
+							//if($dynamic_post_show_dates != 'false' || $dynamic_post_type == 'events'){}
+							$output .= '			<div class="col-xs-12 col-sm-8">';
+							if( get_field('dsp_event_venue') ):
+								$output .= '			<p class="date">Venue: <span>' . get_field('dsp_event_venue', get_the_ID()) . '</span></p>';
+							endif;
+							$output .= '				<p class="date">' . get_field('my_meta_box_city_text') .  ', ' . $state .  '</p>';
+							$output .= '				<p class="date" style="margin-bottom:10px !important;">' . $country .  '</p>';
+							
 							$output .= '			</div>';
-						endif;
+							$output .= '			<div class="col-xs-12 col-sm-8">';
+							if( get_field('dsp_event_start_date', get_the_ID()) ):
+								$output .= '			<p class="date">Start date: <span>' . get_field('dsp_event_start_date', get_the_ID()) . '</span></p>';
+							endif;
+							if( get_field('dsp_event_end_date') ):
+								$output .= '			<p class="date">End date: <span>' . get_field('dsp_event_end_date', get_the_ID()) . '</span></p>';
+							endif;
+							$output .= '			</div>';
+							if( get_field('dsp_event_link') ):
+								$output .= '			<div class="col-xs-12 col-sm-4">';	
+								$output .= '				<div class="pull-right"><a href="' .  get_field('dsp_event_link') . '" class="btn btn-blue">View Event Details</a></div>';
+								$output .= '			</div>';
+							endif;
+							$output .= '		</div>';
+						}
+						
 						$output .= '		</div>';
+						$output .= '	</div>';
+						
+						if( get_field('event_djd_site_post_link') && $dynamic_post_widget == 'true' ):
+							$output .= '</a>';
+						endif;
+						$output .= '</div>';
+						
+						
+						//get_the_title()
+						// event_djd_site_post_name
+						// event_djd_site_post_email
+						// event_djd_site_post_link
+						// djd_site_post_start_date
+						// djd_site_post_end_date
+						// event_djd_site_post_venue
 					}
-					
-					$output .= '		</div>';
-					$output .= '	</div>';
-					
-					if( get_field('event_djd_site_post_link') && $dynamic_post_widget == 'true' ):
-						$output .= '</a>';
-					endif;
-					$output .= '</div>';
-					
-					
-					//get_the_title()
-					// event_djd_site_post_name
-					// event_djd_site_post_email
-					// event_djd_site_post_link
-					// djd_site_post_start_date
-					// djd_site_post_end_date
-					// event_djd_site_post_venue
 				} else if($dynamic_post_type == 'members'){ 
 				
 		
@@ -732,39 +746,48 @@ if (!class_exists("DjdSitePost")) {
 						$boardSupport = (is_array($optionsArray) && in_array( 'board-support', $optionsArray)) ? 'X' : ' ';
 						$other = (is_array($optionsArray) && in_array( 'other', $optionsArray)) ? 'X' : ' ';
 						
-						$output .= '<div>';
-						$output .= '	<div class="table-row seven-cols">';
-						$output .= '		<div class="col-xs-12 col-sm-1"><h5>Country</h5></div>';
-						$output .= '		<div class="col-xs-12 col-sm-1"><h5>Consultant</h5></div>';		
-						$output .= '		<div class="col-xs-12 col-sm-1"><h5>Company</h5></div>';
-						$output .= '		<div class="col-xs-12 col-sm-1"><h5>Pofessional Services</h5></div>';
-						$output .= '		<div class="col-xs-12 col-sm-1"><h5>Training Services</h5></div>';
-						$output .= '		<div class="col-xs-12 col-sm-1"><h5>Board Support Package Services</h5></div>';
-						$output .= '		<div class="col-xs-12 col-sm-1"><h5>Other Services</h5></div>';
-						$output .= '	</div>';
-						$output .= '</div>';
+						if($postCount == 0){
+							$output .= '<div class="mobile-hide-992">';
+							$output .= '	<div class="table-row seven-cols">';
+							$output .= '		<div class="col-xs-12 col-sm-1"><h5>Country</h5></div>';
+							$output .= '		<div class="col-xs-12 col-sm-1"><h5>Consultant</h5></div>';		
+							$output .= '		<div class="col-xs-12 col-sm-1"><h5>Company</h5></div>';
+							$output .= '		<div class="col-xs-12 col-sm-1"><h5>Pofessional Services</h5></div>';
+							$output .= '		<div class="col-xs-12 col-sm-1"><h5>Training Services</h5></div>';
+							$output .= '		<div class="col-xs-12 col-sm-1"><h5>Board Support Package Services</h5></div>';
+							$output .= '		<div class="col-xs-12 col-sm-1"><h5>Other Services</h5></div>';
+							$output .= '	</div>';
+							$output .= '</div>';
+						}
 						
-						$output .= '<div class="table-row seven-cols" style="border-bottom:1px solid #ccced0;">';
-						$output .= '	<div class="col-xs-12 col-sm-1"><p>' . $counteryField . '</p></div>'; //$country
+						
+						$output .= '<div class="table-row seven-cols mobile-table-row">';
+						$output .= '	<div class="col-xs-12 col-sm-1 mobile-show-992"><h5>Consultant</h5></div>';
 						$output .= '	<div class="col-xs-12 col-sm-1">';
+						$output .= '	<p>';
 						$output .= '		<strong>' . get_field('dsp_consultant_contact_name') . '</strong><br>';
-						//$output .= '		<strong>123 Intel Way</strong><br>';
-						$output .= '		<strong>' . $cityField . ', ' . $state . '</strong><br>';
+						if($cityField != "" && $state != ""){
+							$output .= '		<strong>' . $cityField . ', ' . $state . '</strong><br>';
+						}elseif($state != ""){
+							$output .= '		<strong>' . $state . '</strong><br>';
+						}
 						$output .= '		<strong>' . get_field('dsp_consultant_contact_phone') . '</strong><br>';
 						$output .= '		<a href="mailto:' . get_field('dsp_consultant_contact_email') . '" target="_blank">' . get_field('dsp_consultant_contact_email') . '</a>';
+						$output .= '	</p>';
 						$output .= '	</div>';
+						$output .= '	<div class="col-xs-12 mobile-show-992"><h5>Country</h5></div>';
+						$output .= '	<div class="col-xs-12 col-sm-1"><p>' . $counteryField . '</p></div>'; //$country
+						$output .= '	<div class="col-xs-12 col-sm-1 mobile-show-992"><h5>Company</h5></div>';
 						$output .= '	<div class="col-xs-12 col-sm-1"><p>' .  get_the_title() . '</p></div>';
+						$output .= '	<div class="col-xs-12 col-sm-1 mobile-show-992"><h5>Pofessional Services</h5></div>';
 						$output .= '	<div class="col-xs-12 col-sm-1"><p>' . $professionalServices . '</p></div>';
+						$output .= '	<div class="col-xs-12 col-sm-1 mobile-show-992"><h5>Training Services</h5></div>';
 						$output .= '	<div class="col-xs-12 col-sm-1"><p>' . $training . '</p></div>';
+						$output .= '	<div class="col-xs-12 col-sm-1 mobile-show-992"><h5>Board Support Package Services</h5></div>';
 						$output .= '	<div class="col-xs-12 col-sm-1"><p>' . $boardSupport . '</p></div>';
+						$output .= '	<div class="col-xs-12 col-sm-1 mobile-show-992"><h5>Other Services</h5></div>';
 						$output .= '	<div class="col-xs-12 col-sm-1"><p>' . $other . '</p></div>';
 						$output .= '</div>';
-						// $output .= '<div class="half-block">';
-						// $output .= '	<div class="block-copy col-sm-12">';
-						// $output .= '		<h3 class="title" style="margin-bottom:5px !important;">' .  get_the_title() . '</h3>';
-						// $output .= '		<p>' . get_the_excerpt() . '</p>';
-						// $output .= '	</div>';
-						// $output .= '</div>';
 					}else {
 						$output .= '<div class="half-block">';
 						$output .= '	<div class="block-copy col-sm-12">';
@@ -785,7 +808,7 @@ if (!class_exists("DjdSitePost")) {
 				// if($dynamic_post_link_to_page != 'false'){
 					// $output .= '		<p><a href="' . get_the_permalink(get_the_ID()) . '" class="view-more-link">View Details</a></p>';
 				// }
-			
+			$postCount ++;
 			endwhile;
 			
 			wp_reset_postdata();
@@ -885,8 +908,13 @@ if (!class_exists("DjdSitePost")) {
 				
 			if ( !empty ($_POST["djd-our-post-type"])) $djd_post_type = $_POST["djd-our-post-type"];
 			if ( !empty ($_POST["djd-our-id"])) $djd_post_id = $_POST["djd-our-id"];
-			if ( !empty ($_POST["djd-our-post-taxonomy"])) $dynamic_post_taxonomy = $_POST["djd-our-post-taxonomy"];
-			if ( !empty ($_POST["djd-our-post-term"])) $terms = $_POST["djd-our-post-term"];
+			
+			
+			$dynamic_post_taxonomy = ( !empty ($_POST["djd-our-post-taxonomy"])) ? $_POST["djd-our-post-taxonomy"] : 'category';
+			$terms = ( !empty ($_POST["djd-our-post-term"])) ? $_POST["djd-our-post-term"] : 'uncategorized';
+			
+			//if ( !empty ($_POST["djd-our-post-taxonomy"])) $dynamic_post_taxonomy = $_POST["djd-our-post-taxonomy"];
+			//if ( !empty ($_POST["djd-our-post-term"])) $terms = $_POST["djd-our-post-term"];
 				// Create post object with defaults
 			
 			// Check if the city exists
@@ -1200,9 +1228,7 @@ if (!class_exists("DjdSitePost")) {
 					    update_post_meta ($post_success, 'my_meta_box_country_select', $country);
 					}
 					
-					
-					
-					
+
 				}
 
 				if($post_success === false) {

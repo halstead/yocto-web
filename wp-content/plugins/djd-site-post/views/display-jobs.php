@@ -79,10 +79,12 @@ $postTypeName = ucfirst($postTypeNameSingular) . ' ';
 //echo 'name: ' . $djd_options['djd-title'] . $djd_options['djd-form-name'];
 
 ?>
-<form id="site_post_form" class="djd_site_post_form bordered" method="post" action="<?php echo admin_url('admin-ajax.php'); ?>" enctype="multipart/form-data">
+<form id="site_post_form" class="djd_site_post_form bordered <?php echo ($sr && $cf['form_ok']) ? ' hidden' : 'visilbe'; ?>" method="post" action="<?php echo admin_url('admin-ajax.php'); ?>" enctype="multipart/form-data">
 	<p hidden="hidden" class="form_error_message"></p>
 	<input type="hidden" name="djd-our-id" <?php echo ( $my_post ? "value='".$my_post->ID."'" : "value='".$djd_post_id."'" ); ?> />
 	<input type="hidden" name="djd-our-post-type" <?php  echo "value='" . $GLOBALS['djd_post_type']. "'" ?> />
+	<input type="hidden" name="djd-our-post-taxonomy" <?php  echo "value='" . $GLOBALS['djd_post_type_taxonomy']. "'" ?> />
+	<input type="hidden" name="djd-our-post-term" <?php  echo "value='" . $GLOBALS['djd_post_type_term']. "'" ?> />
 	<input type="hidden" name="djd-our-author" <?php if ( $my_post ) echo "value='".$my_post->post_author."'"; ?> />
 	
 	<?php if (isset($djd_options['djd-login-link'])) { ?>
@@ -627,11 +629,13 @@ $postTypeName = ucfirst($postTypeNameSingular) . ' ';
 		<?php }
 	} ?>
 	<button type="submit" class="send-button" id="submit"><?php echo ( $djd_options['djd-send-button'] ? $djd_options['djd-send-button'] : __('Publish', 'djd-site-post') ); ?></button>
-	<button id="refresher" type="reset" onclick="RefreshPage()" class="send-button <?php echo ($sr && $cf['form_ok']) ? 'visible' : ''; ?>"><?php _e('New Post', 'djd-site-post'); ?></button>
-	<p id="success" class="<?php echo ($sr && $cf['form_ok']) ? 'visible' : ''; ?>"><?php echo $djd_options['djd-post-confirmation']; ?></p>
 	<p id="error" class="<?php echo ($sr && !$cf['form_ok']) ? 'visible' : ''; ?>"><?php echo $djd_options['djd-post-fail']; ?></p>
 	</div> <!-- field-wrapper -->
 </form>
+<div>
+	<p id="success" class="<?php echo ($sr && $cf['form_ok']) ? 'visible' : ''; ?>"><?php echo $djd_options['djd-post-confirmation']; ?></p>
+	<button id="refresher" type="reset" onclick="RefreshPage()" class="btn-blue btn send-button <?php echo ($sr && $cf['form_ok']) ? 'visible' : ''; ?>"><?php _e('Submit Another', 'djd-site-post'); ?></button>
+</div>
 <!--<div id="feedback"></div>-->
 <?php } ?>
 <script>

@@ -648,6 +648,7 @@ input[type='submit'] {
       &:active,
       &:visited,
       &:focus {
+        font-weight: 300;
         background: transparent !important;
         background-image: none !important;
       }
@@ -663,6 +664,7 @@ input[type='submit'] {
       a {
         border-bottom: 0 none;
         font-size: 12px;
+        font-weight: 300;
 
         &:hover {
           border-bottom: 0 none;
@@ -675,6 +677,7 @@ input[type='submit'] {
     .dropdown-menu>.active>a:focus,
     .dropdown-menu>.active>a:hover {
       background-color: transparent;
+      font-weight: 300;
     }
   }
 
@@ -1452,27 +1455,28 @@ table {
 }
 
 .ambassadors {
-  text-align: center !important;
-
-  .grid-block {
-    padding-top: 22px;
-
-    .grid-featured-image-container {
-      border-radius: 50%;
-      display: inline-block;
-      height: 120px;
-      overflow: hidden;
-      position: relative;
-      width: 120px;
-    }
-
-    .grid-block-copy {
-      background: transparent;
-      border-bottom: 0 none;
-      text-align: center !important;
+  &.custom-block{
+    text-align: center !important;
+  
+    .grid-block {
+      padding-top: 22px;
+  
+      .grid-featured-image-container {
+        border-radius: 50%;
+        display: inline-block;
+        height: 120px;
+        overflow: hidden;
+        position: relative;
+        width: 120px;
+      }
+  
+      .grid-block-copy {
+        background: transparent;
+        border-bottom: 0 none;
+        text-align: center !important;
+      }
     }
   }
-
 }
 
 #vsel-custom {
@@ -1778,7 +1782,7 @@ body.members {
   }
 
   .container {
-    &.conent-inner {
+    .conent-inner {
       border-top: 1px solid $brand-gray;
       font-size: 12px;
       padding-bottom: 78px;

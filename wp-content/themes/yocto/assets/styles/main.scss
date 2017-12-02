@@ -2009,11 +2009,13 @@ body.members {
   .mobile-table-row {
     border-left: 1px solid $brand-gray;
     border-right: 1px solid $brand-gray;
-    margin-bottom: 36px !important;
+    margin-bottom: 36px;
     padding: 0;
 
     p {
       margin: 12px 0 !important;
+      word-wrap: break-word;
+      font-size:15px;
     }
   }
 }

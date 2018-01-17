@@ -12,6 +12,12 @@
       ],
       "main": true
     },
+    "custom-tiny-mce.css": {
+      "files": [
+        "styles/custom-tiny-mce.css"
+      ],
+      "main": true
+    },
     "customizer.js": {
       "files": [
         "scripts/customizer.js"

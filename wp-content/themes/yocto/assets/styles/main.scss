@@ -90,6 +90,7 @@ p {
 
 a {
   font-family: 'Lato', sans-serif;
+  color: $brand-blue;
 
   &:active,
   &:visited,
@@ -1025,10 +1026,6 @@ h6.blue-text,
 // Activity Table
 
 .activity-block {
-  .block-title {
-    font-size: 16px;
-  }
-
   .row-header {
     border-top: 1px solid $brand-gray;
     padding-bottom: 0;
@@ -1097,6 +1094,7 @@ span {
   &.medium {
     background: $scale-medium;
   }
+
 
   &.high {
     background: $scale-high;
@@ -1494,6 +1492,20 @@ table {
   padding: 10px;
   text-align: center;
   width: 100%;
+}
+
+// PAGE - LEARN
+
+.learn {
+  
+  .grid-featured-image-container {
+    max-height: 425px;
+    overflow: hidden;
+  }
+
+  .grid-block-copy {
+    min-height:84px;
+  }
 }
 
 // PAGE - ECOSYSTEM
@@ -2135,6 +2147,12 @@ body.members {
   #vsel-custom {
     width: 50%;
   }
+  
+  .learn {
+    .grid-block-copy {
+      min-height:104px;
+    }
+  }
 }
 
 // Medium Devices, Desktops
@@ -2199,6 +2217,12 @@ body.members {
     margin-bottom: 0;
     padding: 10px;
   }
+  
+  .learn {
+    .grid-block-copy {
+      min-height:124px;
+    }
+  }
 }
 
 // Large Devices, Wide Screens
@@ -2206,6 +2230,12 @@ body.members {
 @media only screen and (min-width: 1200px) {
   #menu-primary-navigation {
     margin-left: 0;
+  }
+  
+  .learn {
+    .grid-block-copy {
+      min-height:104px;
+    }
   }
 }
 

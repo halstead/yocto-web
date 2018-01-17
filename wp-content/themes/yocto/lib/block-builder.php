@@ -62,6 +62,7 @@ function custom_project_blocks_function($atts) {
 			// Content Fields
 			$contentBlockTitle = '';
 			$contentBlockCopy = '';
+			$contentBlockContent = '';
 			$contentEmbedCode= '';
 			
 			// Image Fields
@@ -116,6 +117,7 @@ function custom_project_blocks_function($atts) {
 			if($blockType == 'content' && $blockState == 'blockActive'){
 				if(isset($field['contentBlockTitle'])){ $contentBlockTitle = $field['contentBlockTitle']; }
 				if(isset($field['contentBlockCopy'])){ $contentBlockCopy = $field['contentBlockCopy']; } 
+				if(isset($field['contentBlockContent'])){ $contentBlockContent = $field['contentBlockContent']; } 
 				if(isset($field['contentShortcode'])){ $contentEmbedCode = $field['contentShortcode']; }
 				//$mediaShortCode = do_shortcode($contentEmbedCode);
 				//$output .= '<div>' . $mediaShortCode . '</div>';
@@ -136,6 +138,9 @@ function custom_project_blocks_function($atts) {
 					if($contentEmbedCode != 'undefined' && $contentEmbedCode != ''){
 						$mediaShortCode = do_shortcode($contentEmbedCode);
 						$output .= '<div class="shortcode">' . do_shortcode($contentEmbedCode) . '</div>';
+					}
+					if($contentBlockContent != 'undefined' && $contentBlockContent != ''){
+						$output .= '<div class="content-wysiwyg">' . $contentBlockContent . '</div>';
 					}
 					if($contentBlockCopy != 'undefined' && $contentBlockCopy != ''){
 						$output .= '<div class="content">' . $contentBlockCopy . '</div>';
@@ -344,6 +349,43 @@ function custom_project_blocks_function($atts) {
 //////------>> START - GLOBAL FUNCTIONS <<------//////
 
 
+function get_ajax_wp_editor($idCounter = null) {
+	$content = '';
+	wp_enqueue_script('editor');
+	wp_enqueue_script('word-count');
+	$contentID = 'contentBlockContent' .  $idCounter;
+	
+	$settingsNew = array(
+		'media_buttons'	=> false, 
+		'tinymce'		 => array( 
+            'content_css' => get_stylesheet_directory_uri() . '/dist/styles/custom-tiny-mce.css',
+            'init_instance_callback' => 'function(editor) {
+                    editor.on("blur", function(){
+                        console.log("Editor ID: " + editor.id + " Editor Content: " + editor.getContent());
+						var currentContent = editor.getContent();
+						var currentContentID = editor.id;
+						jQuery("#" + currentContentID + "field").val(" ");
+						jQuery("#" + currentContentID + "field").val(currentContent);
+                });
+            }',
+            'textarea_name'=> $contentID
+        )
+        // 'textarea_name' => 'text_name',
+        // 'textarea_rows' => get_option('default_post_edit_rows', 10), 
+		// 'quicktags'		=> false			
+		// 'teeny'			=> $teeny,
+		 // 'wpautop'		=> true,
+		 // 'quicktags'		=> true
+	);
+	add_filter( 'wp_default_editor', create_function('', 'return "tinymce";') );
+	
+	$editor_content = '';
+	$content .= wp_editor($editor_content, $contentID, $settingsNew );
+	$content .= '<input type="hidden" id="contentBlockContent' .  $idCounter . 'field" name="contentBlockContent[]" value="" />';
+	return $content;
+}
+
+
 function bk_get_post_info($postID = null) {
 	$output = '';
 	$output .=  '<div id="bk-ajax-container" style="width:100%;">';
@@ -439,6 +481,9 @@ function custom_blocks($atts) {
 	$read_more = $atts["read-more"];
 	$block_link = $atts["block-link"];
 	
+	$expires_date = '-1 month';  // remove later
+	$expire_date_param = date( 'Y-m-d',strtotime($expires_date) );  // remove later
+	
 	if(!isset($block_num) || $block_num == ''){
 		$block_num = -1;
 	}
@@ -468,6 +513,24 @@ function custom_blocks($atts) {
 	      'posts_per_page' => $block_num,
 	      'order' => 'DESC'
 	    );
+	}elseif($post_type == 'jobs'){ // remove later
+		$args=array(
+	      'post_type' => $post_type,
+	      'post_status' => 'publish',
+	      'posts_per_page' => $block_num,
+	      'order' => 'DESC',
+	      'tax_query' => array(
+	        array(
+	            'taxonomy' => $taxonomy,
+	            'field' => 'slug',
+	            'terms' => $taxonomy_term
+	        	)
+	      ),
+	      'date_query' => array(
+	        'after' => $expire_date_param,
+	        'inclusive' => true,
+	      ) 
+	    );	 
 	}else{
 		$args=array(
 	      'post_type' => $post_type,
@@ -562,65 +625,64 @@ function ajax_request_func(){
 			   $dropDown =  $_REQUEST['dropDown'];
 			   $itemSlug =  $_REQUEST['slug'];
 			   $output = list_taxonomies(0, $itemSlug);
+			   $output=json_encode($output);
           break;
 		  case 'taxonomy':
 			   $dropDown =  $_REQUEST['dropDown'];
 			   $itemSlug =  $_REQUEST['slug'];
 			   $postType = $_REQUEST['postType'];
-			   $output = list_taxonomy_terms(0, $itemSlug, $postType);		
+			   $output = list_taxonomy_terms(0, $itemSlug, $postType);	
+			   $output=json_encode($output);	
           break;
 		  case 'all':
-			   //$dropDown =  $_REQUEST['dropDown']; // get passed vaer
-			   $postID =  $_REQUEST['postID'];
-			   //$postType = $_REQUEST['postType'];
-			   //$output = list_taxonomy_terms(0, $itemSlug, $postType);		
+			   $postID =  $_REQUEST['postID'];		
 			   $output = bk_get_post_info($postID);
+			   $output=json_encode($output);
+          break;
+		  case 'editor':
+			   $idCounter =  $_REQUEST['idCounter'];		
+			   $output = get_ajax_wp_editor($idCounter);
           break;
           default:
               $output = 'No function specified, check your jQuery.ajax() call yo';
           break;
-
      }
 
-     $output=json_encode($output);
+     //$output=json_encode($output);
      if(is_array($output)){
      	print_r($output);
      }
      else{
      	echo $output;
      }
-	 echo
+	 //echo 'Ajax Error with output';
      die;
 }
 
-add_action('wp_ajax_nopriv_do_ajax', __NAMESPACE__ . '\\ajax_content_func'); //-->> Inialized here - Then Called by ajax login form (second ajax login call)
-add_action('wp_ajax_do_ajax', __NAMESPACE__ . '\\ajax_content_func');
-
-function ajax_content_func(){
-     switch($_REQUEST['items']){
-		  case 'all':
-			   //$dropDown =  $_REQUEST['dropDown']; // get passed vaer
-			   $postID =  $_REQUEST['postID'];
-			   //$postType = $_REQUEST['postType'];
-			   //$output = list_taxonomy_terms(0, $itemSlug, $postType);		
-			   $output = bk_get_post_info($postID) . $postID;
-          break;
-          default:
-              $output = 'No function specified, check your jQuery.ajax() call';
-          break;
-
-     }
-
-     $output=json_encode($output);
-     if(is_array($output)){
-     	print_r($output);
-     }
-     else{
-     	echo $output;
-     }
-	 echo
-     die;
-}
+// add_action('wp_ajax_nopriv_do_ajax', __NAMESPACE__ . '\\ajax_content_func'); //-->> Inialized here - Then Called by ajax login form (second ajax login call)
+// add_action('wp_ajax_do_ajax', __NAMESPACE__ . '\\ajax_content_func');
+// 
+// function ajax_content_func(){
+     // switch($_REQUEST['items']){
+		  // case 'all':
+			   // $postID =  $_REQUEST['postID'];		
+			   // $output = bk_get_post_info($postID) . $postID;
+          // break;
+          // default:
+              // $output = 'No function specified, check your jQuery.ajax() call';
+          // break;
+// 
+     // }
+// 
+     // $output=json_encode($output);
+     // if(is_array($output)){
+     	// print_r($output);
+     // }
+     // else{
+     	// echo $output;
+     // }
+     // die;
+// }
 
 //////------>> END - AJAX HANDLER FUNCTION <<------//////
 
@@ -672,12 +734,15 @@ function project_builder_meta_box() {
 		.toggle-indicator:before {
 			content: "\f140";
 		}
+		
+		a.sort{
+			padding:20px 0px;
+			cursor:pointer;
+		}
 
 		button.custom-accordian {
 			float: right;
-			width: 36px;
-			height: 36px;
-			padding: 0;
+			padding: 6px 8px 6px 6px !important;
 			border:1px solid #e9e9e9 !important;
 			margin:4px !important;
 		}
@@ -688,6 +753,29 @@ function project_builder_meta_box() {
 
 		button.custom-accordian.open .toggle-indicator:before  {
 			content: "\f142"  !important;
+		}
+		
+		.custom-single-accordion-btn {
+			background:#f5f5f5; 
+			color:#555; 
+			border-bottom-color:#f5f5f5;
+		}
+		
+		.custom-signle-accordion-content-container {
+			background:#f5f5f5; 
+			padding:7px 0px; 
+			border:1px solid #ddd;
+		}
+		
+		.custom-signle-accordion-content-container hr {
+			margin:0px;
+		}
+				
+		.custom-signle-accordion-content textarea {
+			width:100%; 
+			border-top:0px none;
+			border-left:0px none; 
+			border-right:0px none;
 		}
 
 		div.project-block-field-containter {
@@ -715,6 +803,10 @@ function project_builder_meta_box() {
 		
 		#wp-content-editor-container, #post-status-info {  /* Hides Main Content Text Area*/
 			display:none;
+		}
+		
+		.float-container {
+			overflow:hidden
 		}
 		
 		.block-builder-block {
@@ -795,11 +887,74 @@ function project_builder_meta_box() {
 			$('#publish').click();
 		});
 
-		$('#add-block').on('click', function(e) {
+		$(document.body).on('click', '#add-block', function (e) {
 			e.preventDefault();
-			var row = $('.empty-row.screen-reader-text').clone(true);
+			
+			var blockCount = $('.block-builder-block').length;
+			var selectorIDQuicktags = 'contentBlockContent' + blockCount;
+			var selectorIDTinymce = '#contentBlockContent' + blockCount;
+			
+			var row = $('.empty-row.screen-reader-text').clone(true, true);
 			row.removeClass('empty-row screen-reader-text');
+			row.addClass('block-builder-block');
+			var containerID = 'content-container-' + blockCount;
+			row.find('.content-container').attr('id', containerID);
 			row.insertBefore('#repeatable-fieldset-one tbody:first>tr:last');
+			//alert(blockCount);
+			
+			function updateField(inst) {
+			    //alert("The HTML is now:" + inst.getBody().innerHTML);    
+			    var currentContent = inst.getBody().innerHTML;
+				var currentContentID = inst.id;
+				jQuery("#" + currentContentID + "field").val(" ");
+				jQuery("#" + currentContentID + "field").val(currentContent);       
+			}
+						
+			jQuery.ajax({
+		          url: '/wp-admin/admin-ajax.php',
+		          data:{
+		               'action':'do_ajax',
+		               'dropDown': 'editor',
+		               'idCounter': blockCount
+		               },
+		          //dataType: 'html',
+		          method: 'post',
+		          success:function(data){
+				  		// console.log(data);
+				  		$("#" + containerID).empty();
+				  		$("#" + containerID).html(data);
+				  		
+						quicktags({id : selectorIDQuicktags});
+						
+						// plugins: /tabfocus,paste,media,fullscreen,wordpress,wpeditimage,wpgallery,wplink,wpdialogs,wpfullscreen
+						// toolbar 1: 'bold,italic,strikethrough,bullist,numlist,blockquote,hr,alignleft,aligncenter,alignright,link,unlink,wp_more,spellchecker,wp_fullscreen,wp_adv ' 
+						// toolbar 2: 'formatselect,underline,alignjustify,forecolor,pastetext,removeformat,charmap,outdent,indent,undo,redo,wp_help '
+						
+						tinymce.init({
+							target: 'iframe', //'textarea',  // change this value according to your HTML
+							selector: selectorIDTinymce, //'#contentBlockContentNewfield',
+			                plugins: ["lists", "fullscreen", "wordpress", "wplink"],
+			                toolbar: [
+						        'formatselect bold italic bullist numlist blockquote alignleft aligncenter alignright link wp_more fullscreen wp_adv',
+						    ],
+			                menubar: false,
+							statusbar: true,
+							branding: false,
+							skin: 'lightgray',
+							setup: function (ed) {
+						        ed.on("change", function () {
+						            updateField(ed);
+						        })
+						    }
+			            });
+		          },
+		          error: function(errorThrown){
+		               alert('Error Retrieving Request');
+		               console.log(errorThrown);
+		          }
+			 });	
+			 
+			
 			var radioCount = $('input[name*="counter"]').length - 2; //--> There are two hidden ones we don't want to count
 			var radioBlockTypeName = 'blockType' + radioCount + '[]';
 			var radioBlockTypeState = 'blockState' + radioCount + '[]';
@@ -821,7 +976,7 @@ function project_builder_meta_box() {
 			return false;
 		});
 		
-		// $('.remove-row').on('click', function() {
+		// $('.remove-row').on('click', function() {  // removed when added verification popup
 			// $(this).parents('tr').remove();
 			// return false;
 		// });
@@ -890,6 +1045,27 @@ function project_builder_meta_box() {
 			}
 		});
 		
+		$('.custom-single-accordion-btn').on('click', function(e) {
+			$this = $(this);
+			//console.log('click');
+			var currentContainer = $this.closest('.project-block-field-containter').find('.custom-signle-accordion-content');
+			if(currentContainer.hasClass('closed')) {
+				//console.log('open');
+				$this.text('close');
+				currentContainer.removeClass('closed');
+				currentContainer.addClass('open');
+				currentContainer[0].setAttribute('aria-expanded', 'true');
+				currentContainer.slideDown(400);
+			}else if(currentContainer.hasClass('open')){
+				//console.log('close');
+				$this.text('open');
+				currentContainer.addClass('closed');
+				currentContainer.removeClass('open');
+				currentContainer[0].setAttribute('aria-expanded', 'false');
+				currentContainer.slideUp(400);
+			}
+		});
+		
 		
 		$('.checkbox-trigger').change(function() {
 			var targetID = $(this).attr("data-class-target");
@@ -916,7 +1092,7 @@ function project_builder_meta_box() {
 	    $(document.body).on('click',".delete-disclaimer-remove",function (e) {
 	    	//e.preventDefault();
 	    	thisContainer.remove();
-	    	tb_remove() ;
+	    	tb_remove();
 	    	console.log('remove');
 	    });
 	    
@@ -929,6 +1105,8 @@ function project_builder_meta_box() {
 	    $(document.body).on('click',".delete-block-btn",function (e) {
 	    	e.preventDefault();
 	    	//console.log("hey");
+	    	//var customContent = tmce_getContent( 'blockBuilder' );  //', 'textarea-id'
+	    	//console.log('TINY: ' + customContent);
 	    	tb_show('', '#TB_inline?height=250&width=738&inlineId=deleteGateway');
 	    	thisContainer = $(this).closest("tr");
 	    });
@@ -954,6 +1132,17 @@ function project_builder_meta_box() {
 		});
 		
 		
+		// START - WYSIWYG Custom Scripts
+		
+		$(document.body).on('input propertychange',".wp-editor-area",function (e) { // function to update field if editing text (textarea) view
+			var fieldId = '#' + $(this).attr('id') + 'field';
+			var currentContent = $(this).val();
+			$(fieldId).val(currentContent);
+		});
+			
+		// END - WYSIWYG Custom Scripts
+		
+		
 		function updatePostTypeSelectField(dropDown, slug, taxContainer, termContainer){
 			jQuery.ajax({
 		          url: '/wp-admin/admin-ajax.php',
@@ -970,16 +1159,11 @@ function project_builder_meta_box() {
 				  		var taxonomy = $(taxContainer).find('select').val();
 				  		console.log("POSTTYPE: " + postType);
 				  		console.log("TAX: " + taxonomy);
-				  		
 				  		updateTaxonomySelectField('taxonomy', taxonomy, termContainer, postType)
-						// $('#main').empty();
-						// $('#main').html(data.html);
 		          },
 		          error: function(errorThrown){
-		          	   
 		               alert('Error Retrieving Request');
 		               console.log(errorThrown);
-		               //animating = false;
 		          }
 			 });	
 		}
@@ -1138,6 +1322,9 @@ function project_builder_meta_box() {
 			$(this).hide().prev().val('').prev().addClass('button').html('Upload image');
 			return false;
 		});
+		
+		
+		
 
 	});
 	</script>
@@ -1258,7 +1445,45 @@ function project_builder_meta_box() {
 							</div>
 							<div>
 								<div>Content:</div><br /><!-- Slide Overlay Copy -->
-								<textarea style="width:100%;" rows="10" placeholder="" name="contentBlockCopy[]" value="<?php if (array_key_exists('contentBlockCopy', $field) && $field['contentBlockCopy'] != '') echo esc_attr( $field['contentBlockCopy'] ); ?>"><?php if (array_key_exists('contentBlockCopy', $field) && $field['contentBlockCopy'] != '') echo esc_attr( $field['contentBlockCopy'] ); ?></textarea>
+								
+								<?php 
+								if ( user_can_richedit() )
+								wp_enqueue_script('editor');
+								wp_enqueue_script('word-count');
+								$settings = array(
+									'media_buttons'	=> false, //(boolean) $djd_options['djd-allow-media-upload'],
+									'tinymce'		 => array( 
+							            'content_css' => get_stylesheet_directory_uri() . '/dist/styles/custom-tiny-mce.css',
+							        	'init_instance_callback' => 'function(editor) {
+						                        editor.on("blur", function(){
+						                            console.log("Editor ID: " + editor.id + " Editor Content: " + editor.getContent());
+													var currentContent = editor.getContent();
+													var currentContentID = editor.id;
+													jQuery("#" + currentContentID + "field").val(" ");
+													jQuery("#" + currentContentID + "field").val(currentContent);
+						                    });
+						                }'
+							        )
+							        // 'textarea_name' => 'text_name',
+							        // 'textarea_rows' => get_option('default_post_edit_rows', 10), 
+									// 'quicktags'		=> false			
+									// 'teeny'			=> $teeny,
+						 			// 'wpautop'		=> true,
+						 			// 'quicktags'		=> $show_quicktags
+								);
+				
+								$editor_content = (array_key_exists('contentBlockContent', $field) && $field['contentBlockContent'] != '') ? html_entity_decode( $field['contentBlockContent'] ) : '';									
+								$contentID = 'contentBlockContent' . $key;
+								wp_editor($editor_content, $contentID, $settings );
+								?>
+								<br>
+								<input type="hidden" id="contentBlockContent<?php echo $key; ?>field" name="contentBlockContent[]" value="<?php echo htmlspecialchars($editor_content);  ?>" /> 
+								<div>HTML / CSS / JavaScript: </div><br /><!-- Slide Overlay Copy -->
+								<div class="float-container"><span class="button custom-single-accordion-btn alignright">open</span></div>
+								<div class="custom-signle-accordion-content-container">
+									<hr></hr>
+									<div class="custom-signle-accordion-content hidden closed"><textarea rows="7" placeholder="" name="contentBlockCopy[]" value="<?php if (array_key_exists('contentBlockCopy', $field) && $field['contentBlockCopy'] != '') echo esc_attr( $field['contentBlockCopy'] ); ?>"><?php if (array_key_exists('contentBlockCopy', $field) && $field['contentBlockCopy'] != '') echo esc_attr( $field['contentBlockCopy'] ); ?></textarea></div>
+								</div>
 							</div>
 						</div>
 					</td>
@@ -1512,14 +1737,14 @@ function project_builder_meta_box() {
 				</tr>
 			</table>
 		</td>
-		<td><a class="sort">|||</a></td>   <!-- rowspan="2" -->
+		<td><a class="sort draggable">|||</a></td>   <!-- rowspan="2" -->
 	</tr>
 	<?php
-		}
+	}
 	else :
 		// show a blank one (on page load)
 	?>
-	<tr class="blockActive">
+	<tr class="blockActive block-builder-block" id="block-0">
 		<!-- <td><a class="button remove-row" href="#">-</a></td> -->
 		<td><a href="#" class="button delete-block-btn">-</a></td>
 		<td>
@@ -1602,8 +1827,47 @@ function project_builder_meta_box() {
 								</div>
 							</div>
 							<div style="margin-bottom:12px; overflow:hidden;">
-								<span>Content:</span><br />
-								<textarea style="width:100%;" rows="10" placeholder="" name="contentBlockCopy[]"></textarea>
+								<div>Content:</div><br /><!-- Slide Overlay Copy -->
+								<?php 
+								if ( user_can_richedit() )
+								wp_enqueue_script('editor');
+								wp_enqueue_script('word-count');
+								$settings = array(
+									'media_buttons'	=> false, //(boolean) $djd_options['djd-allow-media-upload'],
+									'tinymce'		 => array( 
+							            'content_css' => get_stylesheet_directory_uri() . '/dist/styles/custom-tiny-mce.css',
+							        	'init_instance_callback' => 'function(editor) {
+						                        editor.on("blur", function(){
+						                            console.log("Editor ID: " + editor.id + " Editor Content: " + editor.getContent());
+													var currentContent = editor.getContent();
+													var currentContentID = editor.id
+													jQuery("#" + currentContentID + "field").val(currentContent);
+						                    });
+						                }'
+							        )
+							        // 'textarea_name' => 'text_name',
+							        // 'textarea_rows' => get_option('default_post_edit_rows', 10), 
+									// 'quicktags'		=> false			
+									// 'teeny'			=> $teeny,
+						 			// 'wpautop'		=> true,
+						 			// 'quicktags'		=> $show_quicktags
+								);
+				
+								$editor_new_content = ''; //$editor_content = (array_key_exists('contentBlockContent', $field) && $field['contentBlockContent'] != '') ? esc_attr( $field['contentBlockContent'] ) : '';									
+								$contentNewID = 'contentBlockContent0';
+								wp_editor($editor_new_content, $contentNewID, $settings );
+								?>
+								<br>
+								<input type="hidden" id="contentBlockContent0field" name="contentBlockContent[]" value="" />
+								<div>HTML / CSS / JavaScript: </div><br /><!-- Slide Overlay Copy -->
+								<div class="float-container"><span class="button custom-single-accordion-btn alignright">open</span></div>
+								<div class="custom-signle-accordion-content-container">
+									<hr></hr>
+									<div class="custom-signle-accordion-content hidden closed"><textarea rows="7" placeholder="" name="contentBlockCopy[]"></textarea></div>
+								</div>
+								
+								<!-- <div>HTML / CSS / JavaScript:</div><br />Slide Overlay Copy 
+								<textarea style="width:100%;" rows="5" placeholder="" name="contentBlockCopy[]"></textarea>-->
 							</div>
 						</div>
 					</td>
@@ -1792,7 +2056,7 @@ function project_builder_meta_box() {
 				</tr>
 			</table>
 		</td>
-		<td><a class="sort">|||</a></td>   <!-- rowspan="2" -->
+		<td><a class="sort draggable">|||</a></td>   <!-- rowspan="2" -->
 	</tr>
 	<?php endif; ?>
 
@@ -1880,8 +2144,17 @@ function project_builder_meta_box() {
 								</div>
 							</div>
 							<div style="margin-bottom:12px; overflow:hidden;">
-								<div>Content:</div><br />
-								<textarea style="width:100%;" rows="10" placeholder="" name="contentBlockCopy[]"></textarea>
+								<div>Content:</div><br /><!-- Slide Overlay Copy 1 -->
+								<div class="content-container"></div>
+								<br>
+								<div>HTML / CSS / JavaScript: </div><br /><!-- Slide Overlay Copy -->
+								<div class="float-container"><span class="button custom-single-accordion-btn alignright">open</span></div>
+								<div class="custom-signle-accordion-content-container">
+									<hr></hr>
+									<div class="custom-signle-accordion-content hidden closed"><textarea rows="7" placeholder="" name="contentBlockCopy[]"></textarea></div>
+								</div>
+								<!--<div>HTML / CSS / JavaScript:</div><br /> Slide Overlay Copy 
+								<textarea style="width:100%;" rows="10" placeholder="" name="contentBlockCopy[]"></textarea> -->
 							</div>
 						</div>
 					</td>
@@ -2070,7 +2343,7 @@ function project_builder_meta_box() {
 				</tr>
 			</table>
 		</td>
-		<td><a class="sort">|||</a></td>   <!-- rowspan="2" link-gateway-->
+		<td><a class="sort draggable">|||</a></td>   <!-- rowspan="2" link-gateway-->
 	</tr>
 	</tbody>
 	</table>
@@ -2141,6 +2414,7 @@ function repeatable_meta_box_save($post_id) {
 
 	$contentBlockTitle = $_POST['contentBlockTitle'];
 	$contentBlockCopy = $_POST['contentBlockCopy'];
+	$contentBlockContent = $_POST['contentBlockContent'];
 	$contentShortcode = $_POST['contentShortcode'];
 	// $field['contentBlockTitle'];
 	// $field['contentBlockCopy'];
@@ -2235,9 +2509,11 @@ function repeatable_meta_box_save($post_id) {
 				$new[$i]['contentShortcode'] = stripslashes($contentShortcode[$i] );
 			
 			if ( $contentBlockCopy[$i] != '' )
-				$new[$i]['contentBlockCopy'] = stripslashes($contentBlockCopy[$i] );
-				
-				
+				$new[$i]['contentBlockCopy'] = ( $contentBlockCopy[$i] );
+			
+			if ( $contentBlockContent[$i] != '' )
+				$new[$i]['contentBlockContent'] = ( $contentBlockContent[$i] );
+			
 			//--> Set - Image Section Fields <--//
 			if ( $imageSlide[$i] != '' )
 				$new[$i]['imageSlide'] = stripslashes($imageSlide[$i] );

@@ -41,3 +41,29 @@ template-custom.php
 #### Boilerplate Motivation
 
 Typically, WordPress installations are a spaghetti of the WordPress core, plugins, themes and what have you. This makes upgrading WordPress a pain. The point of this boilerplate is to keep the WordPress core and everything else cleanly separated. This is achieved by using git submodules and some config hacking and Apache redirects :)
+
+## Working with this Boilerplate
+
+When checking out the project, be sure to use the `--recursive` flag if you want to also pull the associated version of WordPress.
+
+## Upgrading Wordpress
+
+After when using this boilerplate, keeping Wordpress up-to-date via git is
+pretty easy.
+
+Go to the submodule directory:
+
+    cd wordpress
+
+Fetch the tags from git:
+
+    git fetch --tags
+
+Checkout the version you want to upgrade to (e.g. `git checkout 3.7.1`):
+
+    git checkout <tag>
+
+Commit your Wordpress upgrade:
+
+    cd ..
+    git commit -m "Updating wordpress to <tag-name>"

@@ -468,6 +468,39 @@ function list_column_select($selectedOption = 4) {
 }
 
 
+function job_blocks_settings ($post_type) {
+	$args=array(
+      'post_type' => $post_type,
+      'post_status' => 'publish',
+      'order' => 'DESC',
+      'meta_query' => array(
+	    'relation' => 'OR',
+	    array(
+	        'key' => 'default_post',
+	        'compare' => 'EXISTS',
+	    ),
+	  )
+    );
+	$job_info_array = array();
+	$output = '';
+	$my_query = null;
+    $my_query = new WP_Query($args);  
+    if( $my_query->have_posts() ) {
+		while ($my_query->have_posts()) : $my_query->the_post();
+			//$jobPostMonthExpires = (function_exists('get_field') && get_field( "expire_after_month" ) ) ? get_field( "expire_after_month", get_the_ID() )  : '';
+			//$jobPostBlockNum = (function_exists('get_field') && get_field( "number_of_blocks_before_showing", get_the_ID() ) ) ? get_field( "number_of_blocks_before_showing", get_the_ID() )  : '';
+			//$jobPostDefaultPost = (function_exists('get_field') && get_field( "default_post", get_the_ID() ) ) ? get_field( "default_post", get_the_ID() )  : '';
+			$job_info_array[0] = get_field( "expire_after_month", get_the_ID() );  //.$jobPostMonthExpires;
+			$job_info_array[1] = get_field( "number_of_blocks_before_showing", get_the_ID() ) ; //$jobPostBlockNum;
+		endwhile;
+	}
+	$output .= $job_info_array;
+	wp_reset_postdata();
+	wp_reset_query();
+	return $job_info_array;
+} 
+
+
 function custom_blocks($atts) { 
 	$post_type = $atts["custom-post-type"];
 	$taxonomy = $atts["taxonomy"];
@@ -480,9 +513,16 @@ function custom_blocks($atts) {
 	$columns = $atts["columns"];
 	$read_more = $atts["read-more"];
 	$block_link = $atts["block-link"];
+
+	// Jobs Custom Options
+	$jobs_options = get_option('options_jobs_field_group');
+	$jobs_expire_date = $jobs_options['jobs_expire_setting'];
+	$jobs_minimum_blocks = $jobs_options['jobs_minimum_blocks'];
+	$jobs_default_ID = $jobs_options['jobs_default_postID'];
 	
-	$expires_date = '-1 month';  // remove later
-	$expire_date_param = date( 'Y-m-d',strtotime($expires_date) );  // remove later
+	$post_expire_date = ( isset($jobs_expire_date) ) ? $jobs_expire_date : '12';				
+	$expires_date = '-' . $post_expire_date  .' month';  // remove later
+	$expire_date_param = date( 'Y-m-d', strtotime($expires_date) );  // remove later
 	
 	if(!isset($block_num) || $block_num == ''){
 		$block_num = -1;
@@ -519,6 +559,7 @@ function custom_blocks($atts) {
 	      'post_status' => 'publish',
 	      'posts_per_page' => $block_num,
 	      'order' => 'DESC',
+	      'post__not_in' => array($jobs_default_ID),
 	      'tax_query' => array(
 	        array(
 	            'taxonomy' => $taxonomy,
@@ -529,7 +570,7 @@ function custom_blocks($atts) {
 	      'date_query' => array(
 	        'after' => $expire_date_param,
 	        'inclusive' => true,
-	      ) 
+	      )
 	    );	 
 	}else{
 		$args=array(
@@ -546,24 +587,34 @@ function custom_blocks($atts) {
 	    	)
 	    );
 	}
-    //colorbox
+    $counter = 0;
 	$output = '';
+	// $output .= 'Expire option: ' . $jobs_expire_date . '<br>'; 
+	// $output .= 'Blocks option: ' . $jobs_minimum_blocks . '<br>';
+	// $output .= 'Default option: ' . $jobs_default_ID . '<br>';
 	$my_query = null;
     $my_query = new WP_Query($args);  
     if( $my_query->have_posts() ) {
 		while ($my_query->have_posts()) : $my_query->the_post();  //$value = get_field( "text_field" );
 			$output .= '<div class="col-xs-12 col-sm-6 ' . $columns . ' ' . $post_type . ' custom-block">';
-			if(get_field('block_link_override') && get_field('block_link_override') != 'none'){
-				//if override is true and not sent to default
-				$output .= (get_field('block_link_override') == 'new-window') ? '<a href="' . get_field( "redirect_field", get_the_ID() )  . '" class="inline-block full-width" target="_blank">' : '<a href="' . get_field( "redirect_field", get_the_ID() )  . '" class="inline-block full-width">';
+			if($post_type == 'jobs'){
+				if( get_field('dsp_job_posting_link') ):
+					$output .= '<a href="' .  get_field('dsp_job_posting_link') . '" target="_blank" class="inline-block full-width">';
+				else:
+					$output .= '<a href="' . get_permalink(get_the_ID())  . '" target="_blank" class="inline-block full-width">';
+				endif;
 			}else{
-		      	$output .= ($block_link == 'page') ? '<a href="' . get_permalink(get_the_ID())  . '" class="inline-block full-width">' : '';
-				$output .= ($block_link == 'modal') ? '<a href="#modal-colorbox" class="inline-block full-width open-colorbox" id="' . get_the_ID() . '">' : '';
-				if(($block_link == 'customField')){
-					$output .= (function_exists('get_field') && get_field( "redirect_field" )) ? '<a href="' . get_field( "redirect_field", get_the_ID() )  . '" class="inline-block full-width" target="' . $linkTarget . '">' : '<a href="/"class="error" id="Undefined Custom field - redirect_field">';
+				if(get_field('block_link_override') && get_field('block_link_override') != 'none'){
+					//if override is true and not sent to default
+					$output .= (get_field('block_link_override') == 'new-window') ? '<a href="' . get_field( "redirect_field", get_the_ID() )  . '" class="inline-block full-width" target="_blank">' : '<a href="' . get_field( "redirect_field", get_the_ID() )  . '" class="inline-block full-width">';
+				}else{
+			      	$output .= ($block_link == 'page') ? '<a href="' . get_permalink(get_the_ID())  . '" class="inline-block full-width">' : '';
+					$output .= ($block_link == 'modal') ? '<a href="#modal-colorbox" class="inline-block full-width open-colorbox" id="' . get_the_ID() . '">' : '';
+					if(($block_link == 'customField')){
+						$output .= (function_exists('get_field') && get_field( "redirect_field", get_the_ID() )) ? '<a href="' . get_field( "redirect_field", get_the_ID() )  . '" class="inline-block full-width" target="' . $linkTarget . '">' : '<a href="/"class="error" id="Undefined Custom field - redirect_field">';
+					}
 				}
 			}
-			
 	      	$output .= '		<div class="grid-block">';
 		    $output .=  ($featured_img == 'checked' ? '<div class="grid-featured-image-container">' .	get_the_post_thumbnail(get_the_ID(), 'medium', array( 'class' => 'img-responsive' )) . '</div>' : ''); 
 		    $output .= '			<div class="grid-block-copy">';
@@ -573,19 +624,87 @@ function custom_blocks($atts) {
 		    $output .= '			</div>';
 		    $output .= '		</div>';
 		    $output .= ($block_link == 'no') ? '' : '</a>';
-		    //$output .= '	</a>';
 	      	$output .= '</div>';
-			
-			
+		$counter ++;	
 		endwhile;
 		$output .= ($block_link == 'modal') ? '<div id="modal-colorbox-container" style="display:none;"></div>' : '';
-		//$output .= '<div id="modal-colorbox-container" style="display:none;"></div>';
+		if($post_type == 'jobs' && $counter < ( $jobs_minimum_blocks + 1 )){
+			$output .= default_job_block($atts);
+		}
 	}else{
-		$output .= '	<div class="container" role="document">';
-	    $output .= '		<div class="content">';
-	    $output .= '			<p>There are no blocks that match your query.</p>';	
-	    $output .= '		</div>';
-		$output .= '	</div>';
+		if($post_type == 'jobs'){
+			$output .= default_job_block($atts);
+		}else{
+			$output .= '	<div class="container" role="document">';
+		    $output .= '		<div class="content">';
+		    $output .= '			<p>There are no blocks that match your query.</p>';	
+		    $output .= '		</div>';
+			$output .= '	</div>';
+		}
+	}
+	wp_reset_postdata();
+	wp_reset_query();
+	return $output;
+}
+
+
+function default_job_block($atts) { 
+	$post_type = $atts["custom-post-type"];
+	$featured_img = $atts["featured-image"];	
+	$title = $atts["title"];	    
+	$content = $atts["content"];
+	$block_num = $atts["block-number"];
+	$character_count = $atts["character-count"];
+	$columns = $atts["columns"];
+	$read_more = $atts["read-more"];
+	$block_link = $atts["block-link"];
+
+	// Jobs Custom Options
+	$jobs_options = get_option('options_jobs_field_group');
+	$jobs_expire_date = $jobs_options['jobs_expire_setting'];
+	$jobs_minimum_blocks = $jobs_options['jobs_minimum_blocks'];
+	$jobs_default_ID = $jobs_options['jobs_default_postID'];
+	
+	$columns = ($columns == 0) ? 1 : $columns; // fix for if columns is 0 or undefined
+	if($columns == 5){
+		$columns = 'col-md-5ths';
+	}else{
+		$columns = 'col-md-' . 12 / $columns;
+	}
+	$character_count = ($character_count == '') ? 120 : $character_count; 
+	$linkTarget = ($post_type == 'featured-block') ? '_self' : '_blank';
+
+	$args = '';
+	$args=array(
+      'post_type' => $post_type,
+      'post_status' => 'publish',
+      'posts_per_page' => 1, //$block_num
+      'order' => 'DESC',
+      'post__in' => array($jobs_default_ID), 
+    );	
+	
+	$output = '';
+	$my_query = null;
+    $my_query = new WP_Query($args); 
+	if( $my_query->have_posts() ) {
+		while ($my_query->have_posts()) : $my_query->the_post(); 
+			$output .= '<div class="col-xs-12 col-sm-6 ' . $columns . ' ' . $post_type . ' custom-block">';
+			if( get_field('dsp_job_posting_link') ):
+				$output .= '<a href="' .  get_field('dsp_job_posting_link') . '" target="_blank" class="inline-block full-width">';
+			else:
+				$output .= '<a href="' . get_permalink(get_the_ID())  . '" target="_blank" class="inline-block full-width">';
+			endif;
+	      	$output .= '		<div class="grid-block">';
+		    $output .=  ($featured_img == 'checked' ? '<div class="grid-featured-image-container">' .	get_the_post_thumbnail(get_the_ID(), 'medium', array( 'class' => 'img-responsive' )) . '</div>' : ''); 
+		    $output .= '			<div class="grid-block-copy">';
+		    $output .=  ($title == 'checked' ? '<h6>' . get_the_title() . '</h6>' : '');
+		    $output .=  ($content == 'checked' ? '<p>' . get_custom_excerpt( $character_count, 'excerpt' ) . '</p>' : ''); 
+		    $output .=  ($read_more == 'checked' ? '<span class="blue-link">Read More &raquo;</span>' : ''); 
+		    $output .= '			</div>';
+		    $output .= '		</div>';
+		    $output .= ($block_link == 'no') ? '' : '</a>';
+	      	$output .= '</div>';
+		endwhile;
 	}
 	wp_reset_postdata();
 	wp_reset_query();
@@ -1323,9 +1442,6 @@ function project_builder_meta_box() {
 			return false;
 		});
 		
-		
-		
-
 	});
 	</script>
 
@@ -1445,7 +1561,6 @@ function project_builder_meta_box() {
 							</div>
 							<div>
 								<div>Content:</div><br /><!-- Slide Overlay Copy -->
-								
 								<?php 
 								if ( user_can_richedit() )
 								wp_enqueue_script('editor');

@@ -781,21 +781,82 @@ class BASEKIT_Function_Slider {
 		    return $excerpt;
 		}
 		
+		function default_slider_job_block() {
+			// Jobs Custom Options
+			$post_type = 'jobs';
+			$jobs_options = get_option('options_jobs_field_group');
+			$jobs_expire_date = $jobs_options['jobs_expire_setting'];
+			$jobs_minimum_blocks = $jobs_options['jobs_minimum_blocks'];
+			$jobs_default_ID = $jobs_options['jobs_default_postID'];
+			$obj = get_post_type_object( $post_type );
+			$post_type_singular_name =  $obj->labels->singular_name;
+			
+			$args = '';
+			$args=array(
+		      'post_type' => $post_type,
+		      'post_status' => 'publish',
+		      'posts_per_page' => 1, //$block_num
+		      'order' => 'DESC',
+		      'post__in' => array($jobs_default_ID), 
+		    );	
+			
+			$output = '';
+			$my_query = null;
+		    $my_query = new WP_Query($args); 
+			if( $my_query->have_posts() ) {
+				while ($my_query->have_posts()) : $my_query->the_post(); 
+					$excerpt = get_custom_excerpt(85);
+					$cityField = get_field('my_meta_box_city_text');
+					$stateField = get_field('my_meta_box_state_select');
+					$counteryField = get_field('my_meta_box_country_select');
+					$state = convertState($stateField, $strFormat='name');
+					$country = convertCountry($counteryField);
+					$output .= '<div class="item">';
+					$output .= '  	<div class="item-content" style="overflow:hidden;">';
+					$output .= '		<h5>' . get_the_title() . '</h5>';
+					$output .= '		<p>' . $excerpt . '</p>'; //get_the_excerpt() 
+					if(get_field('dsp_job_posting_link') ){
+						$output .= '				<div class="widgete-link"><a href="' .  get_field('dsp_job_posting_link') . '" class="blue-link" target="_blank">View Job Details</a></div>';
+					}
+					$output .= '		<span class="tag tag-blue">' . $post_type_singular_name . '</span>';
+					$output .= '	</div>';
+					$output .= '</div>';	
+				endwhile;
+			}
+			wp_reset_postdata();
+			wp_reset_query();
+			return $output;
+		}
+		
 	 	
 		function custom_post_slider_function($atts) {
 			$local_atts = shortcode_atts( array(
 				'post_count' => -1,
 		        'post_type' => 'post',
 		        'taxonomy' => 'category',
-		        'terms' => 'uncategorized'
+		        'terms' => 'uncategorized',
+		        'expire_date_type' => '',
+		        'expire_integer' => '0'
 		    ), $atts );
 			
 			$post_count = $local_atts[ 'post_count' ];
 			$post_type = $local_atts[ 'post_type' ];
 			$post_taxonomy = $local_atts[ 'taxonomy' ];
 			$post_taxonomy_terms = $local_atts[ 'terms' ];
+
+			// Jobs Custom Options
+			$jobs_options = get_option('options_jobs_field_group');
+			$jobs_expire_date = $jobs_options['jobs_expire_setting'];
+			$jobs_minimum_blocks = $jobs_options['jobs_minimum_blocks'];
+			$jobs_default_ID = $jobs_options['jobs_default_postID'];
+
+			$post_expire_date = ( isset($jobs_expire_date) ) ? $jobs_expire_date : '12';				
+			$expires_date = '-' . $post_expire_date  .' month';  // remove later
+			$expire_date_param = date( 'Y-m-d', strtotime($expires_date) );  // remove later
 			
-			if($post_taxonomy == 'uncategorized'){	
+			if($post_type == 'jobs') {
+
+			} elseif($post_taxonomy == 'uncategorized'){	
 				global $wp_version;	
 				if ( $wp_version < 4.5 ) {
 					$terms = get_terms( $post_taxonomy, array(
@@ -814,8 +875,19 @@ class BASEKIT_Function_Slider {
 			} else {  // if terms not 'all' then show only defined terms in the taxonomy (passed in atts)
 				$terms = $post_taxonomy_terms;
 			}
-			
-			if($post_taxonomy != ''){
+
+			if($post_type == 'jobs') {
+				$args=array(
+			      'post_type' => $post_type,
+			      'post_status' => 'publish',
+			      'order' => 'DESC',
+			      'post__not_in' => array($jobs_default_ID),
+			      'date_query' => array(
+			        'after' => $expire_date_param,
+			        'inclusive' => true,
+			      )
+			    );
+			} elseif( $post_taxonomy != '' && $expires == 'true'){
 			    $args=array(
 			      'post_type' => $post_type,
 			      'post_status' => 'publish',
@@ -828,8 +900,26 @@ class BASEKIT_Function_Slider {
 							 'field' => 'slug',
 							 'terms' => $post_taxonomy_terms
 						),
-					   )
-				   //'meta_query' => array($meta_array)
+				  ),
+				  'date_query' => array(
+			        'after' => $expire_date_param,
+			        'inclusive' => true,
+			      ) 
+			    );
+			}elseif($post_taxonomy != ''){
+				$args=array(
+			      'post_type' => $post_type,
+			      'post_status' => 'publish',
+			      'posts_per_page' => $post_count,
+			      'orderby' => 'title',
+			      'order' => 'ASC',
+			      'tax_query' => array(
+						array(
+							'taxonomy' => $post_taxonomy,
+							 'field' => 'slug',
+							 'terms' => $post_taxonomy_terms
+						),
+				  ) 
 			    );
 			}else{
 				$args=array(
@@ -847,6 +937,7 @@ class BASEKIT_Function_Slider {
 			$activeClass = '';
 			$output = '';
 			$my_query = null;
+			
 		    $my_query = new WP_Query($args);
 		    if( $my_query->have_posts() ) {
 		    	$output .= '<div id="carousel-header-' . $post_type . '-' . $post_taxonomy . '" class="carousel slide" data-ride="carousel" style="overflow:hidden">';
@@ -855,15 +946,11 @@ class BASEKIT_Function_Slider {
 				while ($my_query->have_posts()) : $my_query->the_post();
 				$activeClass = ($counter == 0) ? 'active' : '';
 					$output .= '<li data-target="#carousel-header-' . $post_type . '-' . $post_taxonomy . '" data-slide-to="' . $counter . '"  class="' . $activeClass . '"></li>';
-					//$output .= '<div>' . get_the_title() . '</div>';
-				
 				$counter++;
 				endwhile;
 				$output .= '</ol>';
 				$counter = 0;
-				
-				
-				
+
 				$output .= '<div class="carousel-inner" role="listbox">';
 				while ($my_query->have_posts()) : $my_query->the_post();
 					$excerpt = get_custom_excerpt(85);
@@ -871,7 +958,7 @@ class BASEKIT_Function_Slider {
 					$output .= '<div class="item ' . $activeClass . '">';
 					$output .= '  	<div class="item-content" style="overflow:hidden;">';
 					$output .= '		<h5>' . get_the_title() . '</h5>';
-					$output .= '		<p>' . $excerpt . '</p>'; //get_the_excerpt() 
+					$output .= '		<p>' . $excerpt . '</p>'; 
 					if(get_field('dsp_job_posting_link') ){
 						$output .= '				<div class="widgete-link"><a href="' .  get_field('dsp_job_posting_link') . '" class="blue-link" target="_blank">View Job Details</a></div>';
 					}
@@ -881,14 +968,20 @@ class BASEKIT_Function_Slider {
 				
 				$counter++;
 				endwhile;
+				if($post_type == 'jobs' && $counter < ( $jobs_minimum_blocks + 1 )){
+					$output .= default_slider_job_block($atts);
+				}
 				$output .= '</div>';
 				
 				
 				$output .= '</div>';
 			}else{
-				
+				if($post_type == 'jobs'){
+					$output .= default_slider_job_block($atts);
+				}else{
+					
+				}
 			}
-			
 			wp_reset_postdata();
 			wp_reset_query();
 			return $output;

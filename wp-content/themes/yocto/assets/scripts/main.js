@@ -178,7 +178,7 @@
 		);
 		
 		
-		// Experienced Developers Section
+		// Home Page - Experienced Developers Section
 		
 		var url = '/wp-content/themes/yocto/proxy.php';
 		var chart1URL = 'http://api-v1.yoctoproject.org/api/downloads?release%5B%5D=59';
@@ -574,6 +574,7 @@
 			
 			jQuery('input.gsc-input').attr('placeholder', 'Search Documents');
 			jQuery('input.gsc-input').css('background-image', 'none');
+			jQuery('.gsc-search-box ').css('display', 'block');
 			
 			jQuery('input.gsc-input').blur(function() {
 		  		jQuery(this).attr('placeholder', 'Search Documents');

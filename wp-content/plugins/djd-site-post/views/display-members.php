@@ -101,7 +101,7 @@ $postTaxonomyTerm = $GLOBALS['djd_post_type_term'];
 		<div class="row">
 			<div class="col-xs-12 col-sm-6">
 				<label for="djd_site_post_title">Organization/Company Name</label>  <?php //echo $postTaxonomy . ( $djd_options['djd-title'] ? $djd_options['djd-title'] : __('Title', 'djd-site-post') ); ?>
-				<input type="text" <?php echo "required='required'"; ?> id="djd_site_post_title" name="djd_site_post_title" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_title."'"; ?>autofocus="autofocus"/>
+				<input type="text" <?php echo "required='required'"; ?> id="djd_site_post_title" name="djd_site_post_title" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_title."'"; ?>/>
 			</div>
 			
 			<?php if($postTaxonomyTerm  == 'participants'){ ?>  <!-- Participants Fields -->

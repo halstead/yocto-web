@@ -1273,7 +1273,7 @@ span {
   font-size: inherit;
   height: 28px;
   margin-left: 0;
-  margin-top: 1px;
+  margin-top: -1px;
   padding: 6px;
   //padding: 0;
   text-rendering: auto;
@@ -1294,6 +1294,7 @@ span {
 
 .gsc-search-box {
   border: 0 none;
+  display:none;
 
   tbody {
     th,

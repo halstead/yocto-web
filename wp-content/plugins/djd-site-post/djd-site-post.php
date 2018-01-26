@@ -463,7 +463,7 @@ if (!class_exists("DjdSitePost")) {
 	
 	////// SHORTCODES //////
 	
-	function get_custom_excerpt($limit, $source = null){ // Custom Excerpt function by character count
+	public function get_custom_excerpt($limit, $source = null){ // Custom Excerpt function by character count
 
 	    if($source == "content" ? ($excerpt = get_the_content()) : ($excerpt = get_the_excerpt()));
 		    $excerpt = preg_replace(" (\[.*?\])",'',$excerpt);
@@ -477,10 +477,72 @@ if (!class_exists("DjdSitePost")) {
 	    return $excerpt;
 	}
 	
-	
+
 	function handle_display_shortcode($atts, $content = null){
 
-		//global $shortcode_cache, $post, $djd_post_id;
+		function default_shortcode_job_block() {
+			// Jobs Custom Options
+			$post_type = 'jobs';
+			$jobs_options = get_option('options_jobs_field_group');
+			$jobs_expire_date = $jobs_options['jobs_expire_setting'];
+			$jobs_minimum_blocks = $jobs_options['jobs_minimum_blocks'];
+			$jobs_default_ID = $jobs_options['jobs_default_postID'];
+
+			$args = '';
+			$args=array(
+		      'post_type' => $post_type,
+		      'post_status' => 'publish',
+		      'posts_per_page' => 1,
+		      'order' => 'DESC',
+		      'post__in' => array($jobs_default_ID), 
+		    );	
+			
+			$output = '';
+			$my_query = null;
+		    $my_query = new WP_Query($args); 
+			if( $my_query->have_posts() ) {
+				while ($my_query->have_posts()) : $my_query->the_post(); 
+					$cityField = get_field('my_meta_box_city_text');
+					$stateField = get_field('my_meta_box_state_select');
+					$counteryField = get_field('my_meta_box_country_select');
+					$state = convertState($stateField, $strFormat='name');
+					$country = convertCountry($counteryField);
+					$output .= '<div class="half-block">';
+					$output .= '	<div class="block-copy col-sm-12">';
+					if( get_field('dsp_job_website') ):
+						$output .= '		<h3 class="title" style="margin-bottom:5px;"><a href="' .  get_field('dsp_job_website') . '">' .  get_field('dsp_job_company_name') . '</a></h3>';
+					else:
+						$output .= '		<h3 class="title" style="margin-bottom:5px;">' .  get_field('dsp_job_company_name') . '</h3>';
+					endif;
+					
+					if( get_field('dsp_job_posting_link') ):
+						$output .= '		<h3 class="title" style="margin-bottom:5px !important;"><a href="' .  get_field('dsp_job_posting_link') . '">' .  get_the_title() . '</a></h3>';
+					else:
+						$output .= '		<h3 class="title" style="margin-bottom:5px !important;">' .  get_the_title() . '</h3>';
+					endif;	
+					$output .= '		<p>' . get_the_excerpt() . '</p>';
+					
+					if($cityField != "" && $state != ""){
+						$output .= '		<p class="date">' . $cityField .  ', ' . $state . '</p>';
+					}elseif($state != ""){
+						$output .= '		<p class="date">' . $state . '</p>';
+					}
+					$output .= '		<p class="date" style="margin-bottom:10px;">' . $country .  '</p>';
+					$output .= '		<div class="row">';
+					$output .= '			<div class="col-xs-12 col-sm-8"><p class="details">';  
+					$output .= '			</div>';
+					$output .= '			<div class="col-xs-12 col-sm-4">';	
+					$output .= '				<div class="pull-right"><a href="' .  get_field('dsp_job_posting_link') . '" class="btn btn-blue" target="_blank">View Job Details</a></div>';
+					$output .= '			</div>';
+					$output .= '		</div>';
+					$output .= '	</div>';
+					$output .= '</div>';	
+				endwhile;
+			}
+			wp_reset_postdata();
+			wp_reset_query();
+			return $output;
+		}
 		
 		$local_atts = shortcode_atts( array(
 			'post_count' => 8,
@@ -503,17 +565,18 @@ if (!class_exists("DjdSitePost")) {
 		$dynamic_post_type = $local_atts[ 'dynamic_post_type' ];
 		$dynamic_post_taxonomy = $local_atts[ 'dynamic_post_taxonomy' ];
 		$dynamic_post_taxonomy_terms = $local_atts[ 'dynamic_post_taxonomy_terms' ];
+		
+		// Jobs Custom Options
+		$jobs_options = get_option('options_jobs_field_group');
+		$jobs_expire_date = $jobs_options['jobs_expire_setting'];
+		$jobs_minimum_blocks = $jobs_options['jobs_minimum_blocks'];
+		$jobs_default_ID = $jobs_options['jobs_default_postID'];
 
 		// $link = $_POST["djd_site_post_link"];
 		// $city = $_POST["djd_site_post_city"];
 		// $state = $_POST["djd_site_post_state"];
 		// $country = $_POST["djd_site_post_country"];
 		
-		//echo $dynamic_post_show_dates;
-		//echo $dynamic_post_taxonomy_terms;
-
-		
-
 		if($dynamic_post_taxonomy_terms == 'all'){	
 			
 			global $wp_version;
@@ -552,6 +615,16 @@ if (!class_exists("DjdSitePost")) {
 				   )
 			   //'meta_query' => array($meta_array)
 		    );
+		}elseif($dynamic_post_type == 'jobs'){
+			$args=array(
+		      'post_type' => $dynamic_post_type,
+		      'post_status' => 'publish',
+		      'posts_per_page' => $post_count,
+		      'orderby' => 'title',
+		      'posts_per_page' => -1,
+		      'post__not_in' => array($jobs_default_ID),
+		      'order' => 'ASC'
+		    );
 		}else{
 			$args=array(
 		      'post_type' => $dynamic_post_type,
@@ -588,20 +661,20 @@ if (!class_exists("DjdSitePost")) {
 				$country = convertCountry($counteryField);
 				
 				if($dynamic_post_type == 'jobs'){
-					
 					$status;
+					$post_expire_date = ( isset($jobs_expire_date) ) ? $jobs_expire_date : '12';
+					$expires_date = '-' . $post_expire_date  .' month';
 					$datePublished = get_the_date( 'Y-m-d' );
-					$dateCurrent = date("Y-m-d");
 					
-					if(strtotime($datePublished) > strtotime('-30 days')) {
+					if(strtotime($datePublished) > strtotime($expires_date)) {
 					    $status = "keep";
-						//get_the_title()
 						// djd_site_company_name
 						// djd_site_company_contact
 						// djd_site_phone
 						// djd_site_website
 						// djd_site_email
 						// djd_site_posting_link
+						//$output .= $expires_date;
 						$output .= '<div class="half-block">';
 						$output .= '	<div class="block-copy col-sm-12">';
 						
@@ -616,11 +689,9 @@ if (!class_exists("DjdSitePost")) {
 						else:
 							$output .= '		<h3 class="title" style="margin-bottom:5px !important;">' .  get_the_title() . '</h3>';
 						endif;	
-						
-						
-						//$output .= '		<p>Published Date: ' . $datePublished . '</p>';
-						//$output .= '		<p>Current Date: ' . $dateCurrent . '</p>';
-						//$output .= '		<p>Status: ' . $status . '</p>';
+						// $output .= '		<p>Published Date: ' . $datePublished . '</p>';
+						// $output .= '		<p>Current Date: ' . $dateCurrent . '</p>';
+						// $output .= '		<p>Status: ' . $status . '</p>';
 						$output .= '		<p>' . get_the_excerpt() . '</p>';
 						
 						if($cityField != "" && $state != ""){
@@ -670,19 +741,12 @@ if (!class_exists("DjdSitePost")) {
 						}else{
 							$output .= '	<div class="half-block-copy col-sm-12">';
 						}
-						
-						//if( get_field('event_djd_site_post_link') ):
-							//$output .= '	<h3 class="title" style="margin-top:0px; margin-bottom:5px !important;"><a href="' .  get_field('event_djd_site_post_link') . '">' .  get_the_title() . '</a></h3>';
-						//else:
-							$output .= '	<h3 class="title" style="margin-top:0px; margin-bottom:5px !important;">' .  get_the_title() . '</h3>';
-						//endif;
-						
-						$output .= '	<p>' . get_the_excerpt() . '</p>';
+						$output .= '			<h3 class="title" style="margin-top:0px; margin-bottom:5px !important;">' .  get_the_title() . '</h3>';
+						$output .= '			<p>' . get_the_excerpt() . '</p>';
 						
 						
 						if($dynamic_post_widget == 'false'){
 							$output .= '		<div class="row">';
-							//if($dynamic_post_show_dates != 'false' || $dynamic_post_type == 'events'){}
 							$output .= '			<div class="col-xs-12 col-sm-8">';
 							if( get_field('dsp_event_venue') ):
 								$output .= '			<p class="date">Venue: <span>' . get_field('dsp_event_venue', get_the_ID()) . '</span></p>';
@@ -714,9 +778,7 @@ if (!class_exists("DjdSitePost")) {
 							$output .= '</a>';
 						endif;
 						$output .= '</div>';
-						
-						
-						//get_the_title()
+
 						// event_djd_site_post_name
 						// event_djd_site_post_email
 						// event_djd_site_post_link
@@ -725,8 +787,6 @@ if (!class_exists("DjdSitePost")) {
 						// event_djd_site_post_venue
 					}
 				} else if($dynamic_post_type == 'members'){ 
-				
-		
 					if($dynamic_post_taxonomy == 'organization-type' && $dynamic_post_taxonomy_terms == 'consultants'){
 						//dsp_consultant_contact_name
 						//dsp_consultant_contact_phone
@@ -759,7 +819,6 @@ if (!class_exists("DjdSitePost")) {
 							$output .= '	</div>';
 							$output .= '</div>';
 						}
-						
 						
 						$output .= '<div class="table-row seven-cols mobile-table-row">';
 						$output .= '	<div class="col-xs-12 col-sm-1 mobile-show-992"><h5>Consultant</h5></div>';
@@ -803,13 +862,12 @@ if (!class_exists("DjdSitePost")) {
 					$output .= '	</div>';
 					$output .= '</div>';
 				}
-	
-				
-				// if($dynamic_post_link_to_page != 'false'){
-					// $output .= '		<p><a href="' . get_the_permalink(get_the_ID()) . '" class="view-more-link">View Details</a></p>';
-				// }
 			$postCount ++;
 			endwhile;
+			
+			if($dynamic_post_type == 'jobs' && $postCount < ( $jobs_minimum_blocks + 1 )) {	
+				$output .= default_shortcode_job_block();
+			}
 			
 			wp_reset_postdata();
 			wp_reset_query();
@@ -817,14 +875,18 @@ if (!class_exists("DjdSitePost")) {
 			$output .= '</div>';
 			return $output;
 		} else {
-			$output .= '<div class="half-block">';
-			$output .= '	<div class="block-copy col-sm-12">';
-			$output .= '		<p>There are no results that match your input.</p>';
-			$output .= '	</div>';
-			$output .= '</div>';
-			return $output;
-		}	
-		
+			if($dynamic_post_type == 'jobs'){
+				$output .= default_shortcode_job_block($atts);
+				return $output;
+			}else{
+				$output .= '<div class="half-block">';
+				$output .= '	<div class="block-copy col-sm-12">';
+				$output .= '		<p>There are no results that match your input.</p>';
+				$output .= '	</div>';
+				$output .= '</div>';
+				return $output;
+			}
+		}
 	}
 
 		

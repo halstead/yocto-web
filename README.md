@@ -3,11 +3,11 @@ Yocto Project WordPress Site
 
 This package contains the Yocto Project site theme and all related plugins, and implements a WordPress Boilerplate.
 
-### Plugin Installation
+## Plugin Installation
 
 Copy the contents of wp-content/mu-plugins and wp-content/plugins to your wp-content directory.
 
-### Theme Building and Installation
+## Theme Building and Installation
 
 1. Install gulp and Bower globally with `npm install -g gulp bower`
 2. Navigate to the theme directory, then run `npm install`
@@ -38,15 +38,15 @@ template-block-builder.php
 template-custom.php
 ```
 
-#### Boilerplate Motivation
+## Boilerplate Motivation
 
 Typically, WordPress installations are a spaghetti of the WordPress core, plugins, themes and what have you. This makes upgrading WordPress a pain. The point of this boilerplate is to keep the WordPress core and everything else cleanly separated. This is achieved by using git submodules and some config hacking and Apache redirects :)
 
-## Working with this Boilerplate
+### Working with this Boilerplate
 
 When checking out the project, be sure to use the `--recursive` flag if you want to also pull the associated version of WordPress.
 
-## Upgrading Wordpress
+### Upgrading Wordpress
 
 After when using this boilerplate, keeping Wordpress up-to-date via git is
 pretty easy.

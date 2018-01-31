@@ -1402,11 +1402,18 @@ if (!class_exists("DjdSitePost")) {
 	 * Notify admin about new post via email
 	 */
 	function djd_sendmail ($post_id, $post_title) {
+		$djd_options = get_option('djd_site_post_settings');
+		if ( isset($djd_options['djd-guest-account']) ) {
+			$user_query = get_userdata($djd_options['djd-guest-account']);
+			$email = $user_query->user_email;
+		}else{
+			$email = get_option('admin_email');
+		}
 		$blogname = get_option('blogname');
-		$email = get_option('admin_email');
+		
 		$headers = "MIME-Version: 1.0\r\n" . "From: ".$blogname." "."<".$email.">\n" . "Content-Type: text/HTML; charset=\"" . get_option('blog_charset') . "\"\r\n";
-		$content = '<p>'.__('New post submitted from frontend to', 'djd-site-post').' '.$blogname.'.'.'<br/>' .__('To view the entry click here:', 'djd-site-post') . ' '.'<a href="'.get_permalink($post_id).'"><strong>'.$post_title.'</strong></a></p>';
-		wp_mail($email, __('New frontend post to', 'djd-site-post') . ' ' . $blogname . ': ' . $post_title, $content, $headers);
+		$content = '<p>'.__('New Website Form Submission to', 'djd-site-post').' '.$blogname.'.'.'<br/>' .__('To view the entry click here:', 'djd-site-post') . ' '.'<a href="'.get_permalink($post_id).'"><strong>'.$post_title.'</strong></a></p>';
+		wp_mail($email, __('New Yocto Form Submission', 'djd-site-post') . ' ' . $blogname . ': ' . $post_title, $content, $headers);
 	}
 	
 	/**

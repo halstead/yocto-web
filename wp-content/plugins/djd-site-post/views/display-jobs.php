@@ -94,11 +94,11 @@ $postTypeName = ucfirst($postTypeNameSingular) . ' ';
 		<h4><?php echo $GLOBALS['dynamic_post_title'] ?></h4>
 		<!-- <legend><?php //echo ( $djd_options['djd-form-name'] ? $djd_options['djd-form-name'] : __('Frontend Post', 'djd-site-post') ); ?></legend> -->
 		<label for="djd_site_post_title"><?php echo $postTypeName . ( $djd_options['djd-title'] ? $djd_options['djd-title'] : __('Title', 'djd-site-post') ); ?></label>
-		<input type="text" <?php if ( $djd_options['djd-title-required'] == "1" ) echo "required='required'"; ?> id="djd_site_post_title" name="djd_site_post_title" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_title."'"; ?>/>
+		<input type="text" <?php if ( $djd_options['djd-title-required'] == "1" ) echo "required='required'"; ?> id="djd_site_post_title" name="djd_site_post_title" maxlength="120" <?php if ( $my_post ) echo "value='".$my_post->post_title."'"; ?>/>
 		
 		<div class="row">
 			<div class="col-xs-12">
-			<label for="djdsitepostcontent"><?php echo $postTypeName . ( $djd_options['djd-content'] ? $djd_options['djd-content'] : __('Text', 'djd-site-post') ); ?></label>
+			<label for="djdsitepostcontent"><?php echo $postTypeName . ( $djd_options['djd-content'] ? $djd_options['djd-content'] : __('Text', 'djd-site-post') ); ?> (180 character limit)</label>
 			
 			<?php
 				//$content = '<a href="#" class="meta_field_upload_image_button button">Upload image</a>';
@@ -127,8 +127,8 @@ $postTypeName = ucfirst($postTypeNameSingular) . ' ';
 			?>
 			
 			<?php if (isset($djd_options['djd-show-excerpt'])) { ?>
-				<label for="djd_site_post_excerpt"><?php echo ( $djd_options['djd-excerpt'] ? $djd_options['djd-excerpt'] : __('Excerpt', 'djd-site-post') ); ?></label>
-				<textarea id="djd_site_post_excerpt" name="djd_site_post_excerpt"><?php if ( $my_post ) echo $my_post->post_excerpt; ?></textarea>
+				<label for="djd_site_post_excerpt"><?php echo ( $djd_options['djd-excerpt'] ? $djd_options['djd-excerpt'] : __('Excerpt', 'djd-site-post') ); ?> (180 character limmit)</label>
+				<textarea maxlength="180" id="djd_site_post_excerpt" name="djd_site_post_excerpt"><?php if ( $my_post ) echo $my_post->post_excerpt; ?></textarea>
 			<?php } ?>
 			</div>
 		</div>
@@ -137,13 +137,15 @@ $postTypeName = ucfirst($postTypeNameSingular) . ' ';
 			<!-- ADDRESS -->
 		
 		<!-- City -->
+		<!--
 		<div class="row">
 			<div class="col-xs-12">
 				<label for="djd_site_post_city">City<?php //echo ( $djd_options['djd-city'] ? $djd_options['djd-city'] : __('City', 'djd-site-post') ); ?></label>
 				<input type="text" <?php echo "required='required'"; ?> id="djd_site_post_city" name="djd_site_post_city" maxlength="255" value="" <?php //if ( $my_post ) echo "value='".$my_post->post_city."'"; ?>autofocus="autofocus"/>
 			</div>
-
+		-->
 		<!-- State -->
+		<!--
 			<div class="col-xs-12 col-sm-6">
 				<label for="djd_site_post_state">State<?php //echo ( $djd_options['djd-state'] ? $djd_options['djd-state'] : __('State', 'djd-site-post') ); ?></label>
 				<select name="djd_site_post_state" id="djd_site_post_state" style="width:100%;">
@@ -216,8 +218,9 @@ $postTypeName = ucfirst($postTypeNameSingular) . ' ';
 					<option value="YT">Yukon</option>
 				</select>
 			</div>
-			
+			-->
 			<!-- Country -->
+			<!--
 			<div class="col-xs-12 col-sm-6">
 				<label for="djd_site_post_country">Country<?php //echo ( $djd_options['djd-country'] ? $djd_options['djd-country'] : __('Country', 'djd-site-post') ); ?></label>
 				<select name="djd_site_post_country" id="djd_site_post_country" style="width:100%;">
@@ -473,13 +476,14 @@ $postTypeName = ucfirst($postTypeNameSingular) . ' ';
 					<option value="ZW">Zimbabwe</option>
 				</select>
 			</div>
-		
+		-->
 		<?php } ?>
 		
 		<?php                               //Jobs Fields
 		if($postType  == 'jobs'){ ?>   
 		
-		<!-- <div class="row"> -->
+		<div class="row"> <!-- -->
+			<!--
 			<div class="col-xs-12 col-sm-6">
 				<label for="dsp_job_company_name">Company Name</label>
 				<input style="width:100%;" type="text" <?php  echo "required='required'"; ?> id="dsp_job_company_name" name="dsp_job_company_name" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_company_name."'"; ?>autofocus="autofocus"/>
@@ -488,8 +492,7 @@ $postTypeName = ucfirst($postTypeNameSingular) . ' ';
 				<label for="dsp_job_website">Company Website</label>
 				<input style="width:100%;" type="text" <?php  echo "required='required'"; ?> id="dsp_job_website" name="dsp_job_website" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_company_phone."'"; ?>autofocus="autofocus"/>
 			</div>
-		<!-- </div>
-		<div class="row"> -->
+
 			<div class="col-xs-12 col-sm-6">
 				<label for="dsp_job_company_contact">Company Contact</label>
 				<input style="width:100%;" type="text" <?php  echo "required='required'"; ?> id="dsp_job_company_contact" name="dsp_job_company_contact" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_company_contact."'"; ?>autofocus="autofocus"/>
@@ -498,15 +501,14 @@ $postTypeName = ucfirst($postTypeNameSingular) . ' ';
 				<label for="dsp_job_phone">Contact Phone Number</label>
 				<input style="width:100%;" type="text" <?php  echo "required='required'"; ?> id="dsp_job_phone" name="dsp_job_phone" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_company_phone."'"; ?>autofocus="autofocus"/>
 			</div>
-		<!-- </div>
-		<div class="row"> -->
+			-->
 			<div class="col-xs-12 col-sm-6">
 				<label for="dsp_job_email">Contact Email</label>
 				<input style="width:100%;" type="email" <?php echo "required='required'"; ?> id="dsp_job_email" name="dsp_job_email" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_email."'"; ?>autofocus="autofocus"/>
 			</div>
 			<div class="col-xs-12 col-sm-6">
-				<label for="dsp_job_posting_link"><?php echo $postTypeName ?> Link (URL)</label>
-				<input style="width:100%;" type="text" <?php echo "required='required'"; ?> id="dsp_job_posting_link" name="dsp_job_posting_link" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_link."'"; ?>autofocus="autofocus"/>
+				<label for="dsp_job_posting_link"><?php echo $postTypeName ?> Link URL (*Must be valid URL. Example: http://www.job.com/)</label>
+				<input style="width:100%;" type="url" <?php echo "required='required'"; ?> id="dsp_job_posting_link" name="dsp_job_posting_link" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_link."'"; ?>autofocus="autofocus"/>
 			</div>
 		</div>
 		<?php } ?>

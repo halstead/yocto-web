@@ -94,11 +94,11 @@ $postTypeName = ucfirst($postTypeNameSingular) . ' ';
 		<h4><?php echo $GLOBALS['dynamic_post_title'] ?></h4>
 		<!-- <legend><?php //echo ( $djd_options['djd-form-name'] ? $djd_options['djd-form-name'] : __('Frontend Post', 'djd-site-post') ); ?></legend> -->
 		<label for="djd_site_post_title"><?php echo $postTypeName . ( $djd_options['djd-title'] ? $djd_options['djd-title'] : __('Title', 'djd-site-post') ); ?></label>
-		<input type="text" <?php if ( $djd_options['djd-title-required'] == "1" ) echo "required='required'"; ?> id="djd_site_post_title" name="djd_site_post_title" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_title."'"; ?>/>
+		<input type="text" <?php if ( $djd_options['djd-title-required'] == "1" ) echo "required='required'"; ?> id="djd_site_post_title" name="djd_site_post_title" maxlength="120" <?php if ( $my_post ) echo "value='".$my_post->post_title."'"; ?>/>
 		
 		<div class="row">
 			<div class="col-xs-12">
-			<label for="djdsitepostcontent"><?php echo $postTypeName . ( $djd_options['djd-content'] ? $djd_options['djd-content'] : __('Text', 'djd-site-post') ); ?></label>
+			<label for="djdsitepostcontent"><?php echo $postTypeName . ( $djd_options['djd-content'] ? $djd_options['djd-content'] : __('Text', 'djd-site-post') ); ?> (180 character limit)</label>
 			
 			<?php
 				//$content = '<a href="#" class="meta_field_upload_image_button button">Upload image</a>';
@@ -127,8 +127,8 @@ $postTypeName = ucfirst($postTypeNameSingular) . ' ';
 			?>
 			
 			<?php if (isset($djd_options['djd-show-excerpt'])) { ?>
-				<label for="djd_site_post_excerpt"><?php echo ( $djd_options['djd-excerpt'] ? $djd_options['djd-excerpt'] : __('Excerpt', 'djd-site-post') ); ?></label>
-				<textarea id="djd_site_post_excerpt" name="djd_site_post_excerpt"><?php if ( $my_post ) echo $my_post->post_excerpt; ?></textarea>
+				<label for="djd_site_post_excerpt"><?php echo ( $djd_options['djd-excerpt'] ? $djd_options['djd-excerpt'] : __('Excerpt', 'djd-site-post') ); ?> (180 character limit)</label>
+				<textarea maxlength="180" id="djd_site_post_excerpt" name="djd_site_post_excerpt"><?php if ( $my_post ) echo $my_post->post_excerpt; ?></textarea>
 			<?php } ?>
 			</div>
 		</div>
@@ -486,8 +486,8 @@ $postTypeName = ucfirst($postTypeNameSingular) . ' ';
 				<input style="width:100%;" type="text" <?php  echo "required='required'"; ?> id="dsp_event_venue" name="dsp_event_venue" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_start_date."'"; ?>autofocus="autofocus"/>
 			</div>
 			<div class="col-xs-12 col-sm-6">
-				<label for="dsp_event_link">Event Link</label>
-				<input style="width:100%;" type="text" <?php  echo "required='required'"; ?> id="dsp_event_link" name="dsp_event_link" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_event_link."'"; ?>autofocus="autofocus"/>
+				<label for="dsp_event_link">Event Link (*Must be valid URL. Example: http://www.job.com/)</label>
+				<input style="width:100%;" type="url" <?php  echo "required='required'"; ?> id="dsp_event_link" name="dsp_event_link" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_event_link."'"; ?>autofocus="autofocus"/>
 			</div>	
 			<div class="col-xs-12 col-sm-6">
 				<label for="dsp_event_start_date">Start Date</label>

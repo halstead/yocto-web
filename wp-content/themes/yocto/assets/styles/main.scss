@@ -291,6 +291,10 @@ img {
   box-sizing: border-box;
 }
 
+#cboxContent .bk-image-container img {
+  margin:0px auto;
+}
+
 
 // GLOBAL CLASSES
 
@@ -1025,6 +1029,15 @@ h6.blue-text,
 
 // Activity Table
 
+#layerTable {
+  .activity-table {
+    div.row-header:first-child {
+      border-top: 1px solid #c3c3c3;
+      border-bottom:0px none;
+    }
+  }
+}
+
 .activity-block {
 
   .row-header {
@@ -1053,7 +1066,7 @@ h6.blue-text,
   }
 
   .activity-table-tab {
-    border-bottom: 2px solid $white;
+    border-bottom: 2px solid transparent;
     color: $text-gray;
     margin-left: 14px;
     padding-bottom: 3px;
@@ -1455,7 +1468,7 @@ table {
 
 .ambassadors {
   &.custom-block{
-    text-align: center !important;
+    text-align: center;
   
     .grid-block {
       padding-top: 22px;
@@ -1472,20 +1485,10 @@ table {
       .grid-block-copy {
         background: transparent;
         border-bottom: 0 none;
-        text-align: center !important;
+        text-align: center;
       }
     }
   }
-}
-
-#vsel-custom {
-  box-sizing: border-box;
-  float: left;
-  min-height: 1px;
-  padding-left: 15px;
-  padding-right: 15px;
-  position: relative;
-  width: 50%;
 }
 
 #bk-ajax-container {
@@ -1493,6 +1496,23 @@ table {
   padding: 10px;
   text-align: center;
   width: 100%;
+}
+
+.community{
+   .block-more-link {
+     margin-top:20px;
+   }
+  
+}
+
+.jobs .grid-block-copy {
+   h6 {
+     min-height:40px;
+   }
+   
+   p {
+      min-height:60px;
+   }
 }
 
 // PAGE - LEARN
@@ -1700,7 +1720,7 @@ body.members {
 
   .container {
     .row {
-      padding: 0 70px;
+      padding: 0 16px;
     }
   }
 
@@ -1719,8 +1739,9 @@ body.members {
 
     .grid-block-copy {
       float: left;
-      padding-top: 5.5%;
+      padding: 3.5% 0 0 4%;
       text-align: left !important;
+      width: 80%;
 
       h6 {
         color: $black;

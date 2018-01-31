@@ -137,13 +137,15 @@ $postTypeName = ucfirst($postTypeNameSingular) . ' ';
 			<!-- ADDRESS -->
 		
 		<!-- City -->
+		<!--
 		<div class="row">
 			<div class="col-xs-12">
 				<label for="djd_site_post_city">City<?php //echo ( $djd_options['djd-city'] ? $djd_options['djd-city'] : __('City', 'djd-site-post') ); ?></label>
 				<input type="text" <?php echo "required='required'"; ?> id="djd_site_post_city" name="djd_site_post_city" maxlength="255" value="" <?php //if ( $my_post ) echo "value='".$my_post->post_city."'"; ?>autofocus="autofocus"/>
 			</div>
-
+		-->
 		<!-- State -->
+		<!--
 			<div class="col-xs-12 col-sm-6">
 				<label for="djd_site_post_state">State<?php //echo ( $djd_options['djd-state'] ? $djd_options['djd-state'] : __('State', 'djd-site-post') ); ?></label>
 				<select name="djd_site_post_state" id="djd_site_post_state" style="width:100%;">
@@ -216,8 +218,9 @@ $postTypeName = ucfirst($postTypeNameSingular) . ' ';
 					<option value="YT">Yukon</option>
 				</select>
 			</div>
-			
+			-->
 			<!-- Country -->
+			<!--
 			<div class="col-xs-12 col-sm-6">
 				<label for="djd_site_post_country">Country<?php //echo ( $djd_options['djd-country'] ? $djd_options['djd-country'] : __('Country', 'djd-site-post') ); ?></label>
 				<select name="djd_site_post_country" id="djd_site_post_country" style="width:100%;">
@@ -473,13 +476,14 @@ $postTypeName = ucfirst($postTypeNameSingular) . ' ';
 					<option value="ZW">Zimbabwe</option>
 				</select>
 			</div>
-		
+		-->
 		<?php } ?>
 		
 		<?php                               //Jobs Fields
 		if($postType  == 'jobs'){ ?>   
 		
-		<!-- <div class="row"> -->
+		<div class="row"> <!-- -->
+			<!--
 			<div class="col-xs-12 col-sm-6">
 				<label for="dsp_job_company_name">Company Name</label>
 				<input style="width:100%;" type="text" <?php  echo "required='required'"; ?> id="dsp_job_company_name" name="dsp_job_company_name" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_company_name."'"; ?>autofocus="autofocus"/>
@@ -488,8 +492,7 @@ $postTypeName = ucfirst($postTypeNameSingular) . ' ';
 				<label for="dsp_job_website">Company Website</label>
 				<input style="width:100%;" type="text" <?php  echo "required='required'"; ?> id="dsp_job_website" name="dsp_job_website" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_company_phone."'"; ?>autofocus="autofocus"/>
 			</div>
-		<!-- </div>
-		<div class="row"> -->
+
 			<div class="col-xs-12 col-sm-6">
 				<label for="dsp_job_company_contact">Company Contact</label>
 				<input style="width:100%;" type="text" <?php  echo "required='required'"; ?> id="dsp_job_company_contact" name="dsp_job_company_contact" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_company_contact."'"; ?>autofocus="autofocus"/>
@@ -498,14 +501,13 @@ $postTypeName = ucfirst($postTypeNameSingular) . ' ';
 				<label for="dsp_job_phone">Contact Phone Number</label>
 				<input style="width:100%;" type="text" <?php  echo "required='required'"; ?> id="dsp_job_phone" name="dsp_job_phone" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_company_phone."'"; ?>autofocus="autofocus"/>
 			</div>
-		<!-- </div>
-		<div class="row"> -->
+			-->
 			<div class="col-xs-12 col-sm-6">
 				<label for="dsp_job_email">Contact Email</label>
 				<input style="width:100%;" type="email" <?php echo "required='required'"; ?> id="dsp_job_email" name="dsp_job_email" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_email."'"; ?>autofocus="autofocus"/>
 			</div>
 			<div class="col-xs-12 col-sm-6">
-				<label for="dsp_job_posting_link"><?php echo $postTypeName ?> Link (URL)</label>
+				<label for="dsp_job_posting_link"><?php echo $postTypeName ?> Job Link (URL)</label>
 				<input style="width:100%;" type="text" <?php echo "required='required'"; ?> id="dsp_job_posting_link" name="dsp_job_posting_link" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_link."'"; ?>autofocus="autofocus"/>
 			</div>
 		</div>

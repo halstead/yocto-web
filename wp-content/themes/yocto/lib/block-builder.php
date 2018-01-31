@@ -1060,6 +1060,7 @@ function project_builder_meta_box() {
 							statusbar: true,
 							branding: false,
 							skin: 'lightgray',
+							content_css : '/wp-content/themes/yocto/dist/styles/custom-tiny-mce.css',
 							setup: function (ed) {
 						        ed.on("change", function () {
 						            updateField(ed);
@@ -1560,44 +1561,47 @@ function project_builder_meta_box() {
 								</div>
 							</div>
 							<div>
-								<div>Content:</div><br /><!-- Slide Overlay Copy -->
-								<?php 
-								if ( user_can_richedit() )
-								wp_enqueue_script('editor');
-								wp_enqueue_script('word-count');
-								$settings = array(
-									'media_buttons'	=> false, //(boolean) $djd_options['djd-allow-media-upload'],
-									'tinymce'		 => array( 
-							            'content_css' => get_stylesheet_directory_uri() . '/dist/styles/custom-tiny-mce.css',
-							        	'init_instance_callback' => 'function(editor) {
-						                        editor.on("blur", function(){
-						                            console.log("Editor ID: " + editor.id + " Editor Content: " + editor.getContent());
-													var currentContent = editor.getContent();
-													var currentContentID = editor.id;
-													jQuery("#" + currentContentID + "field").val(" ");
-													jQuery("#" + currentContentID + "field").val(currentContent);
-						                    });
-						                }'
-							        )
-							        // 'textarea_name' => 'text_name',
-							        // 'textarea_rows' => get_option('default_post_edit_rows', 10), 
-									// 'quicktags'		=> false			
-									// 'teeny'			=> $teeny,
-						 			// 'wpautop'		=> true,
-						 			// 'quicktags'		=> $show_quicktags
-								);
-				
-								$editor_content = (array_key_exists('contentBlockContent', $field) && $field['contentBlockContent'] != '') ? html_entity_decode( $field['contentBlockContent'] ) : '';									
-								$contentID = 'contentBlockContent' . $key;
-								wp_editor($editor_content, $contentID, $settings );
-								?>
-								<br>
-								<input type="hidden" id="contentBlockContent<?php echo $key; ?>field" name="contentBlockContent[]" value="<?php echo htmlspecialchars($editor_content);  ?>" /> 
 								<div>HTML / CSS / JavaScript: </div><br /><!-- Slide Overlay Copy -->
+								<textarea rows="7" placeholder="" name="contentBlockCopy[]" style="width:100%;" value="<?php if (array_key_exists('contentBlockCopy', $field) && $field['contentBlockCopy'] != '') echo esc_attr( $field['contentBlockCopy'] ); ?>"><?php if (array_key_exists('contentBlockCopy', $field) && $field['contentBlockCopy'] != '') echo esc_attr( $field['contentBlockCopy'] ); ?></textarea>
+								<br /><br />
+								<div>Content:</div><br /><!-- Slide Overlay Copy -->
 								<div class="float-container"><span class="button custom-single-accordion-btn alignright">open</span></div>
 								<div class="custom-signle-accordion-content-container">
 									<hr></hr>
-									<div class="custom-signle-accordion-content hidden closed"><textarea rows="7" placeholder="" name="contentBlockCopy[]" value="<?php if (array_key_exists('contentBlockCopy', $field) && $field['contentBlockCopy'] != '') echo esc_attr( $field['contentBlockCopy'] ); ?>"><?php if (array_key_exists('contentBlockCopy', $field) && $field['contentBlockCopy'] != '') echo esc_attr( $field['contentBlockCopy'] ); ?></textarea></div>
+									<div class="custom-signle-accordion-content hidden closed">
+										<?php 
+										if ( user_can_richedit() )
+										wp_enqueue_script('editor');
+										wp_enqueue_script('word-count');
+										$settings = array(
+											'media_buttons'	=> false, //(boolean) $djd_options['djd-allow-media-upload'],
+											'tinymce'		 => array( 
+									            'content_css' => get_stylesheet_directory_uri() . '/dist/styles/custom-tiny-mce.css',
+									        	'init_instance_callback' => 'function(editor) {
+								                        editor.on("blur", function(){
+								                            console.log("Editor ID: " + editor.id + " Editor Content: " + editor.getContent());
+															var currentContent = editor.getContent();
+															var currentContentID = editor.id;
+															jQuery("#" + currentContentID + "field").val(" ");
+															jQuery("#" + currentContentID + "field").val(currentContent);
+								                    });
+								                }'
+									        )
+									        // 'textarea_name' => 'text_name',
+									        // 'textarea_rows' => get_option('default_post_edit_rows', 10), 
+											// 'quicktags'		=> false			
+											// 'teeny'			=> $teeny,
+								 			// 'wpautop'		=> true,
+								 			// 'quicktags'		=> $show_quicktags
+										);
+						
+										$editor_content = (array_key_exists('contentBlockContent', $field) && $field['contentBlockContent'] != '') ? html_entity_decode( $field['contentBlockContent'] ) : '';									
+										$contentID = 'contentBlockContent' . $key;
+										wp_editor($editor_content, $contentID, $settings );
+										?>
+										<br>
+										<input type="hidden" id="contentBlockContent<?php echo $key; ?>field" name="contentBlockContent[]" value="<?php echo htmlspecialchars($editor_content);  ?>" /> 
+									</div>
 								</div>
 							</div>
 						</div>
@@ -1942,43 +1946,46 @@ function project_builder_meta_box() {
 								</div>
 							</div>
 							<div style="margin-bottom:12px; overflow:hidden;">
-								<div>Content:</div><br /><!-- Slide Overlay Copy -->
-								<?php 
-								if ( user_can_richedit() )
-								wp_enqueue_script('editor');
-								wp_enqueue_script('word-count');
-								$settings = array(
-									'media_buttons'	=> false, //(boolean) $djd_options['djd-allow-media-upload'],
-									'tinymce'		 => array( 
-							            'content_css' => get_stylesheet_directory_uri() . '/dist/styles/custom-tiny-mce.css',
-							        	'init_instance_callback' => 'function(editor) {
-						                        editor.on("blur", function(){
-						                            console.log("Editor ID: " + editor.id + " Editor Content: " + editor.getContent());
-													var currentContent = editor.getContent();
-													var currentContentID = editor.id
-													jQuery("#" + currentContentID + "field").val(currentContent);
-						                    });
-						                }'
-							        )
-							        // 'textarea_name' => 'text_name',
-							        // 'textarea_rows' => get_option('default_post_edit_rows', 10), 
-									// 'quicktags'		=> false			
-									// 'teeny'			=> $teeny,
-						 			// 'wpautop'		=> true,
-						 			// 'quicktags'		=> $show_quicktags
-								);
-				
-								$editor_new_content = ''; //$editor_content = (array_key_exists('contentBlockContent', $field) && $field['contentBlockContent'] != '') ? esc_attr( $field['contentBlockContent'] ) : '';									
-								$contentNewID = 'contentBlockContent0';
-								wp_editor($editor_new_content, $contentNewID, $settings );
-								?>
-								<br>
-								<input type="hidden" id="contentBlockContent0field" name="contentBlockContent[]" value="" />
 								<div>HTML / CSS / JavaScript: </div><br /><!-- Slide Overlay Copy -->
+								<textarea rows="7" placeholder="" style="width:100%;" name="contentBlockCopy[]"></textarea>
+								<br /><br />
+								<div>Content:</div><br /><!-- Slide Overlay Copy -->
 								<div class="float-container"><span class="button custom-single-accordion-btn alignright">open</span></div>
 								<div class="custom-signle-accordion-content-container">
 									<hr></hr>
-									<div class="custom-signle-accordion-content hidden closed"><textarea rows="7" placeholder="" name="contentBlockCopy[]"></textarea></div>
+									<div class="custom-signle-accordion-content hidden closed">
+										<?php 
+										if ( user_can_richedit() )
+										wp_enqueue_script('editor');
+										wp_enqueue_script('word-count');
+										$settings = array(
+											'media_buttons'	=> false, //(boolean) $djd_options['djd-allow-media-upload'],
+											'tinymce'		 => array( 
+									            'content_css' => get_stylesheet_directory_uri() . '/dist/styles/custom-tiny-mce.css',
+									        	'init_instance_callback' => 'function(editor) {
+								                        editor.on("blur", function(){
+								                            console.log("Editor ID: " + editor.id + " Editor Content: " + editor.getContent());
+															var currentContent = editor.getContent();
+															var currentContentID = editor.id
+															jQuery("#" + currentContentID + "field").val(currentContent);
+								                    });
+								                }'
+									        )
+									        // 'textarea_name' => 'text_name',
+									        // 'textarea_rows' => get_option('default_post_edit_rows', 10), 
+											// 'quicktags'		=> false			
+											// 'teeny'			=> $teeny,
+								 			// 'wpautop'		=> true,
+								 			// 'quicktags'		=> $show_quicktags
+										);
+						
+										$editor_new_content = ''; //$editor_content = (array_key_exists('contentBlockContent', $field) && $field['contentBlockContent'] != '') ? esc_attr( $field['contentBlockContent'] ) : '';									
+										$contentNewID = 'contentBlockContent0';
+										wp_editor($editor_new_content, $contentNewID, $settings );
+										?>
+										<br>
+										<input type="hidden" id="contentBlockContent0field" name="contentBlockContent[]" value="" />
+									</div>
 								</div>
 								
 								<!-- <div>HTML / CSS / JavaScript:</div><br />Slide Overlay Copy 
@@ -2259,14 +2266,16 @@ function project_builder_meta_box() {
 								</div>
 							</div>
 							<div style="margin-bottom:12px; overflow:hidden;">
-								<div>Content:</div><br /><!-- Slide Overlay Copy 1 -->
-								<div class="content-container"></div>
-								<br>
 								<div>HTML / CSS / JavaScript: </div><br /><!-- Slide Overlay Copy -->
+								<textarea rows="7" placeholder="" style="width:100%;" name="contentBlockCopy[]"></textarea>
+								<br /><br />
+								<div>Content:</div><br /><!-- Slide Overlay Copy 1 -->
 								<div class="float-container"><span class="button custom-single-accordion-btn alignright">open</span></div>
 								<div class="custom-signle-accordion-content-container">
 									<hr></hr>
-									<div class="custom-signle-accordion-content hidden closed"><textarea rows="7" placeholder="" name="contentBlockCopy[]"></textarea></div>
+									<div class="custom-signle-accordion-content hidden closed">	
+										<div class="content-container"></div>
+									</div>
 								</div>
 								<!--<div>HTML / CSS / JavaScript:</div><br /> Slide Overlay Copy 
 								<textarea style="width:100%;" rows="10" placeholder="" name="contentBlockCopy[]"></textarea> -->

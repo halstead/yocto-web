@@ -15,7 +15,7 @@ class BASEKIT_Options_Functions {
 	public function __construct() {
 	    add_action( 'admin_menu', array( $this, 'add_submenu_page_to_post_type' ) );
 	    add_action( 'admin_init', array( $this, 'sub_menu_page_init' ) );
-	    add_action( 'admin_init', array( $this, 'media_selector_scripts' ) );
+	    //add_action( 'admin_init', array( $this, 'media_selector_scripts' ) );
 	}
 	
 	/**

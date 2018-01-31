@@ -65,8 +65,6 @@ if (!class_exists("DjdSitePost")) {
 
 		// Unautop the shortcode
 		//add_filter( 'the_content', 'shortcode_unautop', 100 );
-		
-		
 
 		// Setup Ajax Support
 		add_action('wp_ajax_process_site_post_form', array( $this, 'process_site_post_form' ) );
@@ -233,10 +231,6 @@ if (!class_exists("DjdSitePost")) {
 				$defaultAdminOptions[$key] = $option;
 		}
 		update_option('djd_site_post_settings', $defaultAdminOptions);
-		
-		
-			
-		
 	} // end set_default_options()
 
 	/*
@@ -457,7 +451,6 @@ if (!class_exists("DjdSitePost")) {
 	
 		// Getting the right post-id for media attachments
 		$this->djd_insert_media_fix( $djd_post_id );
-	
 	}
 
 	
@@ -477,75 +470,142 @@ if (!class_exists("DjdSitePost")) {
 	    return $excerpt;
 	}
 	
+	
+	function default_shortcode_job_block() {
+		// Jobs Custom Options
+		$post_type = 'jobs';
+		$jobs_options = get_option('options_jobs_field_group');
+		$jobs_expire_date = $jobs_options['jobs_expire_setting'];
+		$jobs_minimum_blocks = $jobs_options['jobs_minimum_blocks'];
+		$jobs_default_ID = $jobs_options['jobs_default_postID'];
+
+		$args = '';
+		$args=array(
+	      'post_type' => $post_type,
+	      'post_status' => 'publish',
+	      'posts_per_page' => 1,
+	      'order' => 'DESC',
+	      'post__in' => array($jobs_default_ID), 
+	    );	
+		
+		$output = '';
+		$my_query = null;
+	    $my_query = new WP_Query($args); 
+		if( $my_query->have_posts() ) {
+			while ($my_query->have_posts()) : $my_query->the_post(); 
+				$cityField = get_field('my_meta_box_city_text');
+				$stateField = get_field('my_meta_box_state_select');
+				$counteryField = get_field('my_meta_box_country_select');
+				$state = convertState($stateField, $strFormat='name');
+				$country = convertCountry($counteryField);
+				$output .= '<div class="half-block">';
+				$output .= '	<div class="block-copy col-sm-12">';
+				if( get_field('dsp_job_website') ):
+					$output .= '		<h3 class="title" style="margin-bottom:5px;"><a href="' .  get_field('dsp_job_website') . '">' .  get_field('dsp_job_company_name') . '</a></h3>';
+				else:
+					$output .= '		<h3 class="title" style="margin-bottom:5px;">' .  get_field('dsp_job_company_name') . '</h3>';
+				endif;
+				
+				if( get_field('dsp_job_posting_link') ):
+					$output .= '		<h3 class="title" style="margin-bottom:5px !important;"><a href="' .  get_field('dsp_job_posting_link') . '">' .  get_the_title() . '</a></h3>';
+				else:
+					$output .= '		<h3 class="title" style="margin-bottom:5px !important;">' .  get_the_title() . '</h3>';
+				endif;	
+				$output .= '		<p>' . get_the_excerpt() . '</p>';
+				
+				if($cityField != "" && $state != ""){
+					$output .= '		<p class="date">' . $cityField .  ', ' . $state . '</p>';
+				}elseif($state != ""){
+					$output .= '		<p class="date">' . $state . '</p>';
+				}
+				$output .= '		<p class="date" style="margin-bottom:10px;">' . $country .  '</p>';
+				$output .= '		<div class="row">';
+				$output .= '			<div class="col-xs-12 col-sm-8"><p class="details">';  
+				$output .= '			</div>';
+				$output .= '			<div class="col-xs-12 col-sm-4">';	
+				$output .= '				<div class="pull-right"><a href="' .  get_field('dsp_job_posting_link') . '" class="btn btn-blue" target="_blank">View Job Details</a></div>';
+				$output .= '			</div>';
+				$output .= '		</div>';
+				$output .= '	</div>';
+				$output .= '</div>';	
+			endwhile;
+		}
+		wp_reset_postdata();
+		wp_reset_query();
+		return $output;
+	}
+
 
 	function handle_display_shortcode($atts, $content = null){
-
-		function default_shortcode_job_block() {
-			// Jobs Custom Options
-			$post_type = 'jobs';
-			$jobs_options = get_option('options_jobs_field_group');
-			$jobs_expire_date = $jobs_options['jobs_expire_setting'];
-			$jobs_minimum_blocks = $jobs_options['jobs_minimum_blocks'];
-			$jobs_default_ID = $jobs_options['jobs_default_postID'];
-
-			$args = '';
-			$args=array(
-		      'post_type' => $post_type,
-		      'post_status' => 'publish',
-		      'posts_per_page' => 1,
-		      'order' => 'DESC',
-		      'post__in' => array($jobs_default_ID), 
-		    );	
-			
-			$output = '';
-			$my_query = null;
-		    $my_query = new WP_Query($args); 
-			if( $my_query->have_posts() ) {
-				while ($my_query->have_posts()) : $my_query->the_post(); 
-					$cityField = get_field('my_meta_box_city_text');
-					$stateField = get_field('my_meta_box_state_select');
-					$counteryField = get_field('my_meta_box_country_select');
-					$state = convertState($stateField, $strFormat='name');
-					$country = convertCountry($counteryField);
-					$output .= '<div class="half-block">';
-					$output .= '	<div class="block-copy col-sm-12">';
-					if( get_field('dsp_job_website') ):
-						$output .= '		<h3 class="title" style="margin-bottom:5px;"><a href="' .  get_field('dsp_job_website') . '">' .  get_field('dsp_job_company_name') . '</a></h3>';
-					else:
-						$output .= '		<h3 class="title" style="margin-bottom:5px;">' .  get_field('dsp_job_company_name') . '</h3>';
-					endif;
-					
-					if( get_field('dsp_job_posting_link') ):
-						$output .= '		<h3 class="title" style="margin-bottom:5px !important;"><a href="' .  get_field('dsp_job_posting_link') . '">' .  get_the_title() . '</a></h3>';
-					else:
-						$output .= '		<h3 class="title" style="margin-bottom:5px !important;">' .  get_the_title() . '</h3>';
-					endif;	
-					$output .= '		<p>' . get_the_excerpt() . '</p>';
-					
-					if($cityField != "" && $state != ""){
-						$output .= '		<p class="date">' . $cityField .  ', ' . $state . '</p>';
-					}elseif($state != ""){
-						$output .= '		<p class="date">' . $state . '</p>';
-					}
-					$output .= '		<p class="date" style="margin-bottom:10px;">' . $country .  '</p>';
-					$output .= '		<div class="row">';
-					$output .= '			<div class="col-xs-12 col-sm-8"><p class="details">';  
-					$output .= '			</div>';
-					$output .= '			<div class="col-xs-12 col-sm-4">';	
-					$output .= '				<div class="pull-right"><a href="' .  get_field('dsp_job_posting_link') . '" class="btn btn-blue" target="_blank">View Job Details</a></div>';
-					$output .= '			</div>';
-					$output .= '		</div>';
-					$output .= '	</div>';
-					$output .= '</div>';	
-				endwhile;
-			}
-			wp_reset_postdata();
-			wp_reset_query();
-			return $output;
-		}
 		
+		if (!function_exists('default_shortcode_job_block'))   {
+			function default_shortcode_job_block() {
+				// Jobs Custom Options
+				$post_type = 'jobs';
+				$jobs_options = get_option('options_jobs_field_group');
+				$jobs_expire_date = $jobs_options['jobs_expire_setting'];
+				$jobs_minimum_blocks = $jobs_options['jobs_minimum_blocks'];
+				$jobs_default_ID = $jobs_options['jobs_default_postID'];
+		
+				$args = '';
+				$args=array(
+			      'post_type' => $post_type,
+			      'post_status' => 'publish',
+			      'posts_per_page' => 1,
+			      'order' => 'DESC',
+			      'post__in' => array($jobs_default_ID), 
+			    );	
+				
+				$output = '';
+				$my_query = null;
+			    $my_query = new WP_Query($args); 
+				if( $my_query->have_posts() ) {
+					while ($my_query->have_posts()) : $my_query->the_post(); 
+						$cityField = get_field('my_meta_box_city_text');
+						$stateField = get_field('my_meta_box_state_select');
+						$counteryField = get_field('my_meta_box_country_select');
+						$state = convertState($stateField, $strFormat='name');
+						$country = convertCountry($counteryField);
+						$output .= '<div class="half-block">';
+						$output .= '	<div class="block-copy col-sm-12">';
+						if( get_field('dsp_job_website') ):
+							$output .= '		<h3 class="title" style="margin-bottom:5px;"><a href="' .  get_field('dsp_job_website') . '">' .  get_field('dsp_job_company_name') . '</a></h3>';
+						else:
+							$output .= '		<h3 class="title" style="margin-bottom:5px;">' .  get_field('dsp_job_company_name') . '</h3>';
+						endif;
+						
+						if( get_field('dsp_job_posting_link') ):
+							$output .= '		<h3 class="title" style="margin-bottom:5px !important;"><a href="' .  get_field('dsp_job_posting_link') . '">' .  get_the_title() . '</a></h3>';
+						else:
+							$output .= '		<h3 class="title" style="margin-bottom:5px !important;">' .  get_the_title() . '</h3>';
+						endif;	
+						$output .= '		<p>' . get_the_excerpt() . '</p>';
+						
+						if($cityField != "" && $state != ""){
+							$output .= '		<p class="date">' . $cityField .  ', ' . $state . '</p>';
+						}elseif($state != ""){
+							$output .= '		<p class="date">' . $state . '</p>';
+						}
+						$output .= '		<p class="date" style="margin-bottom:10px;">' . $country .  '</p>';
+						$output .= '		<div class="row">';
+						$output .= '			<div class="col-xs-12 col-sm-8"><p class="details">';  
+						$output .= '			</div>';
+						$output .= '			<div class="col-xs-12 col-sm-4">';	
+						$output .= '				<div class="pull-right"><a href="' .  get_field('dsp_job_posting_link') . '" class="btn btn-blue" target="_blank">View Job Details</a></div>';
+						$output .= '			</div>';
+						$output .= '		</div>';
+						$output .= '	</div>';
+						$output .= '</div>';	
+					endwhile;
+				}
+				wp_reset_postdata();
+				wp_reset_query();
+				return $output;
+			}
+		}
+
 		$local_atts = shortcode_atts( array(
-			'post_count' => 8,
+			'post_count' => '-1',
 			'show_thumbnail' => '1',
 			'show_dates' => 'true',
 			'link_to_page' => 'false',
@@ -877,6 +937,8 @@ if (!class_exists("DjdSitePost")) {
 		} else {
 			if($dynamic_post_type == 'jobs'){
 				$output .= default_shortcode_job_block($atts);
+				wp_reset_postdata();
+				wp_reset_query();
 				return $output;
 			}else{
 				$output .= '<div class="half-block">';
@@ -884,9 +946,13 @@ if (!class_exists("DjdSitePost")) {
 				$output .= '		<p>There are no results that match your input.</p>';
 				$output .= '	</div>';
 				$output .= '</div>';
+				wp_reset_postdata();
+				wp_reset_query();
 				return $output;
 			}
 		}
+		
+		
 	}
 
 		
@@ -964,13 +1030,11 @@ if (!class_exists("DjdSitePost")) {
 
 	function process_site_post_form() {
 		if( isset($_POST) ){
-			
 
 			$djd_options = get_option('djd_site_post_settings');
 				
 			if ( !empty ($_POST["djd-our-post-type"])) $djd_post_type = $_POST["djd-our-post-type"];
 			if ( !empty ($_POST["djd-our-id"])) $djd_post_id = $_POST["djd-our-id"];
-			
 			
 			$dynamic_post_taxonomy = ( !empty ($_POST["djd-our-post-taxonomy"])) ? $_POST["djd-our-post-taxonomy"] : 'category';
 			$terms = ( !empty ($_POST["djd-our-post-term"])) ? $_POST["djd-our-post-term"] : 'uncategorized';

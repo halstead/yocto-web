@@ -1,3 +1,81 @@
 body#tinymce {
 	padding-top:0px !important;
+	background: #f8f8f8;
+    color: #333;
+    font-family: Lato,sans-serif;
+    font-size: 16px;
+    line-height: 20px;
 }
+
+
+a {
+  font-family: 'Lato', sans-serif;
+  color: #0098db;
+  text-transform: capitalize;
+  text-decoration:none;
+}
+
+
+a:active,
+  a:visited,
+  a:focus,
+  a:hover {
+    color: #0098db;
+    text-decoration: none !important;
+}
+
+
+p {
+  color: #333;
+  font-family: 'Lato', sans-serif;
+  font-size: 16px;
+  line-height: 20px;
+  margin-bottom: 16px;
+ }
+ 
+ol {
+	list-style-type: decimal !important;
+	margin-bottom: 10px;
+	padding-left: 20px;
+}
+
+ol li {
+	color: $brand-copy;
+	font-size: 16px;
+	list-style: decimal !important;
+}
+
+ul {
+    list-style-type: disc;
+    margin-bottom: 30px;
+    margin-top: 30px;
+    padding-left: 20px;
+}
+
+ul li {
+	color: $brand-copy;
+	font-size: 16px;
+	list-style: disc;
+}
+
+h2 {
+ 	font-size:19px;
+ 	text-transform:uppercase;
+ }
+
+h3,
+h4 {
+  font-family: 'Lato-bold', sans-serif !important;
+  font-size: 16px !important;
+  font-weight: 400 !important;
+  margin-bottom: 20px !important;
+}
+
+h5,
+h6 {
+  color: $black;
+  font-size: 14px;
+  line-height: 20px;
+  text-transform: uppercase;
+}
+

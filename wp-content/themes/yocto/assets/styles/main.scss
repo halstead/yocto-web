@@ -1039,6 +1039,7 @@ h6.blue-text,
 }
 
 .activity-block {
+
   .row-header {
     border-top: 1px solid $brand-gray;
     padding-bottom: 0;
@@ -1107,7 +1108,6 @@ span {
   &.medium {
     background: $scale-medium;
   }
-
 
   &.high {
     background: $scale-high;
@@ -1500,7 +1500,7 @@ table {
 
 .community{
    .block-more-link {
-     margin-top:20px;
+     margin-top:20px !important;
    }
   
 }

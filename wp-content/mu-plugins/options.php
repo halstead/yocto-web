@@ -1,8 +1,8 @@
 <?php
 /**
- * Must-Use CTP & Taxonomy Plugin
+ * Must-Use CTP Options Plugin
  * 
- * A Custom Class for Custom Post Types and Taxonomies
+ * A Custom Class for adding Options/Settings to Custom Post Types
  * 
  * @package WordPress
  * @subpackage BASEKIT

@@ -816,9 +816,9 @@ class BASEKIT_Function_Slider {
 					$output .= '		<h5>' . get_the_title() . '</h5>';
 					$output .= '		<p>' . $excerpt . '</p>'; //get_the_excerpt() 
 					if(get_field('dsp_job_posting_link') ){
-						$output .= '				<div class="widgete-link"><a href="' .  get_field('dsp_job_posting_link') . '" class="blue-link" target="_blank">View Job Details</a></div>';
+						$output .= '				<div class="widgete-link"><a href="' .  get_field('dsp_job_posting_link') . '" class="blue-link">View All Jobs</a></div>';
 					}
-					$output .= '		<span class="tag tag-blue">' . $post_type_singular_name . '</span>';
+					//$output .= '		<span class="tag tag-blue">' . $post_type_singular_name . '</span>';
 					$output .= '	</div>';
 					$output .= '</div>';	
 				endwhile;
@@ -962,7 +962,7 @@ class BASEKIT_Function_Slider {
 					if(get_field('dsp_job_posting_link') ){
 						//$output .= '				<div class="widgete-link"><a href="' .  get_field('dsp_job_posting_link') . '" class="blue-link" target="_blank">View Job Details</a></div>';
 					}
-					$output .= '		<div class="widgete-link"><a href="/community/jobs/" class="blue-link" target="_blank">View All Jobs</a></div>';
+					$output .= '		<div class="widgete-link"><a href="/community/jobs/" class="blue-link">View All Jobs</a></div>';
 					//$output .= '		<span class="tag tag-blue">' . $post_type_singular_name . '</span>';
 					$output .= '	</div>';
 					$output .= '</div>';

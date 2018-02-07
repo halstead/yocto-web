@@ -211,12 +211,13 @@ div.cpt-block-container .half-block {
 }
 
 #djd_site_post_excerpt {
-	max-width: 99%;
-	width: 99%;
+	/*max-width: 99%;
+	width: 99%;*/
 	height: 100px;
 	border: 1px solid #9f9f9f;
 	padding: 3px;
 	margin: 0;
+	box-sizing:border-box;
 }
 
 #djd_site_post_cat,

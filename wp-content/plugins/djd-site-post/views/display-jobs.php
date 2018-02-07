@@ -93,12 +93,19 @@ $postTypeName = ucfirst($postTypeNameSingular) . ' ';
 	<div id="field-wrapper">
 		<h4><?php echo $GLOBALS['dynamic_post_title'] ?></h4>
 		<!-- <legend><?php //echo ( $djd_options['djd-form-name'] ? $djd_options['djd-form-name'] : __('Frontend Post', 'djd-site-post') ); ?></legend> -->
-		<label for="djd_site_post_title"><?php echo $postTypeName . ( $djd_options['djd-title'] ? $djd_options['djd-title'] : __('Title', 'djd-site-post') ); ?></label>
-		<input type="text" <?php if ( $djd_options['djd-title-required'] == "1" ) echo "required='required'"; ?> id="djd_site_post_title" name="djd_site_post_title" maxlength="120" <?php if ( $my_post ) echo "value='".$my_post->post_title."'"; ?>/>
-		
 		<div class="row">
 			<div class="col-xs-12">
-			<label for="djdsitepostcontent"><?php echo $postTypeName . ( $djd_options['djd-content'] ? $djd_options['djd-content'] : __('Text', 'djd-site-post') ); ?> (180 character limit)</label>
+				<label for="djd_site_post_title"><?php echo $postTypeName . ( $djd_options['djd-title'] ? $djd_options['djd-title'] : __('Title', 'djd-site-post') ); ?></label>
+				<input style="width:100%;" type="text" <?php if ( $djd_options['djd-title-required'] == "1" ) echo "required='required'"; ?> id="djd_site_post_title" name="djd_site_post_title" maxlength="120" <?php if ( $my_post ) echo "value='".$my_post->post_title."'"; ?>/>
+			</div>
+			<div class="col-xs-12">
+				<label for="dsp_job_company_name">Company Name</label>
+				<input style="width:100%;" type="text" <?php  echo "required='required'"; ?> id="dsp_job_company_name" name="dsp_job_company_name" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_company_name."'"; ?> "/>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12">
+			<!--<label for="djdsitepostcontent"><?php //echo $postTypeName . ( $djd_options['djd-content'] ? $djd_options['djd-content'] : __('Text', 'djd-site-post') ); ?> (180 character limit)</label>-->
 			
 			<?php
 				//$content = '<a href="#" class="meta_field_upload_image_button button">Upload image</a>';
@@ -123,12 +130,12 @@ $postTypeName = ucfirst($postTypeNameSingular) . ' ';
 			);
 			$editor_content = '';
 			if ( $my_post ) $editor_content = $my_post->post_content;
-			wp_editor($editor_content, 'djdsitepostcontent', $settings );
+			//wp_editor($editor_content, 'djdsitepostcontent', $settings );
 			?>
 			
 			<?php if (isset($djd_options['djd-show-excerpt'])) { ?>
-				<label for="djd_site_post_excerpt"><?php echo ( $djd_options['djd-excerpt'] ? $djd_options['djd-excerpt'] : __('Excerpt', 'djd-site-post') ); ?> (180 character limmit)</label>
-				<textarea maxlength="180" id="djd_site_post_excerpt" name="djd_site_post_excerpt"><?php if ( $my_post ) echo $my_post->post_excerpt; ?></textarea>
+				<label for="djd_site_post_excerpt"><?php echo ( $djd_options['djd-excerpt'] ? $djd_options['djd-excerpt'] : __('Excerpt', 'djd-site-post') ); ?> (180 character limit)</label>
+				<textarea maxlength="180" style="width:100%;" id="djd_site_post_excerpt" name="djd_site_post_excerpt"><?php if ( $my_post ) echo $my_post->post_excerpt; ?></textarea>
 			<?php } ?>
 			</div>
 		</div>
@@ -504,108 +511,23 @@ $postTypeName = ucfirst($postTypeNameSingular) . ' ';
 			-->
 			<div class="col-xs-12 col-sm-6">
 				<label for="dsp_job_email">Contact Email</label>
-				<input style="width:100%;" type="email" <?php echo "required='required'"; ?> id="dsp_job_email" name="dsp_job_email" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_email."'"; ?>autofocus="autofocus"/>
+				<input style="width:100%;" type="email" <?php echo "required='required'"; ?> id="dsp_job_email" name="dsp_job_email" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_email."'"; ?> />
 			</div>
 			<div class="col-xs-12 col-sm-6">
 				<label for="dsp_job_posting_link"><?php echo $postTypeName ?> Link URL (*Must be valid URL. Example: http://www.job.com/)</label>
-				<input style="width:100%;" type="url" <?php echo "required='required'"; ?> id="dsp_job_posting_link" name="dsp_job_posting_link" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_link."'"; ?>autofocus="autofocus"/>
+				<input style="width:100%;" type="url" <?php echo "required='required'"; ?> id="dsp_job_posting_link" name="dsp_job_posting_link" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_link."'"; ?> />
 			</div>
 		</div>
 		<?php } ?>
-		
-		<!-- Link -->
-		
-		
-		
+
 		<?php
-		
-
-		if ( is_user_logged_in() || isset($djd_options['djd-guest-cat-select']) ){
-		
-			// $orderby = $djd_options['djd-category-order']; //The sort order for categories.
-// 			$active_cat=0;
-// 			if ( $my_post ) {
-// 				$cats=get_the_category($my_post->ID);
-// 				if($cats[0]) $active_cat=$cats[0]->cat_ID;
-// 			}
-// 			switch($djd_options['djd-categories']){
-// 				case 'none':
-// 					break;
-// 				case 'list':
-// 					$args = array(
-// 						'orderby'           => $orderby,
-// 						'order'             => 'ASC',
-// 						'show_count'        => 0,
-// 						'hide_empty'        => 0,
-// 						'child_of'          => 0,
-// 						'echo'              => 0,
-// 						'selected'          => $active_cat,
-// 						'hierarchical'      => 1,
-// 						'name'              => 'djd_site_post_select_category',
-// 						'class'             => 'class=djd_site_post_form',
-// 						'depth'             => 0,
-// 						'tab_index'         => 0,
-// 						'hide_if_empty'     => false
-// 					); ?>
- 					<!--<label for="select_post_category"><?php //echo ( $djd_options['djd-categories-label'] ? $djd_options['djd-categories-label'] : __('Select a Category', 'djd-site-post') ); ?></label>-->
- 					<?php //echo str_replace("&nbsp;", "&#160;", wp_dropdown_categories($args));
-// 					break;
-// 				case 'check':
-// 					$args = array(
-// 						'type'              => 'post',
-// 						'orderby'           => $orderby,
-// 						'order'             => 'ASC',
-// 						'hide_empty'        => 0,
-// 						'hierarchical'      => 0,
-// 						'taxonomy'          => 'category',
-// 						'pad_counts'        => false
-// 					); ?>
- 					<!--<label for="djd_site_post_cat_checklist"><?php //echo ( $djd_options['djd-categories-label'] ? $djd_options['djd-categories-label'] : __('Category', 'djd-site-post') ); ?></label>-->
- 					<!--<ul id="djd_site_post_cat_checklist">-->
- 					<?php //$cats = get_categories($args);
-// 					foreach ($cats as $cat) { ?>
- 						<!--<li><input type="checkbox" name="djd_site_post_checklist_category[]" value="<?php //echo ($cat->cat_ID); ?>" <?php //if( in_category($cat->cat_ID, $my_post->ID) ) echo "checked='checked'"; ?> />&nbsp;<?php //echo($cat->cat_name); ?></li>-->
- 					<?php //} ?>
- 					<!--</ul>-->
- 					<?php //break;
-// 			}
-		}
-		if (isset($djd_options['djd-allow-new-category']) && $verified_user['djd_can_manage_categories']) { ?>
-			<label for="djd_site_post_new_category"><?php echo ( $djd_options['djd-create-category'] ? $djd_options['djd-create-category'] : __('New category', 'djd-site-post') ); ?></label>
-			<input type="text" id="djd_site_post_new_category" name="djd_site_post_new_category" maxlength="255" />
-		<?php }
-		if (isset($djd_options['djd-show-tags'])) { ?>
-			<label for="djd_site_post_tags"><?php echo ( $djd_options['djd-tags'] ? $djd_options['djd-tags'] : __('Tags (comma-separated)', 'djd-site-post') ); ?></label>
-			<input type="text" id="djd_site_post_tags" name="djd_site_post_tags" maxlength="255" <?php if ( $my_post ) echo "value='".implode( ', ', $my_post->tags_input )."'"; ?>/>
-		<?php }
-
-		if (current_theme_supports('post-formats') && isset($djd_options['djd-post-format'])) {
-			$post_formats = get_theme_support( 'post-formats' );
-		
-			if ( is_array( $post_formats[0] ) ) :
-				$post_format = get_post_format( $my_post->ID);//$my_post->ID  // = get_post_meta(get_the_ID(), $something->get_the_id(), TRUE); 
-				if ( !$post_format )
-					$post_format = '0';
-				// Add in the current one if it isn't there yet, in case the current theme doesn't support it
-				if ( $post_format && !in_array( $post_format, $post_formats[0] ) )
-					$post_formats[0][] = $post_format;
-			?>
-				<label for='djd-post-format'><?php _e('Post Format', 'djd-site-post'); ?></label>
-				<select id='djd-post-format' name='djd-post-format'>
-				<option value="0" <?php selected( $post_format, '0' ); ?> ><?php echo get_post_format_string( 'standard' ); ?></option>
-				<?php foreach ( $post_formats[0] as $format ) : ?>
-				<option value="<?php echo esc_attr( $format ); ?>" <?php selected( $post_format, $format ); ?> ><?php echo esc_html( get_post_format_string( $format ) ); ?></option>
-				<?php endforeach; ?>
-				</select>
-			<?php endif;
-		}
 		if (isset($djd_options['djd-guest-info'])) { 
 			if ( ($djd_options['djd-guest-info']) && (!is_user_logged_in()) ){ ?>
-				<label for="djd_site_post_guest_name"><?php _e('Your Name', 'djd-site-post'); ?></label>
+				<!-- <label for="djd_site_post_guest_name"><?php _e('Your Name', 'djd-site-post'); ?></label>
 				<input type="text" required="required" id="djd_site_post_guest_name" name="djd_site_post_guest_name" maxlength="40" />
 	
 				<label for="djd_site_post_guest_email"><?php _e('Your Email', 'djd-site-post'); ?></label>
-				<input type="email" required="required" id="djd_site_post_guest_email" name="djd_site_post_guest_email" maxlength="40" /><br><br>
+				<input type="email" required="required" id="djd_site_post_guest_email" name="djd_site_post_guest_email" maxlength="40" /><br><br> -->
 			<?php } 
 		} ?>
 
@@ -618,18 +540,7 @@ $postTypeName = ucfirst($postTypeNameSingular) . ' ';
 		<input type="text" required="required" id="djd_quiz" name="djd_quiz" maxlength="2" size="2" />
 		<input type="hidden" id="djd_quiz_hidden" name="djd_quiz_hidden" value="<?php echo $no1 + $no2; ?>" />
 	<?php } ?>
-	<?php if (is_user_logged_in()) {
-		if ( $this->djd_check_user_role( 'administrator', $verified_user['djd_user_id'] ) || $this->djd_check_user_role( 'editor', $verified_user['djd_user_id'] ) ) {
-			?>
-			<label for="djd-priv-publish-status"><?php _e('Post Status', 'djd-site-post'); ?></label>
-			<select id='djd-priv-publish-status' name='djd-priv-publish-status'>
-				<option value='publish' <?php if ($djd_options['djd-publish-status'] == 'publish') echo 'selected="selected"'; ?>> <?php _e('Publish', 'djd-site-post') ?></option>
-				<option value='pending' <?php if ($djd_options['djd-publish-status'] == 'pending') echo 'selected="selected"'; ?>> <?php _e('Pending', 'djd-site-post') ?></option>
-				<option value='draft' <?php if ($djd_options['djd-publish-status'] == 'draft') echo 'selected="selected"'; ?>> <?php _e('Draft', 'djd-site-post') ?></option>
-				<option value='private'> <?php _e('Private', 'djd-site-post') ?></option>
-			</select><br><br>
-		<?php }
-	} ?>
+	<br><br>
 	<button type="submit" class="send-button" id="submit"><?php echo ( $djd_options['djd-send-button'] ? $djd_options['djd-send-button'] : __('Publish', 'djd-site-post') ); ?></button>
 	<p id="error" class="<?php echo ($sr && !$cf['form_ok']) ? 'visible' : ''; ?>"><?php echo $djd_options['djd-post-fail']; ?></p>
 	</div> <!-- field-wrapper -->
@@ -638,7 +549,6 @@ $postTypeName = ucfirst($postTypeNameSingular) . ' ';
 	<p id="success" class="<?php echo ($sr && $cf['form_ok']) ? 'visible' : ''; ?>"><?php echo $djd_options['djd-post-confirmation']; ?></p>
 	<button id="refresher" type="reset" onclick="RefreshPage()" class="btn-blue btn send-button <?php echo ($sr && $cf['form_ok']) ? 'visible' : ''; ?>"><?php _e('Submit Another', 'djd-site-post'); ?></button>
 </div>
-<!--<div id="feedback"></div>-->
 <?php } ?>
 <script>
 	var myForm = document.getElementById("site_post_form");

@@ -739,13 +739,13 @@ if (!class_exists("DjdSitePost")) {
 						$output .= '	<div class="block-copy col-sm-12">';
 						
 						if( get_field('dsp_job_website') ):
-							$output .= '		<h3 class="title" style="margin-bottom:5px;"><a href="' .  get_field('dsp_job_website') . '">' .  get_field('dsp_job_company_name') . '</a></h3>';
+							$output .= '		<h3 class="title" style="margin-bottom:5px;"><a href="' .  get_field('dsp_job_website') . '" target="_blank">' .  get_field('dsp_job_company_name') . '</a></h3>';
 						else:
 							$output .= '		<h3 class="title" style="margin-bottom:5px;">' .  get_field('dsp_job_company_name') . '</h3>';
 						endif;
 						
 						if( get_field('dsp_job_posting_link') ):
-							$output .= '		<h3 class="title" style="margin-bottom:5px !important;"><a href="' .  get_field('dsp_job_posting_link') . '">' .  get_the_title() . '</a></h3>';
+							$output .= '		<h3 class="title" style="margin-bottom:5px !important;"><a href="' .  get_field('dsp_job_posting_link') . '" target="_blank">' .  get_the_title() . '</a></h3>';
 						else:
 							$output .= '		<h3 class="title" style="margin-bottom:5px !important;">' .  get_the_title() . '</h3>';
 						endif;	
@@ -869,10 +869,10 @@ if (!class_exists("DjdSitePost")) {
 						if($postCount == 0){
 							$output .= '<div class="mobile-hide-992">';
 							$output .= '	<div class="table-row seven-cols">';
-							$output .= '		<div class="col-xs-12 col-sm-1"><h5>Country</h5></div>';
-							$output .= '		<div class="col-xs-12 col-sm-1"><h5>Consultant</h5></div>';		
+							$output .= '		<div class="col-xs-12 col-sm-1"><h5>Consultant</h5></div>';
+							$output .= '		<div class="col-xs-12 col-sm-1"><h5>Country</h5></div>';		
 							$output .= '		<div class="col-xs-12 col-sm-1"><h5>Company</h5></div>';
-							$output .= '		<div class="col-xs-12 col-sm-1"><h5>Pofessional Services</h5></div>';
+							$output .= '		<div class="col-xs-12 col-sm-1"><h5>Professional Services</h5></div>';
 							$output .= '		<div class="col-xs-12 col-sm-1"><h5>Training Services</h5></div>';
 							$output .= '		<div class="col-xs-12 col-sm-1"><h5>Board Support Package Services</h5></div>';
 							$output .= '		<div class="col-xs-12 col-sm-1"><h5>Other Services</h5></div>';

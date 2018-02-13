@@ -378,7 +378,7 @@
 	
 		var url = '/wp-content/themes/yocto/proxy.php';
 		var downloadsURL = 'http://api-v1.yoctoproject.org/api/downloads?release%5B%5D=59';
-		var docsURL = 'https://www.yoctoproject.org/documentation-api';
+		var docsURL = 'http://api-v1.yoctoproject.org/documentation-api';
 		
 		var docsObjectArray = [];
 		var docsToolObjectArray = [];

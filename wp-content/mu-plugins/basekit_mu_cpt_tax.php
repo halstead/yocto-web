@@ -84,7 +84,7 @@ class BASEKIT_Functions {
 		}
 	public function add_taxonomy() {
 		$this->setup_taxonomy( 'Software Type', 'Software Types', 'software-type', 'software-type', array( 'software-item' ), true, 'baseKit' );
-		$this->setup_taxonomy( 'Learn Category', 'cLearn Categories', 'learn-category', 'learn-category', array( 'learn-items' ), true, 'baseKit' );
+		$this->setup_taxonomy( 'Learn Category', 'Learn Categories', 'learn-category', 'learn-category', array( 'learn-items' ), true, 'baseKit' );
 		$this->setup_taxonomy( 'Member Level', 'Member Levels', 'member-level', 'member-level', array( 'members' ), true, 'baseKit' );
 		$this->setup_taxonomy( 'Organization Type', 'Organization Types', 'organization-type', 'organization-type', array( 'members' ), true, 'baseKit' );
 		$this->setup_taxonomy( 'Featured Page', 'Featured Pages', 'featured-page', 'featured-page', array( 'featured-blocks' ), true, 'baseKit' );

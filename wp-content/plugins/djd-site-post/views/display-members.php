@@ -134,7 +134,7 @@ $postTaxonomyTerm = $GLOBALS['djd_post_type_term'];
 				<input style="width:100%;" type="text" <?php  echo "required='required'"; ?> id="dsp_ypcompatible_contact_email" name="dsp_ypcompatible_contact_email" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_contact_email."'"; ?>autofocus="autofocus"/>
 			</div>
 			<div class="col-xs-12 col-sm-6">
-				<label for="dsp_ypcompatible_product_layer_name">Layer Name</label>
+				<label for="dsp_ypcompatible_product_layer_name">Layer / Product Name</label>
 				<input style="width:100%;" type="text" <?php  echo "required='required'"; ?> id="dsp_ypcompatible_product_layer_name" name="dsp_ypcompatible_product_layer_name" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_layer_name."'"; ?>autofocus="autofocus"/>
 			</div>
 			<div class="col-xs-12 col-sm-6">
@@ -531,9 +531,9 @@ $postTaxonomyTerm = $GLOBALS['djd_post_type_term'];
 			<div class="row">
 				<div class="col-xs-12">
 				<?php if($postTaxonomyTerm  == 'participants' || $postTaxonomyTerm  == 'compatible'){ ?>
-					<label for="djdsitepostcontent">Product/layer Description</label>
+					<label for="djdsitepostcontent">layer / Product Description (180 character limit)</label>
 				<?php }elseif($postTaxonomyTerm  == 'consultants' || $postTaxonomyTerm  == 'members') {  ?>
-					<label for="djdsitepostcontent">Company Description</label>
+					<label for="djdsitepostcontent">Company Description (180 character limit)</label>
 				<?php } ?>
 				<?php
 					//$content = '<a href="#" class="meta_field_upload_image_button button">Upload image</a>';
@@ -562,7 +562,7 @@ $postTaxonomyTerm = $GLOBALS['djd_post_type_term'];
 				?>
 				
 				<?php if (isset($djd_options['djd-show-excerpt'])) { // Currently set to false in admin settings   ?> 
-					<label for="djd_site_post_excerpt"><?php echo ( $djd_options['djd-excerpt'] ? $djd_options['djd-excerpt'] : __('Excerpt', 'djd-site-post') ); ?> (180 character limit)</label>
+					<!--<label for="djd_site_post_excerpt"><?php //echo ( $djd_options['djd-excerpt'] ? $djd_options['djd-excerpt'] : __('Excerpt', 'djd-site-post') ); ?> (180 character limit)</label> -->
 					<textarea maxlength="180" style="width:100%;" id="djd_site_post_excerpt" name="djd_site_post_excerpt"><?php if ( $my_post ) echo $my_post->post_excerpt; ?></textarea>
 				<?php } ?>
 				</div>

@@ -144,15 +144,15 @@ $postTypeName = ucfirst($postTypeNameSingular) . ' ';
 			<!-- ADDRESS -->
 		
 		<!-- City -->
-		<!--
+		
 		<div class="row">
 			<div class="col-xs-12">
 				<label for="djd_site_post_city">City<?php //echo ( $djd_options['djd-city'] ? $djd_options['djd-city'] : __('City', 'djd-site-post') ); ?></label>
 				<input type="text" <?php echo "required='required'"; ?> id="djd_site_post_city" name="djd_site_post_city" maxlength="255" value="" <?php //if ( $my_post ) echo "value='".$my_post->post_city."'"; ?>autofocus="autofocus"/>
 			</div>
-		-->
+		
 		<!-- State -->
-		<!--
+		
 			<div class="col-xs-12 col-sm-6">
 				<label for="djd_site_post_state">State<?php //echo ( $djd_options['djd-state'] ? $djd_options['djd-state'] : __('State', 'djd-site-post') ); ?></label>
 				<select name="djd_site_post_state" id="djd_site_post_state" style="width:100%;">
@@ -225,9 +225,9 @@ $postTypeName = ucfirst($postTypeNameSingular) . ' ';
 					<option value="YT">Yukon</option>
 				</select>
 			</div>
-			-->
+			
 			<!-- Country -->
-			<!--
+			
 			<div class="col-xs-12 col-sm-6">
 				<label for="djd_site_post_country">Country<?php //echo ( $djd_options['djd-country'] ? $djd_options['djd-country'] : __('Country', 'djd-site-post') ); ?></label>
 				<select name="djd_site_post_country" id="djd_site_post_country" style="width:100%;">
@@ -483,13 +483,13 @@ $postTypeName = ucfirst($postTypeNameSingular) . ' ';
 					<option value="ZW">Zimbabwe</option>
 				</select>
 			</div>
-		-->
+		
 		<?php } ?>
 		
 		<?php                               //Jobs Fields
 		if($postType  == 'jobs'){ ?>   
 		
-		<div class="row"> <!-- -->
+		<div class="row">
 			<!--
 			<div class="col-xs-12 col-sm-6">
 				<label for="dsp_job_company_name">Company Name</label>

@@ -501,7 +501,7 @@ $postTypeName = ucfirst($postTypeNameSingular) . ' ';
 			</div>
 			<!-- END DATE -->
 			<div class="col-xs-12 col-sm-6">
-				<label for="dsp_event_name">Conctact Name</label>
+				<label for="dsp_event_name">Contact Name</label>
 				<input style="width:100%;" type="text" <?php  echo "required='required'"; ?> id="dsp_event_name" name="dsp_event_name" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_event_contact_name."'"; ?>autofocus="autofocus"/>
 			</div>
 			<div class="col-xs-12 col-sm-6">

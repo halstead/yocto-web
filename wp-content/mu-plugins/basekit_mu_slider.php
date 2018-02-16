@@ -16,7 +16,6 @@ class BASEKIT_Function_Slider {
 		
 		add_action( 'init', array( $this, 'add_slider_meta_fileds' ) );
 		add_action( 'init', array( $this, 'display_slider_fucntions' ) );
-
 	}
 	
 	
@@ -781,7 +780,7 @@ class BASEKIT_Function_Slider {
 		    return $excerpt;
 		}
 		
-		function default_slider_job_block() {
+		function default_slider_job_block($show_title, $show_description, $show_custom_field) {
 			// Jobs Custom Options
 			$post_type = 'jobs';
 			$jobs_options = get_option('options_jobs_field_group');
@@ -813,11 +812,20 @@ class BASEKIT_Function_Slider {
 					$country = convertCountry($counteryField);
 					$output .= '<div class="item">';
 					$output .= '  	<div class="item-content" style="overflow:hidden;">';
-					$output .= '		<h5>' . get_the_title() . '</h5>';
-					$output .= '		<p>' . $excerpt . '</p>'; //get_the_excerpt() 
-					if(get_field('dsp_job_posting_link') ){
-						$output .= '				<div class="widgete-link"><a href="' .  get_field('dsp_job_posting_link') . '" class="blue-link">View All Jobs</a></div>';
+					if($show_title == 'true'){
+						$output .= '		<h5>' . get_the_title() . '</h5>';
 					}
+					if(get_field('dsp_job_posting_link') && $show_custom_field == 'true'){
+						$output .=	'		<p class="company-name">' . get_field('dsp_job_company_name') . $post_show_company . '</p>';
+					}
+					if($show_description == 'true'){
+						$output .= '		<p class="description"> ' . $excerpt . '</p>'; 
+					} 
+					if(get_field('dsp_job_posting_link') ){
+						//$output .= '				<div class="widgete-link"><a href="' .  get_field('dsp_job_posting_link') . '" class="blue-link">View Job Details</a></div>';
+					}
+					$output .= '<div class="widgete-link"><a href="/community/jobs/" class="blue-link">View All Jobs</a></div>';
+					
 					//$output .= '		<span class="tag tag-blue">' . $post_type_singular_name . '</span>';
 					$output .= '	</div>';
 					$output .= '</div>';	
@@ -835,6 +843,9 @@ class BASEKIT_Function_Slider {
 		        'post_type' => 'post',
 		        'taxonomy' => 'category',
 		        'terms' => 'uncategorized',
+		        'post_show_title' => 'true',
+		        'post_show_description' => 'true',
+		        'post_show_company' => 'true',
 		        'expire_date_type' => '',
 		        'expire_integer' => '0'
 		    ), $atts );
@@ -843,7 +854,12 @@ class BASEKIT_Function_Slider {
 			$post_type = $local_atts[ 'post_type' ];
 			$post_taxonomy = $local_atts[ 'taxonomy' ];
 			$post_taxonomy_terms = $local_atts[ 'terms' ];
-
+			
+			$post_show_title = $local_atts[ 'post_show_title' ];
+			$post_show_description = $local_atts[ 'post_show_description' ];
+			$post_show_custom_field = $local_atts[ 'post_show_company' ];
+			
+			
 			// Jobs Custom Options
 			$jobs_options = get_option('options_jobs_field_group');
 			$jobs_expire_date = $jobs_options['jobs_expire_setting'];
@@ -887,7 +903,7 @@ class BASEKIT_Function_Slider {
 			        'inclusive' => true,
 			      )
 			    );
-			} elseif( $post_taxonomy != '' && $expires == 'true'){
+			} elseif( $post_taxonomy != '' && $expires == 'true') {
 			    $args=array(
 			      'post_type' => $post_type,
 			      'post_status' => 'publish',
@@ -906,7 +922,7 @@ class BASEKIT_Function_Slider {
 			        'inclusive' => true,
 			      ) 
 			    );
-			}elseif($post_taxonomy != ''){
+			} elseif($post_taxonomy != '') {
 				$args=array(
 			      'post_type' => $post_type,
 			      'post_status' => 'publish',
@@ -954,11 +970,19 @@ class BASEKIT_Function_Slider {
 				$output .= '<div class="carousel-inner" role="listbox">';
 				while ($my_query->have_posts()) : $my_query->the_post();
 					$excerpt = get_custom_excerpt(85);
+					
 					$activeClass = ($counter == 0) ? 'active' : '';
 					$output .= '<div class="item ' . $activeClass . '">';
 					$output .= '  	<div class="item-content" style="overflow:hidden;">';
-					$output .= '		<h5>' . get_the_title() . '</h5>';
-					$output .= '		<p>' . $excerpt . '</p>'; 
+					if($post_show_title == 'true'){
+						$output .= '		<h5>' . get_the_title() . '</h5>';
+					}
+					if(get_field('dsp_job_posting_link') && $post_show_custom_field == 'true'){
+						$output .=	'		<p class="company-name">' . get_field('dsp_job_company_name') . $post_show_company . '</p>';
+					}
+					if($post_show_description == 'true'){
+						$output .= '		<p class="description"> ' . $excerpt . '</p>'; 
+					}
 					if(get_field('dsp_job_posting_link') ){
 						//$output .= '				<div class="widgete-link"><a href="' .  get_field('dsp_job_posting_link') . '" class="blue-link" target="_blank">View Job Details</a></div>';
 					}
@@ -970,7 +994,7 @@ class BASEKIT_Function_Slider {
 				$counter++;
 				endwhile;
 				if($post_type == 'jobs' && $counter < ( $jobs_minimum_blocks + 1 )){
-					$output .= default_slider_job_block($atts);
+					$output .= default_slider_job_block($post_show_title, $post_show_description, $post_show_custom_field);
 				}
 				$output .= '</div>';
 				
@@ -978,7 +1002,7 @@ class BASEKIT_Function_Slider {
 				$output .= '</div>';
 			}else{
 				if($post_type == 'jobs'){
-					$output .= default_slider_job_block($atts);
+					$output .= default_slider_job_block($post_show_title, $post_show_description, $post_show_custom_field);
 				}else{
 					
 				}

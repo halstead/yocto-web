@@ -866,6 +866,13 @@ if (!class_exists("DjdSitePost")) {
 						$boardSupport = (is_array($optionsArray) && in_array( 'board-support', $optionsArray)) ? 'X' : ' ';
 						$other = (is_array($optionsArray) && in_array( 'other', $optionsArray)) ? 'X' : ' ';
 						
+						$website_url = get_field('dsp_consultant_website');
+						if (!preg_match("~^(?:f|ht)tps?://~i", $website_url)) {
+					        $website_url = "http://" . $website_url;
+					    }
+					    //return $url;
+						
+						
 						if($postCount == 0){
 							$output .= '<div class="mobile-hide-992">';
 							$output .= '	<div class="table-row seven-cols">';
@@ -885,19 +892,19 @@ if (!class_exists("DjdSitePost")) {
 						$output .= '	<div class="col-xs-12 col-sm-1">';
 						$output .= '	<p>';
 						$output .= '		<strong>' . get_field('dsp_consultant_contact_name') . '</strong><br>';
-						if($cityField != "" && $state != ""){
-							$output .= '		<strong>' . $cityField . ', ' . $state . '</strong><br>';
-						}elseif($state != ""){
-							$output .= '		<strong>' . $state . '</strong><br>';
-						}
-						$output .= '		<strong>' . get_field('dsp_consultant_contact_phone') . '</strong><br>';
-						$output .= '		<a href="mailto:' . get_field('dsp_consultant_contact_email') . '" target="_blank">' . get_field('dsp_consultant_contact_email') . '</a>';
+						// if($cityField != "" && $state != ""){
+							// $output .= '		<strong>' . $cityField . ', ' . $state . '</strong><br>';
+						// }elseif($state != ""){
+							// $output .= '		<strong>' . $state . '</strong><br>';
+						// }
+						// $output .= '		<strong>' . get_field('dsp_consultant_contact_phone') . '</strong><br>';
+						// $output .= '		<a href="mailto:' . get_field('dsp_consultant_contact_email') . '" target="_blank">' . get_field('dsp_consultant_contact_email') . '</a>';
 						$output .= '	</p>';
 						$output .= '	</div>';
 						$output .= '	<div class="col-xs-12 mobile-show-992"><h5>Country</h5></div>';
 						$output .= '	<div class="col-xs-12 col-sm-1"><p>' . $counteryField . '</p></div>'; //$country
 						$output .= '	<div class="col-xs-12 col-sm-1 mobile-show-992"><h5>Company</h5></div>';
-						$output .= '	<div class="col-xs-12 col-sm-1"><p>' .  get_the_title() . '</p></div>';
+						$output .= '	<div class="col-xs-12 col-sm-1"><p><a href="' . $website_url . '" target="_blank">' .  get_the_title() . '</a></p></div>';
 						$output .= '	<div class="col-xs-12 col-sm-1 mobile-show-992"><h5>Pofessional Services</h5></div>';
 						$output .= '	<div class="col-xs-12 col-sm-1"><p>' . $professionalServices . '</p></div>';
 						$output .= '	<div class="col-xs-12 col-sm-1 mobile-show-992"><h5>Training Services</h5></div>';

@@ -529,12 +529,11 @@
 			function buildUpperSection(sectionArray, section){
 				var sectionArrayLength = sectionArray.length;
 				for (var i = 0; i < sectionArrayLength; i++) {
-					if(i === 0){
+					if(sectionArray[i].docVersion === releaseCurrentVersion){ 
 						if(section === 'quickstart'){
 							jQuery('.featured-doc-blocks').find('.custom-block').first().find('a').attr( "href", sectionArray[i].docHTMLFile );
 							jQuery('.featured-doc-blocks').find('.custom-block').first().find('.grid-block-copy h6').text(sectionArray[i].docTitle);
 						}else if(section === 'sdk'){
-							//alert(sectionArray[i].docHTMLFile);
 							jQuery('.featured-doc-blocks').find('.custom-block').last().find('a').attr( "href", sectionArray[i].docHTMLFile );
 							jQuery('.featured-doc-blocks').find('.custom-block').last().find('.grid-block-copy h6').text(sectionArray[i].docTitle);
 						}

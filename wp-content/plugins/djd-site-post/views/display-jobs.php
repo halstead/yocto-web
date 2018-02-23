@@ -483,13 +483,13 @@ $postTypeName = ucfirst($postTypeNameSingular) . ' ';
 					<option value="ZW">Zimbabwe</option>
 				</select>
 			</div>
-		
+		<!-- </div> -->
 		<?php } ?>
 		
 		<?php                               //Jobs Fields
 		if($postType  == 'jobs'){ ?>   
 		
-		<div class="row">
+		<!-- <div class="row"> -->
 			<!--
 			<div class="col-xs-12 col-sm-6">
 				<label for="dsp_job_company_name">Company Name</label>

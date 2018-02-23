@@ -815,7 +815,7 @@ class BASEKIT_Function_Slider {
 					if($show_title == 'true'){
 						$output .= '		<h5>' . get_the_title() . '</h5>';
 					}
-					if(get_field('dsp_job_posting_link') && $show_custom_field == 'true'){
+					if(get_field('dsp_job_company_name') && $show_custom_field == 'true'){
 						$output .=	'		<p class="company-name">' . get_field('dsp_job_company_name') . $post_show_company . '</p>';
 					}
 					if($show_description == 'true'){
@@ -977,8 +977,8 @@ class BASEKIT_Function_Slider {
 					if($post_show_title == 'true'){
 						$output .= '		<h5>' . get_the_title() . '</h5>';
 					}
-					if(get_field('dsp_job_posting_link') && $post_show_custom_field == 'true'){
-						$output .=	'		<p class="company-name">' . get_field('dsp_job_company_name') . $post_show_company . '</p>';
+					if(get_field('dsp_job_company_name') && $post_show_custom_field == 'true'){
+						$output .=	'		<p class="company-name">' . get_field('dsp_job_company_name') . '</p>';
 					}
 					if($post_show_description == 'true'){
 						$output .= '		<p class="description"> ' . $excerpt . '</p>'; 

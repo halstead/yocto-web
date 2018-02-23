@@ -417,7 +417,7 @@ function cd_meta_box_cb()
 				<option value="UA" <?php selected( $selectedCountry, "UA" ); ?> >Ukraine</option>
 				<option value="AE" <?php selected( $selectedCountry, "AE" ); ?> >United Arab Emirates</option>
 				<option value="GB" <?php selected( $selectedCountry, "GB" ); ?> >United Kingdom</option>
-				<option value="USA" <?php selected( $selectedCountry, "US" ); ?> >United States</option>
+				<option value="US" <?php selected( $selectedCountry, "US" ); ?> >United States</option>
 				<option value="UM" <?php selected( $selectedCountry, "UM" ); ?> >United States Minor Outlying Islands</option>
 				<option value="UY" <?php selected( $selectedCountry, "UY" ); ?> >Uruguay</option>
 				<option value="UZ" <?php selected( $selectedCountry, "UZ" ); ?> >Uzbekistan</option>

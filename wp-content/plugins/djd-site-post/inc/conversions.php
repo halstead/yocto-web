@@ -207,8 +207,8 @@ function convertCountry($code) {
         case 'KZ': return 'Kazakhstan';
         case 'KE': return 'Kenya';
         case 'KI': return 'Kiribati';
-        case 'KP': return 'Korea';
-        case 'KR': return 'Korea';
+        case 'KP': return 'Democratic Peoples Republic of Korea (North)';
+        case 'KR': return 'Republic of Korea (South)';
         case 'KW': return 'Kuwait';
         case 'KG': return 'Kyrgyz Republic';
         case 'LA': return 'Lao';
@@ -325,6 +325,7 @@ function convertCountry($code) {
         case 'AE': return 'United Arab Emirates';
         case 'GB': return 'United Kingdom';
         case 'US': return 'United States of America';
+		case 'USA': return 'United States of America';
         case 'UM': return 'United States Minor Outlying Islands';
         case 'VI': return 'United States Virgin Islands';
         case 'UY': return 'Uruguay, Eastern Republic of';

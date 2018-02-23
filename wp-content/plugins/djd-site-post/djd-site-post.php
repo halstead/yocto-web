@@ -727,7 +727,7 @@ if (!class_exists("DjdSitePost")) {
 					$datePublished = get_the_date( 'Y-m-d' );
 					
 					if(strtotime($datePublished) > strtotime($expires_date)) {
-					    $status = "keep";
+					    $status = "published";
 						// djd_site_company_name
 						// djd_site_company_contact
 						// djd_site_phone
@@ -755,12 +755,12 @@ if (!class_exists("DjdSitePost")) {
 						$output .= '		<p>' . get_the_excerpt() . '</p>';
 						
 						if($cityField != "" && $state != ""){
-							$output .= '		<p class="date">' . $cityField .  ', ' . $state . '</p>';
+							$output .= '		<p class="adress">' . $cityField .  ', ' . $state . '</p>';
 						}elseif($state != ""){
-							$output .= '		<p class="date">' . $state . '</p>';
+							$output .= '		<p class="address state">' . $state . '</p>';
 						}
 						
-						$output .= '		<p class="date" style="margin-bottom:10px;">' . $country .  '</p>';
+						$output .= '		<p class="address country" style="margin-bottom:10px;">' . $country .  ' ' . $counteryField . '</p>';
 						
 						if($dynamic_post_widget == 'false'){
 							$output .= '		<div class="row">';
@@ -777,7 +777,10 @@ if (!class_exists("DjdSitePost")) {
 						$output .= '	</div>';
 						$output .= '</div>';
 					}else{
-						$status = "remove";
+						$status = "draft";
+						$postID = get_the_ID();
+						$post = array( 'ID' => $postID, 'post_status' => $status );
+						wp_update_post($post);
 					}
 					
 				}else if($dynamic_post_type == 'events'){
@@ -858,68 +861,84 @@ if (!class_exists("DjdSitePost")) {
 						//board-support
 						//training
 						//other
+						$status;
+						$post_consultant_expire_date = '12'; // ( isset($jobs_expire_date) ) ? $jobs_expire_date : '12';
+						$consultant_expires_date = '-' . $post_consultant_expire_date  .' month';
+						$datePostPublished = get_the_date( 'Y-m-d' );
+						
+						if(strtotime($datePostPublished) > strtotime($consultant_expires_date)) {
+						    $status = "published";
 
-						$optionsArray = get_field('dsp_consultant_services_offered');
-						 
-						$professionalServices = (is_array($optionsArray) && in_array( 'professional-services', $optionsArray)) ? 'X' : ' ';
-						$training = (is_array($optionsArray) && in_array( 'training', $optionsArray)) ? 'X' : ' ';
-						$boardSupport = (is_array($optionsArray) && in_array( 'board-support', $optionsArray)) ? 'X' : ' ';
-						$other = (is_array($optionsArray) && in_array( 'other', $optionsArray)) ? 'X' : ' ';
-						
-						$website_url = get_field('dsp_consultant_website');
-						if (!preg_match("~^(?:f|ht)tps?://~i", $website_url)) {
-					        $website_url = "http://" . $website_url;
-					    }
-					    //return $url;
-						
-						
-						if($postCount == 0){
-							$output .= '<div class="mobile-hide-992">';
-							$output .= '	<div class="table-row seven-cols">';
-							$output .= '		<div class="col-xs-12 col-sm-1"><h5>Consultant</h5></div>';
-							$output .= '		<div class="col-xs-12 col-sm-1"><h5>Country</h5></div>';		
-							$output .= '		<div class="col-xs-12 col-sm-1"><h5>Company</h5></div>';
-							$output .= '		<div class="col-xs-12 col-sm-1"><h5>Professional Services</h5></div>';
-							$output .= '		<div class="col-xs-12 col-sm-1"><h5>Training Services</h5></div>';
-							$output .= '		<div class="col-xs-12 col-sm-1"><h5>Board Support Package Services</h5></div>';
-							$output .= '		<div class="col-xs-12 col-sm-1"><h5>Other Services</h5></div>';
+							$optionsArray = get_field('dsp_consultant_services_offered');
+							 
+							$professionalServices = (is_array($optionsArray) && in_array( 'professional-services', $optionsArray)) ? 'X' : ' ';
+							$training = (is_array($optionsArray) && in_array( 'training', $optionsArray)) ? 'X' : ' ';
+							$boardSupport = (is_array($optionsArray) && in_array( 'board-support', $optionsArray)) ? 'X' : ' ';
+							$other = (is_array($optionsArray) && in_array( 'other', $optionsArray)) ? 'X' : ' ';
+							
+							$website_url = get_field('dsp_consultant_website');
+							if (!preg_match("~^(?:f|ht)tps?://~i", $website_url)) {
+						        $website_url = "http://" . $website_url;
+						    }
+						    //return $url;
+							
+							
+							if($postCount == 0){
+								$output .= '<div class="mobile-hide-992">';
+								$output .= '	<div class="table-row seven-cols">';
+								$output .= '		<div class="col-xs-12 col-sm-1"><h5>Consultant</h5></div>';
+								$output .= '		<div class="col-xs-12 col-sm-1"><h5>Country</h5></div>';		
+								$output .= '		<div class="col-xs-12 col-sm-1"><h5>Company</h5></div>';
+								$output .= '		<div class="col-xs-12 col-sm-1"><h5>Professional Services</h5></div>';
+								$output .= '		<div class="col-xs-12 col-sm-1"><h5>Training Services</h5></div>';
+								$output .= '		<div class="col-xs-12 col-sm-1"><h5>Board Support Package Services</h5></div>';
+								$output .= '		<div class="col-xs-12 col-sm-1"><h5>Other Services</h5></div>';
+								$output .= '	</div>';
+								$output .= '</div>';
+							}
+							
+							$output .= '<div class="table-row seven-cols mobile-table-row">';
+							$output .= '	<div class="col-xs-12 col-sm-1 mobile-show-992"><h5>Consultant</h5></div>';
+							$output .= '	<div class="col-xs-12 col-sm-1">';
+							$output .= '	<p>';
+							$output .= '		<strong>' . get_field('dsp_consultant_contact_name') . '</strong><br>';
+							// if($cityField != "" && $state != ""){
+								// $output .= '		<strong>' . $cityField . ', ' . $state . '</strong><br>';
+							// }elseif($state != ""){
+								// $output .= '		<strong>' . $state . '</strong><br>';
+							// }
+							// $output .= '		<strong>' . get_field('dsp_consultant_contact_phone') . '</strong><br>';
+							// $output .= '		<a href="mailto:' . get_field('dsp_consultant_contact_email') . '" target="_blank">' . get_field('dsp_consultant_contact_email') . '</a>';
+							$output .= '	</p>';
 							$output .= '	</div>';
+							$output .= '	<div class="col-xs-12 mobile-show-992"><h5>Country</h5></div>';
+							$output .= '	<div class="col-xs-12 col-sm-1"><p>' . $counteryField . '</p></div>'; //$country
+							$output .= '	<div class="col-xs-12 col-sm-1 mobile-show-992"><h5>Company</h5></div>';
+							$output .= '	<div class="col-xs-12 col-sm-1"><p><a href="' . $website_url . '" target="_blank">' .  get_the_title() . '</a></p></div>';
+							$output .= '	<div class="col-xs-12 col-sm-1 mobile-show-992"><h5>Pofessional Services</h5></div>';
+							$output .= '	<div class="col-xs-12 col-sm-1"><p>' . $professionalServices . '</p></div>';
+							$output .= '	<div class="col-xs-12 col-sm-1 mobile-show-992"><h5>Training Services</h5></div>';
+							$output .= '	<div class="col-xs-12 col-sm-1"><p>' . $training . '</p></div>';
+							$output .= '	<div class="col-xs-12 col-sm-1 mobile-show-992"><h5>Board Support Package Services</h5></div>';
+							$output .= '	<div class="col-xs-12 col-sm-1"><p>' . $boardSupport . '</p></div>';
+							$output .= '	<div class="col-xs-12 col-sm-1 mobile-show-992"><h5>Other Services</h5></div>';
+							$output .= '	<div class="col-xs-12 col-sm-1"><p>' . $other . '</p></div>';
 							$output .= '</div>';
+						}else{
+							$status = "draft";
+							$postID = get_the_ID();
+							$post = array( 'ID' => $postID, 'post_status' => $status );
+							wp_update_post($post);
+							$consultant_name = get_field('dsp_consultant_contact_name');
+							$consultant_email = get_field('dsp_consultant_contact_email');
+							$this->send_consultant_email($consultant_name, $consultant_email);
 						}
-						
-						$output .= '<div class="table-row seven-cols mobile-table-row">';
-						$output .= '	<div class="col-xs-12 col-sm-1 mobile-show-992"><h5>Consultant</h5></div>';
-						$output .= '	<div class="col-xs-12 col-sm-1">';
-						$output .= '	<p>';
-						$output .= '		<strong>' . get_field('dsp_consultant_contact_name') . '</strong><br>';
-						// if($cityField != "" && $state != ""){
-							// $output .= '		<strong>' . $cityField . ', ' . $state . '</strong><br>';
-						// }elseif($state != ""){
-							// $output .= '		<strong>' . $state . '</strong><br>';
-						// }
-						// $output .= '		<strong>' . get_field('dsp_consultant_contact_phone') . '</strong><br>';
-						// $output .= '		<a href="mailto:' . get_field('dsp_consultant_contact_email') . '" target="_blank">' . get_field('dsp_consultant_contact_email') . '</a>';
-						$output .= '	</p>';
-						$output .= '	</div>';
-						$output .= '	<div class="col-xs-12 mobile-show-992"><h5>Country</h5></div>';
-						$output .= '	<div class="col-xs-12 col-sm-1"><p>' . $counteryField . '</p></div>'; //$country
-						$output .= '	<div class="col-xs-12 col-sm-1 mobile-show-992"><h5>Company</h5></div>';
-						$output .= '	<div class="col-xs-12 col-sm-1"><p><a href="' . $website_url . '" target="_blank">' .  get_the_title() . '</a></p></div>';
-						$output .= '	<div class="col-xs-12 col-sm-1 mobile-show-992"><h5>Pofessional Services</h5></div>';
-						$output .= '	<div class="col-xs-12 col-sm-1"><p>' . $professionalServices . '</p></div>';
-						$output .= '	<div class="col-xs-12 col-sm-1 mobile-show-992"><h5>Training Services</h5></div>';
-						$output .= '	<div class="col-xs-12 col-sm-1"><p>' . $training . '</p></div>';
-						$output .= '	<div class="col-xs-12 col-sm-1 mobile-show-992"><h5>Board Support Package Services</h5></div>';
-						$output .= '	<div class="col-xs-12 col-sm-1"><p>' . $boardSupport . '</p></div>';
-						$output .= '	<div class="col-xs-12 col-sm-1 mobile-show-992"><h5>Other Services</h5></div>';
-						$output .= '	<div class="col-xs-12 col-sm-1"><p>' . $other . '</p></div>';
-						$output .= '</div>';
 					}else {
-						$output .= '<div class="half-block">';
-						$output .= '	<div class="block-copy col-sm-12">';
-						$output .= '		<p>Organization block</p>';
-						$output .= '	</div>';
-						$output .= '</div>';
+						// $output .= '<div class="half-block">';
+						// $output .= '	<div class="block-copy col-sm-12">';
+						// $output .= '		<p>Organization block</p>';
+						// $output .= '	</div>';
+						// $output .= '</div>';
 					}
 
 				} else {
@@ -958,8 +977,6 @@ if (!class_exists("DjdSitePost")) {
 				return $output;
 			}
 		}
-		
-		
 	}
 
 		
@@ -1408,6 +1425,14 @@ if (!class_exists("DjdSitePost")) {
 	/**
 	 * Notify admin about new post via email
 	 */
+	 
+	function send_consultant_email($name, $email){
+		$blogname = get_option('blogname');
+		$headers = "MIME-Version: 1.0\r\n" . "From: ".$blogname." "."<".$email.">\n" . "Content-Type: text/HTML; charset=\"" . get_option('blog_charset') . "\"\r\n";
+		$content = '<p>'.__('Your anual Yocto Consultant status has expired.', 'djd-site-post') . '<br/>' .__('To resubcribe please fill out the form here:', 'djd-site-post') . ' '.'<a href="https://caffelli-staging.yoctoproject.org/community/consultants/consultant-registration/"><strong>Yocto Consultant Regitration</strong></a><br<br>Thanks, The Yocto Team</p>';
+		wp_mail($email, __('Yocto Consultant Expiration Notice', 'djd-site-post'), $content, $headers);
+	}
+	
 	function djd_sendmail ($post_id, $post_title) {
 		$djd_options = get_option('djd_site_post_settings');
 		if ( isset($djd_options['djd-guest-account']) ) {

@@ -661,7 +661,7 @@ if (!class_exists("DjdSitePost")) {
 		if($dynamic_post_taxonomy != ''){
 		    $args=array(
 		      'post_type' => $dynamic_post_type,
-		      'post_status' => 'publish',
+		      'post_status' => array('publish', 'pending'),
 		      'posts_per_page' => $post_count,
 		      'orderby' => 'title',
 		      'posts_per_page' => -1,
@@ -688,7 +688,7 @@ if (!class_exists("DjdSitePost")) {
 		}else{
 			$args=array(
 		      'post_type' => $dynamic_post_type,
-		      'post_status' => 'publish',
+		      'post_status' => array('publish', 'pending'),  //'publish',
 		      'posts_per_page' => $post_count,
 		      'orderby' => 'title',
 		      'posts_per_page' => -1,
@@ -777,14 +777,19 @@ if (!class_exists("DjdSitePost")) {
 						$output .= '	</div>';
 						$output .= '</div>';
 					}else{
-						$status = "draft";
+						$status = "trash";
 						$postID = get_the_ID();
 						$post = array( 'ID' => $postID, 'post_status' => $status );
 						wp_update_post($post);
 					}
 					
 				}else if($dynamic_post_type == 'events'){
-					
+					// event_djd_site_post_name
+					// event_djd_site_post_email
+					// event_djd_site_post_link
+					// djd_site_post_start_date
+					// djd_site_post_end_date
+					// event_djd_site_post_venue
 					$status;
 					$datePublished = get_the_date( 'Y-m-d' );
 					$dateCurrent = date("Y-m-d");
@@ -841,13 +846,6 @@ if (!class_exists("DjdSitePost")) {
 							$output .= '</a>';
 						endif;
 						$output .= '</div>';
-
-						// event_djd_site_post_name
-						// event_djd_site_post_email
-						// event_djd_site_post_link
-						// djd_site_post_start_date
-						// djd_site_post_end_date
-						// event_djd_site_post_venue
 					}
 				} else if($dynamic_post_type == 'members'){ 
 					if($dynamic_post_taxonomy == 'organization-type' && $dynamic_post_taxonomy_terms == 'consultants'){
@@ -891,8 +889,6 @@ if (!class_exists("DjdSitePost")) {
 							if (!preg_match("~^(?:f|ht)tps?://~i", $website_url)) {
 						        $website_url = "http://" . $website_url;
 						    }
-						    //return $url;
-							
 							
 							if($postCount == 0){
 								$output .= '<div class="mobile-hide-992">';
@@ -935,16 +931,26 @@ if (!class_exists("DjdSitePost")) {
 							$output .= '	<div class="col-xs-12 col-sm-1 mobile-show-992"><h5>Other Services</h5></div>';
 							$output .= '	<div class="col-xs-12 col-sm-1"><p>' . $other . '</p></div>';
 							$output .= '</div>';
-
-						}elseif(strtotime($datePostPublished) < strtotime($consultant_notification_date)){ //if is under send message setting
-							$consultant_name = get_field('dsp_consultant_contact_name');
-							$consultant_email = get_field('dsp_consultant_contact_email');
-							$this->send_consultant_email($consultant_name, $consultant_email, $consultants_email_copy);
-						}elseif(strtotime($datePostPublished) < strtotime($consultant_expires_date)){ //if is under set to draft
+						}else{ //if is under set to draft
+							$output .= '<p>make draft</p>';
 							$status = "draft";
 							$postID = get_the_ID();
 							$post = array( 'ID' => $postID, 'post_status' => $status );
 							wp_update_post($post);
+						}
+						
+						$currentPostStatus =  get_post_status( get_the_ID() );
+						if(strtotime($datePostPublished) > strtotime($consultant_notification_date) && $currentPostStatus == 'publish') { //if is under send message setting
+							$output .= '<p>make pending</p>';
+							$status = "pending";
+							$postID = get_the_ID();
+							$post = array( 'ID' => $postID, 'post_status' => $status );
+							wp_update_post($post);
+							
+							$consultant_name = get_field('dsp_consultant_contact_name');
+							$consultant_email = get_field('dsp_consultant_contact_email');
+							$output .= '<p>send mesg: </p>' . $consultant_name . ' ' . $consultant_email . ' ' . $consultants_email_copy;
+							$this->send_consultant_email($consultant_name, $consultant_email, $consultants_email_copy);
 						}
 					}else {
 						// $output .= '<div class="half-block">';
@@ -957,7 +963,7 @@ if (!class_exists("DjdSitePost")) {
 				} else {
 					$output .= '<div class="half-block">';
 					$output .= '	<div class="block-copy col-sm-12">';
-					$output .= '		<p>Something has gone terribly wrong! Move to Alaska immediately.</p>';
+					$output .= '		<p>Something has gone terribly wrong! There are no results.</p>';
 					$output .= '	</div>';
 					$output .= '</div>';
 				}
@@ -1440,9 +1446,15 @@ if (!class_exists("DjdSitePost")) {
 	 */
 	 
 	function send_consultant_email($name, $email, $emailCopy){
+		$fromEmail = '';
+		if ( isset($djd_options['djd-guest-account']) ) {
+			$user_query = get_userdata($djd_options['djd-guest-account']);
+			$fromEmail = $user_query->user_email;
+		}else{
+			$fromEmail = get_option('admin_email');
+		}
 		$blogname = get_option('blogname');
-		$headers = "MIME-Version: 1.0\r\n" . "From: ".$blogname." "."<".$email.">\n" . "Content-Type: text/HTML; charset=\"" . get_option('blog_charset') . "\"\r\n";
-		//$content = '<p>'.__('Your anual Yocto Consultant status has expired.', 'djd-site-post') . '<br/>' .__('To resubcribe please fill out the form here:', 'djd-site-post') . ' '.'<a href="https://caffelli-staging.yoctoproject.org/community/consultants/consultant-registration/"><strong>Yocto Consultant Regitration</strong></a><br<br>Thanks, The Yocto Team</p>';
+		$headers = "MIME-Version: 1.0\r\n" . "From: ".$blogname." "."<".$fromEmail.">\n" . "Content-Type: text/HTML; charset=\"" . get_option('blog_charset') . "\"\r\n";
 		$content = '<p>' .  $emailCopy . '</p>';
 		wp_mail($email, __('Yocto Consultant Expiration Notice', 'djd-site-post'), $content, $headers);
 	}

@@ -1391,7 +1391,7 @@
    // compatible layers
     'layers': { 
       init: function() {
-   		alert('init');
+   		//alert('init');
    		var url = '/wp-content/themes/yocto/proxy.php';
   		var sourceURL = 'https://layers.openembedded.org/layerindex/api/layers/?filter=yp_compatible_version__isnull:false&format=json';
 

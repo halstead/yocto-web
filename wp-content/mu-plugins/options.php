@@ -14,6 +14,7 @@ class BASEKIT_Options_Functions {
 	
 	public function __construct() {
 	    add_action( 'admin_menu', array( $this, 'add_submenu_page_to_post_type' ) );
+		add_action( 'admin_menu', array( $this, 'add_submenu_page_to_organization_post_type' ) );
 	    add_action( 'admin_init', array( $this, 'sub_menu_page_init' ) );
 	    //add_action( 'admin_init', array( $this, 'media_selector_scripts' ) );
 	}
@@ -22,13 +23,24 @@ class BASEKIT_Options_Functions {
 	 * Add sub menu page to the custom post type
 	 */
 	public function add_submenu_page_to_post_type() {
-	    add_submenu_page(
+		add_submenu_page(
 	        'edit.php?post_type=jobs',
 	        __('Jobs Options', 'jobs'),
 	        __('Jobs Options', 'jobs'),
 	        'manage_options',
 	        'jobs_section',
 	        array($this, 'jobs_options_display'));
+	}
+	
+	
+	public function add_submenu_page_to_organization_post_type() {
+	   add_submenu_page(
+	        'edit.php?post_type=members',
+	        __('Organization Options', 'members'),
+	        __('Organization Options', 'members'),
+	        'manage_options',
+	        'members_section',
+	        array($this, 'organization_options_display'));
 	}
 	
 	/**
@@ -48,6 +60,26 @@ class BASEKIT_Options_Functions {
 	    settings_fields( 'jobs_section' );
 	
 	    do_settings_sections( 'jobs-section-page' );
+	
+	    submit_button();
+	
+	    echo '</form></div>';
+	}
+
+	public function organization_options_display() {
+		$this->options = get_option( 'options_organizations_field_group' );
+	
+	    wp_enqueue_media();
+	
+	    echo '<div class="wrap">';
+	
+	    printf( '<h1>%s</h1>', __('Organization Options', 'members' ) ); 
+	
+	    echo '<form method="post" action="options.php">';
+	
+	    settings_fields( 'organizations_section' );
+	
+	    do_settings_sections( 'organizations-section-page' );
 	
 	    submit_button();
 	
@@ -94,6 +126,46 @@ class BASEKIT_Options_Functions {
 	        'jobs-section-page', // Page
 	        'header_settings_section' // Section
 	        );
+
+
+		///// organization settings
+			
+		register_setting(
+	        'organizations_section', // Option group
+	        'options_organizations_field_group', // Option name
+	        array( $this, 'sanitize' ) // Sanitize
+	        );
+	
+	    add_settings_section(
+	        'header_settings_section', // ID
+	        __('Header Settings', 'members'), // Title
+	        array( $this, 'print_orgainzation_section_info' ), // Callback
+	        'organizations-section-page' // Page
+	        );
+	
+	    add_settings_field(
+	        'consultants_expire_setting', // ID
+	        __('Consultants Expire Setting (Months)', 'members'), // Title
+	        array( $this, 'consultants_expire_block_callback' ), // Callback
+	        'organizations-section-page', // Page
+	        'header_settings_section' // Section
+	        );
+			
+		add_settings_field(
+	        'consultants_notification_setting', // ID
+	        __('Consultants Notifications Setting (Months)', 'members'), // Title
+	        array( $this, 'consultants_notification_setting_callback' ), // Callback
+	        'organizations-section-page', // Page
+	        'header_settings_section' // Section
+	        );
+			
+		add_settings_field(
+	        'consultants_email_copy', // ID
+	        __('Consultants Email Text Setting', 'members'), // Title
+	        array( $this, 'consultants_email_copy_callback' ), // Callback
+	        'organizations-section-page', // Page
+	        'header_settings_section' // Section
+	        );
 	
 	    // add_settings_field(
 	        // 'image_attachment_id',
@@ -121,6 +193,16 @@ class BASEKIT_Options_Functions {
 		if( isset( $input['jobs_default_postID'] ) )
 	        $new_input['jobs_default_postID'] = sanitize_text_field( $input['jobs_default_postID'] );
 		
+		// organization section
+		if( isset( $input['consultants_expire_setting'] ) )
+	        $new_input['consultants_expire_setting'] = sanitize_text_field( $input['consultants_expire_setting'] );
+			
+		if( isset( $input['consultants_notification_setting'] ) )
+	        $new_input['consultants_notification_setting'] = sanitize_text_field( $input['consultants_notification_setting'] );
+		
+		if( isset( $input['consultants_email_copy'] ) )
+	        $new_input['consultants_email_copy'] = ( $input['consultants_email_copy'] );
+			
 	    // if( isset( $input['image_attachment_id'] ) )
 	        // $new_input['image_attachment_id'] = absint( $input['image_attachment_id'] );
 	
@@ -135,6 +217,10 @@ class BASEKIT_Options_Functions {
 	    print 'Select options for Jobs.';
 	}
 	
+	public function print_orgainzation_section_info()
+	{
+	    print 'Select options for Consultants.';
+	}
 	/**
 	 * Get the settings option array and print one of its values
 	 */
@@ -143,7 +229,6 @@ class BASEKIT_Options_Functions {
 	        '<p>Enter number of months jobs will be visible on the website.</p><input type="text" id="jobs_expire_setting" name="options_jobs_field_group[jobs_expire_setting]" value="%s" />',
 	        $expireMonth = isset( $this->options['jobs_expire_setting'] ) ? esc_attr( $this->options['jobs_expire_setting']) : '1'
 		);
-		
 	}
 	
 	public function jobs_minimum_block_callback() {
@@ -157,6 +242,29 @@ class BASEKIT_Options_Functions {
 		printf(
 	        '<p>Job post ID to be used as default. This job post will appear based off setting above.</p><input type="text" id="jobs_default_postID" name="options_jobs_field_group[jobs_default_postID]" value="%s" />',
 	        $defaultID = isset( $this->options['jobs_default_postID'] ) ? esc_attr( $this->options['jobs_default_postID']) : ''
+		);
+	}
+
+	/// organization callbacks
+	
+	public function consultants_expire_block_callback() {
+		printf(
+	        '<p>Enter number of months before consultants expire (Go into Draft Status).</p><input type="text" id="consultants_expire_setting" name="options_organizations_field_group[consultants_expire_setting]" value="%s" />',
+	        $expirationMonths = isset( $this->options['consultants_expire_setting'] ) ? esc_attr( $this->options['consultants_expire_setting']) : '0'
+		);
+	}
+	
+	public function consultants_notification_setting_callback() {
+		printf(
+	        '<p>Enter number of months before consultants get sent reminder email.</p><input type="text" id="consultants_notification_setting" name="options_organizations_field_group[consultants_notification_setting]" value="%s" />',
+	        $notificationMonths = isset( $this->options['consultants_notification_setting'] ) ? esc_attr( $this->options['consultants_notification_setting']) : '0'
+		);
+	}
+	
+	public function consultants_email_copy_callback() {
+		printf(
+	        '<p>Enter the copy for the consultant email informming them that they are about to expire.</p><textarea cols="80" rows="8" id="consultants_email_copy" name="options_organizations_field_group[consultants_email_copy]" value="" />%s</textarea>',
+	        $emailCopy = isset( $this->options['consultants_email_copy'] ) ? esc_attr( $this->options['consultants_email_copy']) : ''
 		);
 	}
 	

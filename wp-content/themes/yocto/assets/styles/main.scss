@@ -21,6 +21,10 @@
 
 // GLOBAL
 
+html, body {
+  overflow-x:hidden;
+}
+
 body {
   background: $brand-gray-background;
   color: $text-gray;
@@ -599,6 +603,30 @@ input[type='submit'] {
    }
 }
 
+#carousel-header-17 {
+  background-color:transparent !important;
+}
+
+#carousel-header-17 .carousel-inner {
+    min-height: 240px;
+}
+
+#carousel-header-17 ol.carousel-indicators {
+  bottom:14px;
+  margin-bottom:0px;
+  padding-left:0px;
+}
+
+#carousel-header-17 .overlay-container h5 {
+    color: #fff;
+    font-size: 22px;
+    margin: 176px auto 14px;
+    text-align: center;
+    width: 75%;
+    line-height: 32px;
+    margin-top: 9.5%;
+}
+
 
 // NAVIGATION
 
@@ -992,6 +1020,15 @@ h6.blue-text,
 .home .shortcode {
     margin-right: -15px;
     margin-left: -15px;
+}
+
+#layerTable .activity-table div.row-header:first-child {
+  border-top: 1px solid #c3c3c3;
+  border-bottom:0px none;
+}
+
+.home .shortcode {
+    margin-right: -15px;
 }
 
 // Experienced Developer
@@ -2017,7 +2054,8 @@ body.members {
   }
 
   .narrow-block {
-    padding: 10px 0;
+    padding: 12px;
+    box-sizing:border-box;
   }
 
   .find-us {
@@ -2306,3 +2344,60 @@ body.members {
 // DESKTOP FIRST
 
 @media only screen and (max-width: 600px) {}
+
+
+@media screen and (min-width: 0px) and (max-width: 768px) {
+    #carousel-header-17 {
+      min-height:300px;
+    }
+    .item-content img {
+      display:none;
+    }
+    
+    .experienced-developers .content {
+        float: none;
+        width: 100%;
+      .col-xs-12 {
+        margin-bottom:18px; 
+      }
+    }
+    
+    .home .experienced-developers .shortcode {
+      float: none;
+      width: 100%;
+      margin-right:0px;
+      margin-left:0px; 
+      padding-right:0px;
+      padding-left:0px; 
+      margin-bottom:18px;
+    }
+    
+    .activity-table .row-header {
+      display:none;
+    }
+    
+    .activity-table-tab-container {
+      margin-left:0px;
+      
+      .activity-table-tab:first-child {
+        margin-left:0px;
+      }
+      
+      span {
+        padding-left:0px !important;
+        display:block;
+        margin: 12px auto;
+      }
+    }
+      
+ }
+  
+  
+@media screen and (min-width: 0px) and (max-width: 420px) {
+  #carousel-header-17 .overlay-container h5 {
+    margin-top:26% !important;
+    margin-bottom:10px !important;
+    font-size:16px !important;
+    line-height:22px !important;
+  }
+}

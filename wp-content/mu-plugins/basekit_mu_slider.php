@@ -1027,7 +1027,7 @@ class BASEKIT_Function_Slider {
 			$output = '';
 			
 			//$output .= "POST: " . $post->ID;
-			$output .= '<div id="carousel-header-' . $slider_id . '" class="carousel slide" data-ride="carousel" style="background:#333; overflow:hidden">';
+			$output .= '<div id="carousel-header-' . $slider_id . '" class="carousel slide" data-ride="carousel" style="overflow:hidden">';
 			if ( $repeatable_project_fields ) :
 				$output .= '<ol class="carousel-indicators">';
 				foreach ( $repeatable_project_fields as $key => $field ) {

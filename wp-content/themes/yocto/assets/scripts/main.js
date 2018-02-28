@@ -1387,7 +1387,94 @@
       finalize: function() {
         // JavaScript to be fired on the home page, after the init JS
       }
-    }
+   },
+   // compatible layers
+    'layers': { 
+      init: function() {
+   		alert('init');
+   		var url = '/wp-content/themes/yocto/proxy.php';
+  		var sourceURL = 'https://layers.openembedded.org/layerindex/api/layers/?filter=yp_compatible_version__isnull:false&format=json';
+
+ 		var jsonData;
+		
+		function buildTable(layerData, searchTerm){
+			var layerTableHtml = '';
+			var hasResults = false;
+			if(searchTerm !== 'all'){
+				var searchTitleString = '<h3>Search Results For: ' + searchTerm + '</h3>';
+				jQuery('.search-title').html(searchTitleString);
+			}
+			jQuery.each(layerData, function(i, obj) {
+			  if(searchTerm === 'all'){
+				  hasResults = true;
+				  layerTableHtml += '<div class="table-row" style="border-bottom:1px solid #ccced0;">';
+				  layerTableHtml += '	<div class="col-xs-12 col-sm-2"><a target="_blank" href="' + obj['layer'].vcs_web_url + '">'  + obj['layer'].name + '<br />version: ' + obj['branch'].name + '</a></div>';
+				  layerTableHtml += '	<div class="col-xs-12 col-sm-4"><p>' + obj['layer'].summary + '</p></div>';
+				  layerTableHtml += '	<div class="col-xs-12 col-sm-2"><p>' + obj['maintainers'][0].name +'</p></div>';
+				  layerTableHtml += '	<div class="col-xs-12 col-sm-4"><p>' + obj['layer'].vcs_url + '</p></div>';
+				  layerTableHtml += '</div>';
+			  }else{
+				  searchTerm = searchTerm.toLowerCase();
+				  if ((obj['layer'].name.toLowerCase().indexOf(searchTerm) >= 0) || (obj['layer'].description.toLowerCase().indexOf(searchTerm) >= 0) || (obj['layer'].vcs_url.toLowerCase().indexOf(searchTerm) >= 0) || (obj['maintainers'][0].name.toLowerCase().indexOf(searchTerm) >= 0)){
+					  hasResults = true;
+					  layerTableHtml += '<div class="table-row" style="border-bottom:1px solid #ccced0;">';
+					  layerTableHtml += '	<div class="col-xs-12 col-sm-2"><a href="' + obj.vcs_web_url + '">' + obj['layer'].name + '<br />version: ' + obj['branch'].name + '</a></div>';
+					  layerTableHtml += '	<div class="col-xs-12 col-sm-4"><p>' + obj['layer'].summary + '</p></div>';
+					  layerTableHtml += '	<div class="col-xs-12 col-sm-2"><p>' + obj['maintainers'][0].name + '</p></div>';
+					  layerTableHtml += '	<div class="col-xs-12 col-sm-4"><p>' + obj['layer'].vcs_url + '</p></div>';
+					  layerTableHtml += '</div>';
+				  }
+			  }
+			});
+			if(hasResults === false){
+			 layerTableHtml += '<div class="table-row" style="border-bottom:1px solid #ccced0;">No Search Results for '+ searchTerm + '.</div>';
+			}
+			jQuery('#layerTable').html(layerTableHtml);
+		}
+
+		
+		var getUrlParameter = function getUrlParameter(sParam) {
+		    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+		        sURLVariables = sPageURL.split('&'),
+		        sParameterName,
+		        i;
+
+		    for (i = 0; i < sURLVariables.length; i++) {
+		        sParameterName = sURLVariables[i].split('=');
+
+		        if (sParameterName[0] === sParam) {
+		            return sParameterName[1] === undefined ? 'all' : sParameterName[1];
+		        }
+		    }
+		};
+		
+		var searchTerm = getUrlParameter('searchTerm');
+		
+		if(searchTerm !== undefined){
+			jQuery.getJSON({ dataType: 'json', url: sourceURL}, function(data){
+				buildTable(data, searchTerm);
+			  })
+			.fail(function(jqXHR, textStatus, errorThrown) {
+			       console.log("error " + textStatus);
+			       console.log("incoming Text " + jqXHR.responseText);
+			});
+		}else{
+			jQuery.getJSON({ dataType: 'json', url: sourceURL}, function(data){
+				buildTable(data, 'all');
+			  })
+			.fail(function(jqXHR, textStatus, errorThrown) {
+			       console.log("error " + textStatus);
+			       console.log("incoming Text " + jqXHR.responseText);
+			});
+		}
+      },
+   
+      finalize: function() {
+        // JavaScript to be fired on the home page, after the init JS
+        //alert('final');
+      }
+     }
+   
   };
 
   // The routing fires all common scripts, followed by the page specific scripts.

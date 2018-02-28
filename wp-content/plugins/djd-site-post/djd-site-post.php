@@ -862,11 +862,22 @@ if (!class_exists("DjdSitePost")) {
 						//training
 						//other
 						$status;
-						$post_consultant_expire_date = '12'; // ( isset($jobs_expire_date) ) ? $jobs_expire_date : '12';
-						$consultant_expires_date = '-' . $post_consultant_expire_date  .' month';
-						$datePostPublished = get_the_date( 'Y-m-d' );
 						
-						if(strtotime($datePostPublished) > strtotime($consultant_expires_date)) {
+						$consultants_options = get_option('options_organizations_field_group');
+						$consultants_expire_setting = $consultants_options['consultants_expire_setting'];
+						$consultants_notification_setting = $consultants_options['consultants_notification_setting'];
+						$consultants_email_copy = $consultants_options['consultants_email_copy'];
+				
+						$post_consultant_expire_date = ( isset($consultants_expire_setting) ) ? $consultants_expire_setting : '12';
+						$consultant_expires_date = '-' . $post_consultant_expire_date  .' month';
+						
+						$post_consultant_notification_date = ( isset($consultants_expire_setting) ) ? $consultants_expire_setting : '12';
+						$consultant_notification_date = '-' . $post_consultant_notification_date  .' month';
+						
+						$datePostPublished = get_the_date( 'Y-m-d' );
+			
+						
+						if(strtotime($datePostPublished) > strtotime($consultant_expires_date)) { // show them
 						    $status = "published";
 
 							$optionsArray = get_field('dsp_consultant_services_offered');
@@ -924,14 +935,16 @@ if (!class_exists("DjdSitePost")) {
 							$output .= '	<div class="col-xs-12 col-sm-1 mobile-show-992"><h5>Other Services</h5></div>';
 							$output .= '	<div class="col-xs-12 col-sm-1"><p>' . $other . '</p></div>';
 							$output .= '</div>';
-						}else{
+
+						}elseif(strtotime($datePostPublished) < strtotime($consultant_notification_date)){ //if is under send message setting
+							$consultant_name = get_field('dsp_consultant_contact_name');
+							$consultant_email = get_field('dsp_consultant_contact_email');
+							$this->send_consultant_email($consultant_name, $consultant_email, $consultants_email_copy);
+						}elseif(strtotime($datePostPublished) < strtotime($consultant_expires_date)){ //if is under set to draft
 							$status = "draft";
 							$postID = get_the_ID();
 							$post = array( 'ID' => $postID, 'post_status' => $status );
 							wp_update_post($post);
-							$consultant_name = get_field('dsp_consultant_contact_name');
-							$consultant_email = get_field('dsp_consultant_contact_email');
-							$this->send_consultant_email($consultant_name, $consultant_email);
 						}
 					}else {
 						// $output .= '<div class="half-block">';
@@ -1426,10 +1439,11 @@ if (!class_exists("DjdSitePost")) {
 	 * Notify admin about new post via email
 	 */
 	 
-	function send_consultant_email($name, $email){
+	function send_consultant_email($name, $email, $emailCopy){
 		$blogname = get_option('blogname');
 		$headers = "MIME-Version: 1.0\r\n" . "From: ".$blogname." "."<".$email.">\n" . "Content-Type: text/HTML; charset=\"" . get_option('blog_charset') . "\"\r\n";
-		$content = '<p>'.__('Your anual Yocto Consultant status has expired.', 'djd-site-post') . '<br/>' .__('To resubcribe please fill out the form here:', 'djd-site-post') . ' '.'<a href="https://caffelli-staging.yoctoproject.org/community/consultants/consultant-registration/"><strong>Yocto Consultant Regitration</strong></a><br<br>Thanks, The Yocto Team</p>';
+		//$content = '<p>'.__('Your anual Yocto Consultant status has expired.', 'djd-site-post') . '<br/>' .__('To resubcribe please fill out the form here:', 'djd-site-post') . ' '.'<a href="https://caffelli-staging.yoctoproject.org/community/consultants/consultant-registration/"><strong>Yocto Consultant Regitration</strong></a><br<br>Thanks, The Yocto Team</p>';
+		$content = '<p>' .  $emailCopy . '</p>';
 		wp_mail($email, __('Yocto Consultant Expiration Notice', 'djd-site-post'), $content, $headers);
 	}
 	

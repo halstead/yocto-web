@@ -718,7 +718,7 @@ if (!class_exists("DjdSitePost")) {
 				$stateField = get_field('my_meta_box_state_select');
 				$counteryField = get_field('my_meta_box_country_select');
 				$state = convertState($stateField, $strFormat='name');
-				$country = convertCountry($counteryField);
+				$country = convertCountry($counteryField, $strFormat='name');
 				
 				if($dynamic_post_type == 'jobs'){
 					$status;
@@ -869,7 +869,7 @@ if (!class_exists("DjdSitePost")) {
 						$post_consultant_expire_date = ( isset($consultants_expire_setting) ) ? $consultants_expire_setting : '12';
 						$consultant_expires_date = '-' . $post_consultant_expire_date  .' month';
 						
-						$post_consultant_notification_date = ( isset($consultants_expire_setting) ) ? $consultants_expire_setting : '12';
+						$post_consultant_notification_date = ( isset($consultants_notification_setting) ) ? $consultants_notification_setting : '12';
 						$consultant_notification_date = '-' . $post_consultant_notification_date  .' month';
 						
 						$datePostPublished = get_the_date( 'Y-m-d' );
@@ -919,7 +919,7 @@ if (!class_exists("DjdSitePost")) {
 							$output .= '	</p>';
 							$output .= '	</div>';
 							$output .= '	<div class="col-xs-12 mobile-show-992"><h5>Country</h5></div>';
-							$output .= '	<div class="col-xs-12 col-sm-1"><p>' . $counteryField . '</p></div>'; //$country
+							$output .= '	<div class="col-xs-12 col-sm-1"><p>' . $country . '</p></div>'; //$country
 							$output .= '	<div class="col-xs-12 col-sm-1 mobile-show-992"><h5>Company</h5></div>';
 							$output .= '	<div class="col-xs-12 col-sm-1"><p><a href="' . $website_url . '" target="_blank">' .  get_the_title() . '</a></p></div>';
 							$output .= '	<div class="col-xs-12 col-sm-1 mobile-show-992"><h5>Pofessional Services</h5></div>';
@@ -939,9 +939,11 @@ if (!class_exists("DjdSitePost")) {
 							wp_update_post($post);
 						}
 						
+						// $output .= 'currrentdate: ' . strtotime($datePostPublished) . '<br>';
+						// $output .= 'notificationdate: ' . strtotime($consultant_notification_date);
 						$currentPostStatus =  get_post_status( get_the_ID() );
-						if(strtotime($datePostPublished) > strtotime($consultant_notification_date) && $currentPostStatus == 'publish') { //if is under send message setting
-							$output .= '<p>make pending</p>';
+						if(strtotime($datePostPublished) < strtotime($consultant_notification_date) && $currentPostStatus == 'publish') { //if is under send message setting
+							//$output .= '<p>make pending</p>';
 							$status = "pending";
 							$postID = get_the_ID();
 							$post = array( 'ID' => $postID, 'post_status' => $status );
@@ -1396,8 +1398,6 @@ if (!class_exists("DjdSitePost")) {
 					    update_post_meta ($post_success, 'my_meta_box_state_select', $state);
 					    update_post_meta ($post_success, 'my_meta_box_country_select', $country);
 					}
-					
-
 				}
 
 				if($post_success === false) {

@@ -34,11 +34,10 @@ function custom_project_blocks_function($atts) {
 	$block_counter = 1;
 	
 	$output = '';
-	
 
     global $post;
 	$repeatable_project_fields = get_post_meta($post->ID, 'project-builder-meta-box-blocks', true);
-
+	
 	if ( $repeatable_project_fields ) :
 		foreach ( $repeatable_project_fields as $key => $field ) {
 			
@@ -64,6 +63,7 @@ function custom_project_blocks_function($atts) {
 			$contentBlockCopy = '';
 			$contentBlockContent = '';
 			$contentEmbedCode= '';
+			
 			
 			// Image Fields
 			$image = '';
@@ -106,9 +106,7 @@ function custom_project_blocks_function($atts) {
 			// $field['customblocksSectionLink'];
 			// $field['customblocksBlockCount'];
 			// $field['customblocksLink'];
-			
-			
-			
+
 			//Test
 			//$output .= "BlockBackgoundColor: " . $field['blockContentBackgroundColor'];
 			
@@ -119,8 +117,6 @@ function custom_project_blocks_function($atts) {
 				if(isset($field['contentBlockCopy'])){ $contentBlockCopy = $field['contentBlockCopy']; } 
 				if(isset($field['contentBlockContent'])){ $contentBlockContent = $field['contentBlockContent']; } 
 				if(isset($field['contentShortcode'])){ $contentEmbedCode = $field['contentShortcode']; }
-				//$mediaShortCode = do_shortcode($contentEmbedCode);
-				//$output .= '<div>' . $mediaShortCode . '</div>';
 				
 				if($blockWidthType == 'fullwidth'){
 					$output .= '<div class="' . $blockContentContainerClass . ' content-block" style="padding-top:' . $blockPadding . '; padding-bottom:' . $blockPadding . '; background-color:' . $blockBackgroundColor . ';">';
@@ -194,7 +190,6 @@ function custom_project_blocks_function($atts) {
 					$output .= '<div class="container"><div class="inner"><h5 class="alert">You must define a block width for this block.</h5></div></div>';
 				}
 				
-			
 			// VIDEO BLOCK //	
 			} elseif($blockType == 'video' && $blockState == 'blockActive'){
 			
@@ -263,7 +258,6 @@ function custom_project_blocks_function($atts) {
 				if(isset($field['numOfColumnsSelected'])){ $customBlocksColumnsSelected = $field['numOfColumnsSelected']; }
 				if(isset($field['customblocksLink'])){ $customblocksLink = $field['customblocksLink']; }
 				if(isset($field['customblocksSectionLink'])){ $customblocksSectionLink = $field['customblocksSectionLink']; }
-
 				
 				$attsArray = array(
 				    "custom-post-type" => $customBlocksType, 
@@ -331,8 +325,6 @@ function custom_project_blocks_function($atts) {
 		$output .= '	</div>';
 		$output .= '</div>';
 	endif;
-
-
 
 	wp_reset_postdata();
 	wp_reset_query();
@@ -834,7 +826,7 @@ function project_builder_meta_box() {
     global $post;
 	
 	//slider-builder-meta-box-blocks
-
+	$post_ID = get_the_ID();
 	$repeatable_project_fields = get_post_meta(get_the_ID(), 'project-builder-meta-box-blocks', true);
     // We'll use this nonce field later on when saving.
     wp_nonce_field( 'repeatable_meta_box_nonce', 'repeatable_meta_box_nonce' );
@@ -1458,19 +1450,22 @@ function project_builder_meta_box() {
 	<tbody>
 	<?php
 	$counter = 0;
+	$contentSearchResults = '';
 	if ( $repeatable_project_fields ) :
 
 		//var_dump($_POST);
-		
-			
 		// $field['videoControls']
 		// $field['videoAutoplay']
 		// $field['videoSound']
 		// $field['videoLoop']
-				
-				
 
 	foreach ( $repeatable_project_fields as $key => $field ) {
+		$contentSearchResults .=  (array_key_exists('contentBlockTitle', $field) && $field['contentBlockTitle'] != '') ? ( '<h2 class="block-title">' . $field['contentBlockTitle'] . '</h2>' ) : '';	
+		$contentSearchResults .=  (array_key_exists('contentBlockCopy', $field) && $field['contentBlockCopy'] != '') ? ( '<p>' . $field['contentBlockCopy']  . '</p>' ) : '';	
+		$contentSearchResults .=  (array_key_exists('contentBlockContent', $field) && $field['contentBlockContent'] != '') ? '<div>' . html_entity_decode( $field['contentBlockContent'] . '</div>' ) : '';	
+		$contentSearchResults .=  (array_key_exists('imageBlockTitle', $field) && $field['imageBlockTitle'] != '') ? ( '<h2 class="block-title">' . $field['imageBlockTitle'] . '</h2>' ) : '';	
+		$contentSearchResults .=  (array_key_exists('customblocksTitle', $field) && $field['customblocksTitle'] != '') ? ( '<h2 class="block-title">' . $field['customblocksTitle'] . '</h2>' ) : '';	
+		$contentSearchResults .=  (array_key_exists('customblocksCopy', $field) && $field['customblocksCopy'] != '') ? ( '<p>' . $field['customblocksCopy'] . '</p>' ) : '';		
 	?>
 	<tr class="<?php echo $field['blockState']; ?> block-builder-block" id="<?php echo 'block-' . $key ?>">   <!-- rowspan="2" -->
 		<!-- <td><a class="button remove-row" href="#">-</a></td> -->
@@ -1643,8 +1638,8 @@ function project_builder_meta_box() {
 							<div style="margin-bottom:12px; overflow:hidden;"><!-- Slide Link -->
 								<div style="float:left; width:32%;">Link Target:</div>
 								<div style="float:left; width:68%;">	<?php //echo $key; ?>
-									<input type="radio" name="imageLinkTarget<?php echo $key; ?>[]" class="image-link-target-radio image-link-target-same-window" id="image-link-target-same-window" value="sameWindow" <?php checked( $field['imageLinkTarget'], 'sameWindow' ); ?> > Same Window 
-									<input type="radio" name="imageLinkTarget<?php echo $key; ?>[]" class="image-link-target-radio image-link-target-new-window" id="image-link-target-new-window" style="margin-left:12px;" value="newWindow" <?php checked( $field['imageLinkTarget'], 'newWindow' ); ?> > New Window 
+									<input type="radio" name="imageLinkTarget<?php echo $key; ?>[]" class="image-link-target-radio image-link-target-same-window" id="image-link-target-same-window" value="sameWindow" <?php if (array_key_exists('imageLinkTarget', $field) && checked( $field['imageLinkTarget'], 'sameWindow' )); ?> > Same Window 
+									<input type="radio" name="imageLinkTarget<?php echo $key; ?>[]" class="image-link-target-radio image-link-target-new-window" id="image-link-target-new-window" style="margin-left:12px;" value="newWindow" <?php if (array_key_exists('imageLinkTarget', $field) && checked( $field['imageLinkTarget'], 'newWindow' )); ?> > New Window 
 								</div>
 							</div>
 							<div style="margin-bottom:12px; overflow:hidden;"><!-- Slide Overlay Title -->
@@ -1850,7 +1845,7 @@ function project_builder_meta_box() {
 							</div>  
 							<div>
 								<div>Content:</div><br /><!-- Slide Overlay Copy -->
-								<textarea style="width:100%;" rows="10" placeholder="" name="customblocksCopy[]" value="<?php if (array_key_exists('customblocksCopy', $field) && $field['contentBlockCopy'] != '') echo esc_attr( $field['customblocksCopy'] ); ?>"><?php if (array_key_exists('customblocksCopy', $field) && $field['customblocksCopy'] != '') echo esc_attr( $field['customblocksCopy'] ); ?></textarea>
+								<textarea style="width:100%;" rows="10" placeholder="" name="customblocksCopy[]" value="<?php if (array_key_exists('customblocksCopy', $field) && $field['customblocksCopy'] != '') echo esc_attr( $field['customblocksCopy'] ); ?>"><?php if (array_key_exists('customblocksCopy', $field) && $field['customblocksCopy'] != '') echo esc_attr( $field['customblocksCopy'] ); ?></textarea>
 							</div>
 						</div>
 					</td>
@@ -1960,7 +1955,7 @@ function project_builder_meta_box() {
 										wp_enqueue_script('editor');
 										wp_enqueue_script('word-count');
 										$settings = array(
-											'media_buttons'	=> false, //(boolean) $djd_options['djd-allow-media-upload'],
+											'media_buttons'	=> false, 
 											'tinymce'		 => array( 
 									            'content_css' => get_stylesheet_directory_uri() . '/dist/styles/custom-tiny-mce.css',
 									        	'init_instance_callback' => 'function(editor) {
@@ -1980,7 +1975,7 @@ function project_builder_meta_box() {
 								 			// 'quicktags'		=> $show_quicktags
 										);
 						
-										$editor_new_content = ''; //$editor_content = (array_key_exists('contentBlockContent', $field) && $field['contentBlockContent'] != '') ? esc_attr( $field['contentBlockContent'] ) : '';									
+										$editor_new_content = ''; 								
 										$contentNewID = 'contentBlockContent0';
 										wp_editor($editor_new_content, $contentNewID, $settings );
 										?>
@@ -2490,13 +2485,23 @@ function project_builder_meta_box() {
 	
 
 	<?php
-	
 	 // $blockTypes = $field['blockName'];
 	 // $ShowfeatureImage = $field['customblocksShowFeaturedImage'];
      // echo "Feature Image: " . $ShowfeatureImage;
 	 // echo "Block Name: " . $blockTypes;
+
+	update_post_content_search($post_ID, $contentSearchResults);
 }
 
+
+function update_post_content_search($post_id, $contentSearchResults){
+	$my_post = array(
+      'ID' => $post_id,
+      'post_content' => $contentSearchResults
+	);
+	//Update the post into the database - used to populate post content for search results
+	wp_update_post( $my_post, false );
+}
 
 
 add_action('save_post', __NAMESPACE__ . '\\repeatable_meta_box_save');
@@ -2518,13 +2523,11 @@ function repeatable_meta_box_save($post_id) {
 	$old = get_post_meta($post_id, 'project-builder-meta-box-blocks', true);
 	$new = array();
 
-
 	//--> Block Types <--//
 	$blocks = $_POST['counter'];
 	$blocksOrder = $_POST['blockOrder'];
 	$blockCount = count( $blocks );
 	$activeBlockCount = 0;
-	
 	
 	//--> Block Settings <--//
 	$blockName = $_POST['blockName'];
@@ -2536,31 +2539,20 @@ function repeatable_meta_box_save($post_id) {
 	$blockContentContainerClass = $_POST['blockContentContainerClass'];
 	
 	//--> Content Section Fields <--//
-
 	$contentBlockTitle = $_POST['contentBlockTitle'];
 	$contentBlockCopy = $_POST['contentBlockCopy'];
 	$contentBlockContent = $_POST['contentBlockContent'];
 	$contentShortcode = $_POST['contentShortcode'];
-	// $field['contentBlockTitle'];
-	// $field['contentBlockCopy'];
 	
 	//--> Image Section Fields <--//
-	
 	//  Slide Image (Poster) 
-	
 	$imageSlide = $_POST['imageSlide'];
 	$imageSlideLink = $_POST['imageSlideLink'];
 	//$imageLinkTarget = $_POST['imageLinkTarget']; 
 	$imageSlideOverlayCopy = $_POST['imageSlideOverlayCopy'];
 	$imageBlockTitle = $_POST['imageBlockTitle'];
-	
-	// $field['imageSlide'];
-	// $field['imageSlideLink'];
-	// $field['imageSlideOverlayCopy'];
-	// $field['imageBlockTitle'];
 
 	//--> Video Section Fields <--//
-	
 	//  Slide Image (Poster)  
 	$videoSlidePosterImage = $_POST['videoSlidePosterImage'];
 	$videoSlideLink = $_POST['videoSlideLink'];
@@ -2568,34 +2560,22 @@ function repeatable_meta_box_save($post_id) {
 	$videoSlideSourceLink = $_POST['videoSlideSourceLink'];
 	$videoSlideOverlayTitle = $_POST['videoSlideOverlayTitle'];
 	$videoSlideOverlayCopy = $_POST['videoSlideOverlayCopy'];
-	// $field['videoSlidePosterImage'];
-	// $field['videoSlideLink'];
-	// $field['videoSlideSourceLink'];
-	// $field['videoSlideOverlayTitle'];
-	// $field['videoSlideOverlayCopy'];
 	
 	//--> Custom Block Section Fields <--//
-	
 	$customblocksType = $_POST['customblocksType'];
 	$customblocksTaxonomies = $_POST['customblocksTaxonomies'];
 	$customblocksTerms = $_POST['customblocksTerms'];
 	$customblocksTitle = $_POST['customblocksTitle'];
 	$customblocksCopy = $_POST['customblocksCopy'];
-	
-	//$customblocksShowFeaturedImage = print_r($_POST['customblocksShowFeaturedImage']);
 	$customblocksShowFeaturedImage = $_POST['customblocksShowFeaturedImageHidden'];
 	$customblocksShowTitle = $_POST['customblocksShowTitleHidden'];
 	$customblocksShowDescription = $_POST['customblocksShowDescriptionHidden'];
 	$customblocksCharacterCount = $_POST['customblocksCharacterCount'];
 	$customblocksSectionLink = $_POST['customblocksSectionLink'];
-	
-	
 	$customblocksBlockCount = $_POST['customblocksBlockCount'];
-	
 	$numOfColumnsSelected = $_POST['numOfColumnsSelected']; 
 	$customblocksReadMore = $_POST['customblocksReadMoreHidden'];  
 
-	
 	for ( $i = 0; $i < $blockCount; $i++ ) {
 		if ( $blocks[$i] == 'block-active' ) {
 			$activeBlockCount++;
@@ -2611,6 +2591,7 @@ function repeatable_meta_box_save($post_id) {
 			
 			if ( $_POST['blockState' . $blocksOrder[$i]][0] != '' )
 				$new[$i]['blockState'] = $_POST['blockState' . $blocksOrder[$i]][0];
+			
 			
 			//$blockName = $_POST['blockName'];
 			if ( $blockName[$i] != '' )
@@ -2629,29 +2610,32 @@ function repeatable_meta_box_save($post_id) {
 			//--> Set - Content Section Fields <--//
 			if ( $contentBlockTitle[$i] != '' )
 				$new[$i]['contentBlockTitle'] = stripslashes($contentBlockTitle[$i] );
+				$contentSearchResults .= '<h2 class="block-title1">' . $contentBlockTitle[$i] . '</h2>';
 			
 			if ( $contentShortcode[$i] != '' )
 				$new[$i]['contentShortcode'] = stripslashes($contentShortcode[$i] );
 			
 			if ( $contentBlockCopy[$i] != '' )
 				$new[$i]['contentBlockCopy'] = ( $contentBlockCopy[$i] );
+				$contentSearchResults .= '<div>' . $contentBlockCopy[$i] . '</div>';
 			
 			if ( $contentBlockContent[$i] != '' )
 				$new[$i]['contentBlockContent'] = ( $contentBlockContent[$i] );
-			
+				$contentSearchResults .= $contentBlockContent[$i];
+				
 			//--> Set - Image Section Fields <--//
 			if ( $imageSlide[$i] != '' )
 				$new[$i]['imageSlide'] = stripslashes($imageSlide[$i] );
 			
 			if ( $imageSlideLink[$i] != '' )
 				$new[$i]['imageSlideLink'] = stripslashes($imageSlideLink[$i] );
-			
-			if ( $_POST['imageLinkTarget' . $blocksOrder[$i]][0] != '' )
+
+			if ( isset($_POST['imageLinkTarget' . $blocksOrder[$i]][0]) && $_POST['imageLinkTarget' . $blocksOrder[$i]][0] != '' )
 				$new[$i]['imageLinkTarget'] = $_POST['imageLinkTarget' . $blocksOrder[$i]][0];
 		
 			if ( $imageBlockTitle[$i] != '' )
 				$new[$i]['imageBlockTitle'] = stripslashes( $imageBlockTitle[$i] );
-			
+				
 			if ( $imageSlideOverlayCopy[$i] != '' )
 				$new[$i]['imageSlideOverlayCopy'] = stripslashes($imageSlideOverlayCopy[$i] );
 
@@ -2662,7 +2646,7 @@ function repeatable_meta_box_save($post_id) {
 			if ( $videoSlideLink[$i] != '' )
 				$new[$i]['videoSlideLink'] = stripslashes(  $videoSlideLink[$i] );
 				
-			if ( $_POST['videoLinkTarget' . $blocksOrder[$i]][0] != '' )
+			if ( isset($_POST['videoLinkTarget' . $blocksOrder[$i]][0]) && $_POST['videoLinkTarget' . $blocksOrder[$i]][0] != '' )
 				$new[$i]['videoLinkTarget'] = $_POST['videoLinkTarget' . $blocksOrder[$i]][0];
 
 			if ( $videoSlideSourceLink[$i] != '' )
@@ -2714,10 +2698,7 @@ function repeatable_meta_box_save($post_id) {
 			if ($customblocksReadMore[$i] != '') 
 				$new[$i]['customblocksReadMore'] = stripslashes( $customblocksReadMore[$i] );
 			
-			// if ( $customblocksLink . $blocksOrder[$i][0] != '' )
-				// $new[$i]['customblocksLink'] = $customblocksLink . $blocksOrder[$i][0];
-			
-			if ( $_POST['customblocksLink' . $blocksOrder[$i]][0] != '' )
+			if ( isset($_POST['customblocksLink' . $blocksOrder[$i]][0]) && $_POST['customblocksLink' . $blocksOrder[$i]][0] != '' )
 				$new[$i]['customblocksLink'] = $_POST['customblocksLink' . $blocksOrder[$i]][0];
 
 		}else {

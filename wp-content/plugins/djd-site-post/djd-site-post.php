@@ -760,7 +760,7 @@ if (!class_exists("DjdSitePost")) {
 							$output .= '		<p class="address state">' . $state . '</p>';
 						}
 						
-						$output .= '		<p class="address country" style="margin-bottom:10px;">' . $country .  ' ' . $counteryField . '</p>';
+						$output .= '		<p class="address country" style="margin-bottom:10px;">' . $country .  '</p>';
 						
 						if($dynamic_post_widget == 'false'){
 							$output .= '		<div class="row">';

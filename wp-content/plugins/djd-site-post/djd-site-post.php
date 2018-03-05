@@ -932,7 +932,7 @@ if (!class_exists("DjdSitePost")) {
 							$output .= '	<div class="col-xs-12 col-sm-1"><p>' . $other . '</p></div>';
 							$output .= '</div>';
 						}else{ //if is under set to draft
-							$output .= '<p>make draft</p>';
+							//$output .= '<p>make draft</p>';
 							$status = "draft";
 							$postID = get_the_ID();
 							$post = array( 'ID' => $postID, 'post_status' => $status );

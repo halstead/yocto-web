@@ -59,6 +59,101 @@ function setup_init() {
 
 
 
+// Daily Scheduled Scripts 
+
+register_activation_hook(__FILE__, 'daily_activation');
+
+function daily_activation() {
+    if (! wp_next_scheduled ( 'yocto_daily_event' )) {
+	wp_schedule_event(time(), 'daily', 'yocto_daily_event');
+    }
+}
+
+add_action('yocto_daily_event', 'daily_script');
+
+function daily_script() {  // yocoto consultant daily script
+	$args=array(
+      'post_type' => 'members',
+      'post_status' => array('publish', 'pending'), 
+      'orderby' => 'title',
+      'posts_per_page' => -1,
+      'order' => 'ASC',
+      'tax_query' => array(
+		array(
+			'taxonomy' => 'organization-type',
+			 'field' => 'slug',
+			 'terms' => 'consultants'
+		),
+	   )
+    );
+	$my_query = null;
+	$my_query = new WP_Query($args);
+	if( $my_query->have_posts() ) {
+		$status;		
+		$consultants_options = get_option('options_organizations_field_group');
+		$consultants_expire_setting = $consultants_options['consultants_expire_setting'];
+		$consultants_notification_setting = $consultants_options['consultants_notification_setting'];
+		$consultants_email_copy = $consultants_options['consultants_email_copy'];
+		// consultant draft (expired)
+		$post_consultant_expire_date = ( isset($consultants_expire_setting) ) ? $consultants_expire_setting : '12';
+		$consultant_expires_date = '-' . $post_consultant_expire_date  .' month';
+		// consultant pending
+		$post_consultant_notification_date = ( isset($consultants_notification_setting) ) ? $consultants_notification_setting : '12';
+		$consultant_notification_date = '-' . $post_consultant_notification_date  .' month';
+		
+		while ($my_query->have_posts()) : $my_query->the_post();
+
+			$datePostPublished = get_the_date( 'Y-m-d' );
+			
+			if(strtotime($datePostPublished) > strtotime($consultant_expires_date)) { // do nothing
+				$status = "published";
+			}else{ // set to draft
+				$status = "draft";
+				$postID = get_the_ID();
+				$post = array( 'ID' => $postID, 'post_status' => $status );
+				wp_update_post($post);
+			}
+
+			$currentPostStatus =  get_post_status( get_the_ID() );
+			if(strtotime($datePostPublished) < strtotime($consultant_notification_date) && $currentPostStatus == 'publish') { //set to pending and send message setting
+				$status = "pending";
+				$postID = get_the_ID();
+				$post = array( 'ID' => $postID, 'post_status' => $status );
+				wp_update_post($post);
+				
+				$consultant_name = get_field('dsp_consultant_contact_name');
+				$consultant_email = get_field('dsp_consultant_contact_email');
+				$output .= '<p>send mesg: </p>' . $consultant_name . ' ' . $consultant_email . ' ' . $consultants_email_copy;
+				send_consultant_email($consultant_name, $consultant_email, $consultants_email_copy);
+			}
+		
+		endwhile;
+	}
+}
+
+
+function send_consultant_email($name, $email, $emailCopy){
+	$fromEmail = '';
+	if ( isset($djd_options['djd-guest-account']) ) {
+		$user_query = get_userdata($djd_options['djd-guest-account']);
+		$fromEmail = $user_query->user_email;
+	}else{
+		$fromEmail = get_option('admin_email');
+	}
+	$blogname = get_option('blogname');
+	$headers = "MIME-Version: 1.0\r\n" . "From: ".$blogname." "."<".$fromEmail.">\n" . "Content-Type: text/HTML; charset=\"" . get_option('blog_charset') . "\"\r\n";
+	$content = '<p>' .  $emailCopy . '</p>';
+	wp_mail($email, __('Yocto Consultant Expiration Notice', 'djd-site-post'), $content, $headers);
+}
+
+
+register_deactivation_hook(__FILE__, 'daily_deactivation');
+
+function daily_deactivation() {
+	wp_clear_scheduled_hook('yocto_daily_event');
+}
+
+
 //add_action( 'add_meta_boxes', __NAMESPACE__ . '\\cd_meta_box_add' );
 // function cd_meta_box_add()
 // {

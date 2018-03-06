@@ -1408,7 +1408,7 @@
 			  if(searchTerm === 'all'){
 				  hasResults = true;
 				  layerTableHtml += '<div class="table-row" style="border-bottom:1px solid #ccced0;">';
-				  layerTableHtml += '	<div class="col-xs-12 col-sm-2"><a target="_blank" href="' + obj['layer'].vcs_web_url + '">'  + obj['layer'].name + '<br />version: ' + obj['branch'].name + '</a></div>';
+				  layerTableHtml += '	<div class="col-xs-12 col-sm-2"><a target="_blank" href="' + obj['layer'].vcs_web_url + '">' + obj['layer'].name + '<br />version: ' + obj['branch'].name + '</a></div>';
 				  layerTableHtml += '	<div class="col-xs-12 col-sm-4"><p>' + obj['layer'].summary + '</p></div>';
 				  layerTableHtml += '	<div class="col-xs-12 col-sm-2"><p>' + obj['maintainers'][0].name +'</p></div>';
 				  layerTableHtml += '	<div class="col-xs-12 col-sm-4"><p>' + obj['layer'].vcs_url + '</p></div>';
@@ -1418,7 +1418,7 @@
 				  if ((obj['layer'].name.toLowerCase().indexOf(searchTerm) >= 0) || (obj['branch'].name.toLowerCase().indexOf(searchTerm) >= 0) || (obj['layer'].description.toLowerCase().indexOf(searchTerm) >= 0) || (obj['layer'].vcs_url.toLowerCase().indexOf(searchTerm) >= 0) || (obj['maintainers'][0].name.toLowerCase().indexOf(searchTerm) >= 0)){
 					  hasResults = true;
 					  layerTableHtml += '<div class="table-row" style="border-bottom:1px solid #ccced0;">';
-					  layerTableHtml += '	<div class="col-xs-12 col-sm-2"><a href="' + obj.vcs_web_url + '">' + obj['layer'].name + '<br />version: ' + obj['branch'].name + '</a></div>';
+					  layerTableHtml += '	<div class="col-xs-12 col-sm-2"><a target="_blank" href="' + obj['layer'].vcs_web_url + '">' + obj['layer'].name + '<br />version: ' + obj['branch'].name + '</a></div>';
 					  layerTableHtml += '	<div class="col-xs-12 col-sm-4"><p>' + obj['layer'].summary + '</p></div>';
 					  layerTableHtml += '	<div class="col-xs-12 col-sm-2"><p>' + obj['maintainers'][0].name + '</p></div>';
 					  layerTableHtml += '	<div class="col-xs-12 col-sm-4"><p>' + obj['layer'].vcs_url + '</p></div>';

@@ -1059,17 +1059,13 @@ if (!class_exists("DjdSitePost")) {
 			
 			if (empty($success_url)) $success_url = home_url() . "/";
 		}
-		//
-		
 		//$newOptions = array('djd-post-type' => $dynamic_post_type);
 		//update_option('djd_site_post_settings', $newOptions);
 		//'djd-post-type' => 'post',
 		
-
 		// Call the function and grab the results (if nothing, output a comment noting that it was empty).
 		// This one calls the form presented to the user.
 		return call_user_func_array(array($this, $form_name), array($atts, $content, $user_verified, $djd_post_id, $called_from_widget));
-
 	}
 
 
@@ -1081,20 +1077,13 @@ if (!class_exists("DjdSitePost")) {
 			if ( !empty ($_POST["djd-our-post-type"])) $djd_post_type = $_POST["djd-our-post-type"];
 			if ( !empty ($_POST["djd-our-id"])) $djd_post_id = $_POST["djd-our-id"];
 			
-			$dynamic_post_taxonomy = ( !empty ($_POST["djd-our-post-taxonomy"])) ? $_POST["djd-our-post-taxonomy"] : 'category';
-			$terms = ( !empty ($_POST["djd-our-post-term"])) ? $_POST["djd-our-post-term"] : 'uncategorized';
-			
-			//if ( !empty ($_POST["djd-our-post-taxonomy"])) $dynamic_post_taxonomy = $_POST["djd-our-post-taxonomy"];
-			//if ( !empty ($_POST["djd-our-post-term"])) $terms = $_POST["djd-our-post-term"];
-				// Create post object with defaults
-			
-			// Check if the city exists
-			//$city_term = term_exists( $city, 'location', $state_term['term_taxonomy_id'] );
-			
+			$dynamic_post_taxonomy = ( !empty ($_POST["djd-our-post-taxonomy"])) ? $_POST["djd-our-post-taxonomy"] : 'organization-type';
+			$terms = ( !empty ($_POST["djd-our-post-term"])) ? $_POST["djd-our-post-term"] : 'members';
+
+			// Check if the term exists
 			$org_term = term_exists( $terms, $dynamic_post_taxonomy, 0 );
-			// Create city if it doesn't exist
-			if ( !$org_term ) {
-			    //$org_term = wp_insert_term( $terms, $dynamic_post_taxonomy, array( 'parent' => $state_term['term_taxonomy_id'] ) );
+			// Create term if it doesn't exist
+			if ( !$org_term ) { 
 				$org_term = wp_insert_term( $terms, $dynamic_post_taxonomy, array( 'parent' => 0 ) );
 			}
 			
@@ -1103,7 +1092,7 @@ if (!class_exists("DjdSitePost")) {
 			        $org_term['term_taxonomy_id']
 			    )
 			);
-			//if($dynamic_post_taxonomy != ''){
+			// Create post object with defaults
 				$my_post = array(
 					'ID' => $djd_post_id,
 					'post_title' => '',
@@ -1119,24 +1108,7 @@ if (!class_exists("DjdSitePost")) {
 					'to_ping' =>  '',
 				    'tax_input' => $custom_tax
 				);
-			// }else{
-				// $my_post = array(
-					// 'ID' => $djd_post_id,
-					// 'post_title' => '',
-					// 'post_status' => 'publish',
-					// 'post_author' => '',
-					// 'post_category' => '',
-					// 'comment_status' => 'open',
-					// 'ping_status' => 'open',
-					// 'post_content' => '',
-					// 'post_excerpt' => '',
-					// 'post_type' => $djd_post_type, 
-					// 'tags_input' => '',
-					// 'to_ping' =>  ''
-				// );
-			// }
-				
-				
+
 				//print_r($my_post);
 				
 				$date_stamp = strtotime($date_string);
@@ -1207,10 +1179,10 @@ if (!class_exists("DjdSitePost")) {
 				// Insert the post into the database
 				$post_success = wp_update_post( $my_post );
 				
-				
 				// Insert Meta Data
 				if($post_success != 0)
 				{
+					$status = wp_set_object_terms($post_success, $terms, $dynamic_post_taxonomy); //set taxonomy / terms
 					if($djd_post_type == 'events') {
 						$eventlink = $_POST["dsp_event_link"];
 						$eventVenue = $_POST["dsp_event_venue"];

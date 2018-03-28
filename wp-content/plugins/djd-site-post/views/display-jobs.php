@@ -148,7 +148,7 @@ $postTypeName = ucfirst($postTypeNameSingular) . ' ';
 		<div class="row">
 			<div class="col-xs-12">
 				<label for="djd_site_post_city">City<?php //echo ( $djd_options['djd-city'] ? $djd_options['djd-city'] : __('City', 'djd-site-post') ); ?></label>
-				<input type="text" <?php echo "required='required'"; ?> id="djd_site_post_city" name="djd_site_post_city" maxlength="255" value="" <?php //if ( $my_post ) echo "value='".$my_post->post_city."'"; ?>autofocus="autofocus"/>
+				<input style="width:100%;" type="text" <?php echo "required='required'"; ?> id="djd_site_post_city" name="djd_site_post_city" maxlength="255" value="" <?php //if ( $my_post ) echo "value='".$my_post->post_city."'"; ?>autofocus="autofocus"/>
 			</div>
 		
 		<!-- State -->
@@ -540,6 +540,8 @@ $postTypeName = ucfirst($postTypeNameSingular) . ' ';
 		<input type="text" required="required" id="djd_quiz" name="djd_quiz" maxlength="2" size="2" />
 		<input type="hidden" id="djd_quiz_hidden" name="djd_quiz_hidden" value="<?php echo $no1 + $no2; ?>" />
 	<?php } ?>
+	<label class="error" for="g-recaptcha" id="g-recaptcha_error" style="margin: 0 0 5px 10px; display: none; color: red;">Captcha is required</label>
+	<div class="g-recaptcha" id="g-recaptcha" data-sitekey="6LePhU8UAAAAAGJQwZRkXsoO6cdLNS_9UVVpKaU8"></div>
 	<br><br>
 	<button type="submit" class="send-button" id="submit"><?php echo ( $djd_options['djd-send-button'] ? $djd_options['djd-send-button'] : __('Publish', 'djd-site-post') ); ?></button>
 	<p id="error" class="<?php echo ($sr && !$cf['form_ok']) ? 'visible' : ''; ?>"><?php echo $djd_options['djd-post-fail']; ?></p>

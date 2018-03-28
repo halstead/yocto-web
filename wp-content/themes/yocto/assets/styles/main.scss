@@ -82,7 +82,6 @@ p {
 
   a {
     color: $brand-blue;
-    text-transform: capitalize;
   }
 
   strong {
@@ -811,6 +810,18 @@ input[type='submit'] {
     right: 0;
     top: 0;
   }
+}
+
+// BODY SEARCH 
+
+.search-no-results .content input[type=search] {
+  color:#333;
+  border-bottom:1px solid #c3c3c3;
+}
+
+.error404 .content .search-wrap .icon-search,
+.search-no-results .content .search-wrap .icon-search {
+  color:#0098db;
 }
 
 // GRID BLOCKS

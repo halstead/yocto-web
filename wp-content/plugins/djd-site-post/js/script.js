@@ -1,8 +1,9 @@
 function ProcessFormAjax() {
-	
+
 	var errorNotice = jQuery('#error'),
 		successNotice = jQuery('#success'),
 		refresher = jQuery('#refresher'),
+		form = jQuery('#site_post_form'),
 		submit = jQuery('#submit');
 	
 	var theLanguage = jQuery('html').attr('lang');
@@ -18,32 +19,53 @@ function ProcessFormAjax() {
 		jQuery("input#djd_quiz").focus();
 		return false;
 	}
-
-	var ed = tinyMCE.get('djdsitepostcontent');
-
-	ed.setProgressState(1);
-	tinyMCE.get('djdsitepostcontent').save();
-
-	var newPostForm = jQuery(this).serialize();
-
+	if($( "#djdsitepostcontent" ).length){
+		var ed = tinyMCE.get('djdsitepostcontent');
+		ed.setProgressState(1);
+		tinyMCE.get('djdsitepostcontent').save();
+	}
 	
-	jQuery('#loading').show;
-	jQuery.ajax({
-		type:"POST",
-		url: jQuery(this).attr('action'),
-		data: newPostForm,
-		success:function(response){
-			ed.setProgressState(0);
-			jQuery('#loading').hide;
-            if(response == "success") {
-				successNotice.show();
-				refresher.show();
-				submit.html(btnMsg);
-			} else {
-				errorNotice.show();
+	var newPostForm = jQuery(this).serialize();
+	
+	var captcha_response = grecaptcha.getResponse();
+	var captcha_container = $('#g-recaptcha');
+	var captcha_error = $('#g-recaptcha_error');
+	captcha_error.hide();
+	captcha_container.removeClass('error');
+	
+	if(captcha_response.length == 0){
+	    // Captcha is not Passed
+	    console.log('no captcha');
+	    captcha_error.show();
+	    captcha_container.addClass('error');
+	    return false;
+	}else{
+		console.log('yes captcha');
+	    // Captcha is Passed
+	    //return true;
+	    jQuery('#loading').show;
+		jQuery.ajax({
+			type:"POST",
+			url: jQuery(this).attr('action'),
+			data: newPostForm,
+			success:function(response){
+				if($( "#djdsitepostcontent" ).length){
+					ed.setProgressState(0);
+				}
+				jQuery('#loading').hide;
+	            if(response == "success") {
+					successNotice.show();
+					refresher.show();
+					form.hide();
+					jQuery(window).scrollTop(0);
+					submit.html(btnMsg);
+				} else {
+					errorNotice.show();
+				}
 			}
-		}
-	});
+		});
+	}
+	
 
 	return false;
 }

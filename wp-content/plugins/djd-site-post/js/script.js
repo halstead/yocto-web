@@ -19,7 +19,7 @@ function ProcessFormAjax() {
 		jQuery("input#djd_quiz").focus();
 		return false;
 	}
-	if($( "#djdsitepostcontent" ).length){
+	if(jQuery( "#djdsitepostcontent" ).length){
 		var ed = tinyMCE.get('djdsitepostcontent');
 		ed.setProgressState(1);
 		tinyMCE.get('djdsitepostcontent').save();
@@ -28,8 +28,8 @@ function ProcessFormAjax() {
 	var newPostForm = jQuery(this).serialize();
 	
 	var captcha_response = grecaptcha.getResponse();
-	var captcha_container = $('#g-recaptcha');
-	var captcha_error = $('#g-recaptcha_error');
+	var captcha_container = jQuery('#g-recaptcha');
+	var captcha_error = jQuery('#g-recaptcha_error');
 	captcha_error.hide();
 	captcha_container.removeClass('error');
 	
@@ -49,7 +49,7 @@ function ProcessFormAjax() {
 			url: jQuery(this).attr('action'),
 			data: newPostForm,
 			success:function(response){
-				if($( "#djdsitepostcontent" ).length){
+				if(( "#djdsitepostcontent" ).length){
 					ed.setProgressState(0);
 				}
 				jQuery('#loading').hide;

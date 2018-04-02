@@ -1070,7 +1070,34 @@ if (!class_exists("DjdSitePost")) {
 
 
 	function process_site_post_form() {
-		if( isset($_POST) ){
+		// Check reCaptcha
+		$response = $_POST["g-recaptcha-response"];
+		$url = 'https://www.google.com/recaptcha/api/siteverify';
+		$data = array(
+			'secret' => '6LePhU8UAAAAACs94mkfFKJQ9hkEeVIKMNsfMAW0',
+			'response' => $_POST["g-recaptcha-response"]
+		);
+		$options = array(
+			'http' => array (
+				'method' => 'POST',
+				'content' => http_build_query($data)
+			)
+		);
+		$context  = stream_context_create($options);
+		$verify = file_get_contents($url, false, $context);
+		$captcha_success=json_decode($verify);
+		$spam_detected = false;
+		if ($captcha_success->success==false) {
+			// captcha false
+			$spam_detected = true;
+		} else if ($captcha_success->success==true) {
+			// captcha true
+			$spam_detected = false;
+		} else {
+			$spam_detected = true;
+		}
+		
+		if( isset($_POST) && $spam_detected == false ){
 
 			$djd_options = get_option('djd_site_post_settings');
 				
@@ -1175,13 +1202,12 @@ if (!class_exists("DjdSitePost")) {
 				if( array_key_exists('djd-priv-publish-status', $_POST)) {
 					$my_post['post_status'] = wp_strip_all_tags($_POST['djd-priv-publish-status']);
 				}
-
+				
 				// Insert the post into the database
 				$post_success = wp_update_post( $my_post );
 				
 				// Insert Meta Data
-				if($post_success != 0)
-				{
+				if($post_success != false) {
 					$status = wp_set_object_terms($post_success, $terms, $dynamic_post_taxonomy); //set taxonomy / terms
 					if($djd_post_type == 'events') {
 						$eventlink = $_POST["dsp_event_link"];
@@ -1374,8 +1400,7 @@ if (!class_exists("DjdSitePost")) {
 
 				if($post_success === false) {
 					$result = "error";
-				}
-				else {
+				} else {
 					$result = "success";
 					//if ( 'publish' == $my_post['post_status'] ) do_action('publish_post');
 					if (isset($_POST['djd-post-format'])) {
@@ -1400,13 +1425,14 @@ if (!class_exists("DjdSitePost")) {
 					}
 					if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
 						echo $result;
+						//echo "it didn't worked son";
 					} else {
 						setcookie('form_ok', 1,  time() + 10, '/');
 						header("Location: ".$_SERVER["HTTP_REFERER"]);
+						//echo "it worked son";
 						die();
 					}
-				}
-				else {
+				}else {
 					throw new Exception( $djd_options['djd-post-fail'] ? $djd_options['djd-post-fail'] : __('We were unable to accept your post at this time. Please try again. If the problem persists tell the site owner.', 'djd-site-post'));
 				}
 		} // isset($_POST)

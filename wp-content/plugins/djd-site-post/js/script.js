@@ -34,22 +34,19 @@ function ProcessFormAjax() {
 	captcha_container.removeClass('error');
 	
 	if(captcha_response.length == 0){
-	    // Captcha is not Passed
-	    console.log('no captcha');
+	    //console.log('no captcha');
 	    captcha_error.show();
 	    captcha_container.addClass('error');
 	    return false;
 	}else{
-		console.log('yes captcha');
-	    // Captcha is Passed
-	    //return true;
+		//console.log('yes captcha');
 	    jQuery('#loading').show;
 		jQuery.ajax({
 			type:"POST",
 			url: jQuery(this).attr('action'),
 			data: newPostForm,
 			success:function(response){
-				if(( "#djdsitepostcontent" ).length){
+				if(jQuery( "#djdsitepostcontent" ).length){
 					ed.setProgressState(0);
 				}
 				jQuery('#loading').hide;
@@ -65,7 +62,5 @@ function ProcessFormAjax() {
 			}
 		});
 	}
-	
-
 	return false;
 }

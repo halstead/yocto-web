@@ -101,14 +101,14 @@ $postTaxonomyTerm = $GLOBALS['djd_post_type_term'];
 		<div class="row">
 			<div class="col-xs-12 col-sm-6">
 				<label for="djd_site_post_title">Organization/Company Name</label>  <?php //echo $postTaxonomy . ( $djd_options['djd-title'] ? $djd_options['djd-title'] : __('Title', 'djd-site-post') ); ?>
-				<input type="text" <?php echo "required='required'"; ?> id="djd_site_post_title" name="djd_site_post_title" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_title."'"; ?>/>
+				<input style="width:100%;" type="text" <?php echo "required='required'"; ?> id="djd_site_post_title" name="djd_site_post_title" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_title."'"; ?>/>
 			</div>
 			
 			<?php if($postTaxonomyTerm  == 'participants'){ ?>  <!-- Participants Fields -->
 				
 			<div class="col-xs-12 col-sm-6">
 				<label for="dsp_participant_organization_url">Organization URL</label>  <?php //echo $postTaxonomy . ( $djd_options['djd-title'] ? $djd_options['djd-title'] : __('Title', 'djd-site-post') ); ?>
-				<input type="text" <?php echo "required='required'"; ?> id="dsp_participant_organization_url" name="dsp_participant_organization_url" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_organization_url."'"; ?>autofocus="autofocus"/>
+				<input style="width:100%;" type="text" <?php echo "required='required'"; ?> id="dsp_participant_organization_url" name="dsp_participant_organization_url" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_organization_url."'"; ?>autofocus="autofocus"/>
 			</div>
 			<div class="col-xs-12 col-sm-6">
 				<label for="dsp_participant_contact_name">Contact Name</label>
@@ -123,7 +123,7 @@ $postTaxonomyTerm = $GLOBALS['djd_post_type_term'];
 				
 			<div class="col-xs-12 col-sm-6">
 				<label for="dsp_ypcompatible_org_url">Organization URL</label>  <?php //echo $postTaxonomy . ( $djd_options['djd-title'] ? $djd_options['djd-title'] : __('Title', 'djd-site-post') ); ?>
-				<input type="text" <?php echo "required='required'"; ?> id="dsp_ypcompatible_org_url" name="dsp_ypcompatible_org_url" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_organization_url."'"; ?>autofocus="autofocus"/>
+				<input style="width:100%;" type="text" <?php echo "required='required'"; ?> id="dsp_ypcompatible_org_url" name="dsp_ypcompatible_org_url" maxlength="255" <?php if ( $my_post ) echo "value='".$my_post->post_organization_url."'"; ?>autofocus="autofocus"/>
 			</div>
 			<div class="col-xs-12 col-sm-6">
 				<label for="dsp_ypcompatible_contact_name">Contact Name</label>
@@ -186,11 +186,9 @@ $postTaxonomyTerm = $GLOBALS['djd_post_type_term'];
 					
 				<?php } ?>
 			
-			
-			
 				<div class="col-xs-12 col-sm-6">
 					<label for="djd_site_post_city">City<?php //echo ( $djd_options['djd-city'] ? $djd_options['djd-city'] : __('City', 'djd-site-post') ); ?></label>
-					<input type="text" <?php echo "required='required'"; ?> id="djd_site_post_city" name="djd_site_post_city" maxlength="255" value="" <?php //if ( $my_post ) echo "value='".$my_post->post_city."'"; ?>autofocus="autofocus"/>
+					<input style="width:100%;" type="text" <?php echo "required='required'"; ?> id="djd_site_post_city" name="djd_site_post_city" maxlength="255" value="" <?php //if ( $my_post ) echo "value='".$my_post->post_city."'"; ?>autofocus="autofocus"/>
 				</div>
 				
 				<!-- State -->
@@ -808,11 +806,13 @@ $postTaxonomyTerm = $GLOBALS['djd_post_type_term'];
 	<input type="hidden" name="action" value="process_site_post_form"/>
 	<?php if ( (isset($djd_options['djd-quiz'])) && (!is_user_logged_in()) ) { ?>
 		<?php $no1 = mt_rand(1, 12); $no2 = mt_rand(1, 12); ?>
-		<label class="error" for="djd_quiz" id="quiz_error" style="margin: 0 0 5px 10px; display: none; color: red;"><?php _e('Wrong Quiz Answer!', 'djd-site-post'); ?></label>
+		<label class="error" for="djd_quiz" id="quiz_error" style="margin: 0 0 5px 0; display: none; color: red;"><?php _e('Wrong Quiz Answer!', 'djd-site-post'); ?></label>
 		<label for="djd_quiz" id="djd_quiz_label"><?php echo $no1; ?> plus <?php echo $no2; ?> =</label>
 		<input type="text" required="required" id="djd_quiz" name="djd_quiz" maxlength="2" size="2" />
 		<input type="hidden" id="djd_quiz_hidden" name="djd_quiz_hidden" value="<?php echo $no1 + $no2; ?>" />
 	<?php } ?>
+	<label class="error" for="g-recaptcha" id="g-recaptcha_error" style="margin: 0 0 5px 10px; display: none; color: red;">Captcha is required</label>
+	<div class="g-recaptcha" id="g-recaptcha" data-sitekey="6LePhU8UAAAAAGJQwZRkXsoO6cdLNS_9UVVpKaU8"></div>
 	<br><br>
 	<button type="submit" class="send-button" id="submit"><?php echo ( $djd_options['djd-send-button'] ? $djd_options['djd-send-button'] : __('Publish', 'djd-site-post') ); ?></button>
 	<p id="error" class="<?php echo ($sr && !$cf['form_ok']) ? 'visible' : ''; ?>"><?php echo $djd_options['djd-post-fail']; ?></p>

@@ -624,6 +624,260 @@
 		};
       }
     },
+    'documentation': {
+      init: function() {
+      	console.log('docs page');
+        // JavaScript to be fired on the docs page
+        // docs dropdown 
+	
+		var url = '/wp-content/themes/yocto/proxy.php';
+		var downloadsURL = 'http://api-v1.yoctoproject.org/api/downloads?release%5B%5D=59';
+		var docsURL = 'http://api-v1.yoctoproject.org/documentation-api';
+		
+		var docsObjectArray = [];
+		var docsToolObjectArray = [];
+		var docsDevelopmentObjectArray = [];
+		var docsReferenceObjectArray = [];
+		var docsQuickStartObjectArray = [];
+		var docsSDKObjectArray = [];
+		var docsNoneObjectArray = [];
+		var releaseCurrentVersion = '';
+		var initialVersionClass = '';
+		
+		function initialDocsSetup() {
+			releaseCurrentVersion = (releaseCurrentVersion + ' ').trim();
+			//var documentClass = 'ver-' + releaseCurrentVersion.split('.').join('-');
+		}
+		
+		function buildDropdown(tableData){
+			var selectHtml = '';
+			var hasResults = false;
+			selectHtml += '<select id="releaseSelect" name="release-select" class="header-select">';
+			jQuery.each(tableData.nodes, function(i, obj) {
+				if(i === 0) {
+					releaseCurrentVersion = obj.node.field_release_number;
+					var versionClassClean = (releaseCurrentVersion + ' ').trim();
+					initialVersionClass = 'ver-' + versionClassClean.split('.').join('-');
+				}
+				selectHtml += '<option poky-version="field_poky_version" data-release-number="' + obj.node.field_release_number + '" value="' + obj.node.title + '">' + obj.node.title + '</option>';
+			});
+			selectHtml += '</select>';
+			jQuery("#dropdownContainer").html(selectHtml);
+		}
+		
+
+		jQuery('#dropdownContainer').on('change', 'select#releaseSelect', function(){
+			var releaseNumber = jQuery(this).find(':selected').data('release-number');
+			releaseNumber = (releaseNumber + ' ').trim();
+			var documentClass = 'ver-' + releaseNumber.split('.').join('-');
+			jQuery( ".dynamic-documents" ).hide();
+			jQuery( "." + documentClass).show();
+			
+			//change new section docs		
+			var docsSDKObjectArrayLength = docsSDKObjectArray.length;
+			var docsQuickStartObjectArrayLength = docsQuickStartObjectArray.length;
+			
+			for (var i = 0; i < docsSDKObjectArrayLength; i++) {
+				if(docsSDKObjectArray[i].docVersion === releaseNumber) {
+					jQuery('.featured-doc-blocks').find('.custom-block').last().find('a').attr( "href", docsSDKObjectArray[i].docHTMLFile);
+					jQuery('.featured-doc-blocks').find('.custom-block').last().find('.grid-block-copy h6').text(docsSDKObjectArray[i].docTitle);
+				}
+			}
+
+			for (var j = 0; j < docsQuickStartObjectArrayLength; j++) {
+				if(docsQuickStartObjectArray[j].docVersion === releaseNumber) {
+		   			jQuery('.featured-doc-blocks').find('.custom-block').first().find('a').attr( "href", docsQuickStartObjectArray[j].docHTMLFile );
+		   		 	jQuery('.featured-doc-blocks').find('.custom-block').first().find('.grid-block-copy h6').text(docsQuickStartObjectArray[j].docTitle);
+				}
+			}
+		});
+		
+		
+		// docs search
+		
+	    var cx = '010276533680706855010:dr7y7wxxktw';
+	    var gcse = document.createElement('script');
+	    gcse.type = 'text/javascript';
+	    gcse.async = true;
+	    gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+	    var s = document.getElementsByTagName('script')[0];
+	    s.parentNode.insertBefore(gcse, s);
+		
+		
+		// docs sections
+		
+		function buildSections(tableData){		
+			var docsHtml = '';
+			var linkHtml = '';
+			var hasResults = false;
+			
+			jQuery.each(tableData.nodes, function(i, obj) {
+				var showAmount = 100;
+				if(i < showAmount){
+
+					var documentVersionArray = obj.node.term_node_tid.split(' ');
+					var documentVersion = documentVersionArray[2];
+					var documentClass = 'ver-' + documentVersion.split('.').join('-');
+					var documentCategory = obj.node.field_section.trim(); 
+					var docItem = {docTitle:obj.node.title, docBody:obj.node.body, docHTMLFile:obj.node.HTML, docVersion:documentVersion, docClass:documentClass, docCategory:documentCategory};
+					docsObjectArray[i] = docItem;
+					
+					//documentCategory = docsObjectArray[i].docCategory.replace(/\\n/g, ' '); // if used in block builder
+					documentCategory = docsObjectArray[i].docCategory.replace(/\n/g, ' ');
+
+					switch(documentCategory) {
+					    case "Tool":
+					        docsToolObjectArray.push(docItem);
+					        break;
+					    case "Development":
+					        docsDevelopmentObjectArray.push(docItem);
+					        break;
+						case "Reference":
+					        docsReferenceObjectArray.push(docItem);
+					        break;
+						case "Development New User":
+					        docsSDKObjectArray.push(docItem);
+					        break;
+						case "New User":
+					        docsQuickStartObjectArray.push(docItem);
+					        break;
+					    default:
+					        docsNoneObjectArray.push(docItem);
+					}
+				}
+			});
+			
+			
+			function buildSection(sectionArray, sectionContainerID){
+				var docsHtml = "";
+				var sectionArrayLength = sectionArray.length;
+				for (var i = 0; i < sectionArrayLength; i++) {
+					if(sectionArray[i].docClass === initialVersionClass){
+						docsHtml += '<div class="col-xs-12 col-sm-6 col-md-3 documents dynamic-documents custom-block ' + sectionArray[i].docCategory + ' ' + sectionArray[i].docClass + '">';
+						docsHtml += '	<a href="' + sectionArray[i].docHTMLFile + '" class="inline-block full-width" target="_blank">';		
+						docsHtml += '		<div class="grid-block"><div class="grid-featured-image-container"></div>';			
+						docsHtml += '			<div class="grid-block-copy">';
+						docsHtml += '				<h6>' + sectionArray[i].docTitle + '</h6>';
+						docsHtml += '				<p>' + sectionArray[i].docBody + '</p>';			
+						docsHtml += '			</div>';		
+						docsHtml += '		</div>';
+						docsHtml += '	</a>';
+						docsHtml += '</div>';
+					}else{
+						docsHtml += '<div class="col-xs-12 col-sm-6 col-md-3 documents dynamic-documents custom-block ' + sectionArray[i].docCategory + ' ' + sectionArray[i].docClass + '" style="display:none;">';
+						docsHtml += '	<a href="' + sectionArray[i].docHTMLFile + '" class="inline-block full-width" target="_blank">';		
+						docsHtml += '		<div class="grid-block"><div class="grid-featured-image-container"></div>';			
+						docsHtml += '			<div class="grid-block-copy">';
+						docsHtml += '				<h6>' + sectionArray[i].docTitle + '</h6>';
+						docsHtml += '				<p>' + sectionArray[i].docBody + '</p>';			
+						docsHtml += '			</div>';		
+						docsHtml += '		</div>';
+						docsHtml += '	</a>';
+						docsHtml += '</div>';
+					}
+				}
+				jQuery("#" + sectionContainerID).html(docsHtml);
+			}
+			
+			
+			function buildUpperSection(sectionArray, section){
+				var sectionArrayLength = sectionArray.length;
+				for (var i = 0; i < sectionArrayLength; i++) {
+					if(sectionArray[i].docVersion === releaseCurrentVersion){ 
+						if(section === 'quickstart'){
+							jQuery('.featured-doc-blocks').find('.custom-block').first().find('a').attr( "href", sectionArray[i].docHTMLFile );
+							jQuery('.featured-doc-blocks').find('.custom-block').first().find('.grid-block-copy h6').text(sectionArray[i].docTitle);
+						}else if(section === 'sdk'){
+							jQuery('.featured-doc-blocks').find('.custom-block').last().find('a').attr( "href", sectionArray[i].docHTMLFile );
+							jQuery('.featured-doc-blocks').find('.custom-block').last().find('.grid-block-copy h6').text(sectionArray[i].docTitle);
+						}
+					}
+				}
+			}
+			
+			buildSection(docsToolObjectArray, 'docsToolContainer');
+			buildSection(docsDevelopmentObjectArray, 'docsDevelopmentContainer');
+			buildSection(docsReferenceObjectArray, 'docsReferenceContainer');
+			buildSection(docsNoneObjectArray, 'docsNoneContainer');
+			
+			buildUpperSection(docsQuickStartObjectArray, 'quickstart');
+			buildUpperSection(docsSDKObjectArray, 'sdk');
+			initialDocsSetup();
+	
+		}
+		
+		function buildDocsSections() {
+			jQuery.getJSON( url, { csurl: docsURL}, function(data){ //, dataType: "json"
+				buildSections(data);
+			});
+		}
+		
+		jQuery.getJSON( url, { csurl: downloadsURL}, function(data){
+			buildDropdown(data);
+			buildDocsSections();
+		});
+		
+		
+      },
+      finalize: function() {
+        // JavaScript to be fired on the home page, after the init JS
+        window.onload = function(){
+	
+			// Customize Google Search
+			
+			jQuery('input.gsc-input').attr('placeholder', 'Search Documents');
+			jQuery('input.gsc-input').css('background-image', 'none');
+			jQuery('.gsc-search-box ').css('display', 'block');
+			
+			jQuery('input.gsc-input').blur(function() {
+		  		jQuery(this).attr('placeholder', 'Search Documents');
+		  		jQuery(this).css('background-image', 'none');
+			});
+			
+			jQuery('.gsc-search-box').submit(function( event ) {
+				alert('submit');
+				jQuery('input.gsc-input').attr('placeholder', 'Search Documents');
+				jQuery('input.gsc-input').css('background-image', 'none');
+			});
+			
+			// Docs Section Navigartion
+			
+			var getUrlParameter = function getUrlParameter(sParam) {
+			    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+			        sURLVariables = sPageURL.split('&'),
+			        sParameterName,
+			        i;
+		
+			    for (i = 0; i < sURLVariables.length; i++) {
+			        sParameterName = sURLVariables[i].split('=');
+		
+			        if (sParameterName[0] === sParam) {
+			            return sParameterName[1] === undefined ? true : sParameterName[1];
+			        }
+			    }
+			};
+				
+			function animateBody(section, offset) {	
+				var currentSection = jQuery('.' + section);
+				var headerOffset = jQuery('.header-position-container').outerHeight();
+			
+				console.log(headerOffset);
+				var scrollLocation = currentSection.offset().top - (headerOffset + offset);
+				jQuery("html, body").delay(800).animate({scrollTop: scrollLocation }, 'slow');
+			}
+			
+			var searchTerm = getUrlParameter('section');
+				
+			if(searchTerm !== undefined){
+				if(searchTerm === 'featured-doc-blocks'){
+					animateBody(searchTerm, 45);	
+				}else{
+					animateBody(searchTerm, 0);	
+				}
+			}
+		};
+      }
+    },
     // docs archive
     'archived_documents': {
       init: function() {

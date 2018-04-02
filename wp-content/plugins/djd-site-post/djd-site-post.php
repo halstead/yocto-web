@@ -1059,42 +1059,58 @@ if (!class_exists("DjdSitePost")) {
 			
 			if (empty($success_url)) $success_url = home_url() . "/";
 		}
-		//
-		
 		//$newOptions = array('djd-post-type' => $dynamic_post_type);
 		//update_option('djd_site_post_settings', $newOptions);
 		//'djd-post-type' => 'post',
 		
-
 		// Call the function and grab the results (if nothing, output a comment noting that it was empty).
 		// This one calls the form presented to the user.
 		return call_user_func_array(array($this, $form_name), array($atts, $content, $user_verified, $djd_post_id, $called_from_widget));
-
 	}
 
 
 	function process_site_post_form() {
-		if( isset($_POST) ){
+		// Check reCaptcha
+		$response = $_POST["g-recaptcha-response"];
+		$url = 'https://www.google.com/recaptcha/api/siteverify';
+		$data = array(
+			'secret' => '6LePhU8UAAAAACs94mkfFKJQ9hkEeVIKMNsfMAW0',
+			'response' => $_POST["g-recaptcha-response"]
+		);
+		$options = array(
+			'http' => array (
+				'method' => 'POST',
+				'content' => http_build_query($data)
+			)
+		);
+		$context  = stream_context_create($options);
+		$verify = file_get_contents($url, false, $context);
+		$captcha_success=json_decode($verify);
+		$spam_detected = false;
+		if ($captcha_success->success==false) {
+			// captcha false
+			$spam_detected = true;
+		} else if ($captcha_success->success==true) {
+			// captcha true
+			$spam_detected = false;
+		} else {
+			$spam_detected = true;
+		}
+		
+		if( isset($_POST) && $spam_detected == false ){
 
 			$djd_options = get_option('djd_site_post_settings');
 				
 			if ( !empty ($_POST["djd-our-post-type"])) $djd_post_type = $_POST["djd-our-post-type"];
 			if ( !empty ($_POST["djd-our-id"])) $djd_post_id = $_POST["djd-our-id"];
 			
-			$dynamic_post_taxonomy = ( !empty ($_POST["djd-our-post-taxonomy"])) ? $_POST["djd-our-post-taxonomy"] : 'category';
-			$terms = ( !empty ($_POST["djd-our-post-term"])) ? $_POST["djd-our-post-term"] : 'uncategorized';
-			
-			//if ( !empty ($_POST["djd-our-post-taxonomy"])) $dynamic_post_taxonomy = $_POST["djd-our-post-taxonomy"];
-			//if ( !empty ($_POST["djd-our-post-term"])) $terms = $_POST["djd-our-post-term"];
-				// Create post object with defaults
-			
-			// Check if the city exists
-			//$city_term = term_exists( $city, 'location', $state_term['term_taxonomy_id'] );
-			
+			$dynamic_post_taxonomy = ( !empty ($_POST["djd-our-post-taxonomy"])) ? $_POST["djd-our-post-taxonomy"] : 'organization-type';
+			$terms = ( !empty ($_POST["djd-our-post-term"])) ? $_POST["djd-our-post-term"] : 'members';
+
+			// Check if the term exists
 			$org_term = term_exists( $terms, $dynamic_post_taxonomy, 0 );
-			// Create city if it doesn't exist
-			if ( !$org_term ) {
-			    //$org_term = wp_insert_term( $terms, $dynamic_post_taxonomy, array( 'parent' => $state_term['term_taxonomy_id'] ) );
+			// Create term if it doesn't exist
+			if ( !$org_term ) { 
 				$org_term = wp_insert_term( $terms, $dynamic_post_taxonomy, array( 'parent' => 0 ) );
 			}
 			
@@ -1103,7 +1119,7 @@ if (!class_exists("DjdSitePost")) {
 			        $org_term['term_taxonomy_id']
 			    )
 			);
-			//if($dynamic_post_taxonomy != ''){
+			// Create post object with defaults
 				$my_post = array(
 					'ID' => $djd_post_id,
 					'post_title' => '',
@@ -1119,24 +1135,7 @@ if (!class_exists("DjdSitePost")) {
 					'to_ping' =>  '',
 				    'tax_input' => $custom_tax
 				);
-			// }else{
-				// $my_post = array(
-					// 'ID' => $djd_post_id,
-					// 'post_title' => '',
-					// 'post_status' => 'publish',
-					// 'post_author' => '',
-					// 'post_category' => '',
-					// 'comment_status' => 'open',
-					// 'ping_status' => 'open',
-					// 'post_content' => '',
-					// 'post_excerpt' => '',
-					// 'post_type' => $djd_post_type, 
-					// 'tags_input' => '',
-					// 'to_ping' =>  ''
-				// );
-			// }
-				
-				
+
 				//print_r($my_post);
 				
 				$date_stamp = strtotime($date_string);
@@ -1203,14 +1202,13 @@ if (!class_exists("DjdSitePost")) {
 				if( array_key_exists('djd-priv-publish-status', $_POST)) {
 					$my_post['post_status'] = wp_strip_all_tags($_POST['djd-priv-publish-status']);
 				}
-
+				
 				// Insert the post into the database
 				$post_success = wp_update_post( $my_post );
 				
-				
 				// Insert Meta Data
-				if($post_success != 0)
-				{
+				if($post_success != false) {
+					$status = wp_set_object_terms($post_success, $terms, $dynamic_post_taxonomy); //set taxonomy / terms
 					if($djd_post_type == 'events') {
 						$eventlink = $_POST["dsp_event_link"];
 						$eventVenue = $_POST["dsp_event_venue"];
@@ -1402,8 +1400,7 @@ if (!class_exists("DjdSitePost")) {
 
 				if($post_success === false) {
 					$result = "error";
-				}
-				else {
+				} else {
 					$result = "success";
 					//if ( 'publish' == $my_post['post_status'] ) do_action('publish_post');
 					if (isset($_POST['djd-post-format'])) {
@@ -1428,13 +1425,14 @@ if (!class_exists("DjdSitePost")) {
 					}
 					if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
 						echo $result;
+						//echo "it didn't worked son";
 					} else {
 						setcookie('form_ok', 1,  time() + 10, '/');
 						header("Location: ".$_SERVER["HTTP_REFERER"]);
+						//echo "it worked son";
 						die();
 					}
-				}
-				else {
+				}else {
 					throw new Exception( $djd_options['djd-post-fail'] ? $djd_options['djd-post-fail'] : __('We were unable to accept your post at this time. Please try again. If the problem persists tell the site owner.', 'djd-site-post'));
 				}
 		} // isset($_POST)

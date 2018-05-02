@@ -588,7 +588,7 @@ function custom_blocks($atts) {
     $my_query = new WP_Query($args);  
     if( $my_query->have_posts() ) {
 		while ($my_query->have_posts()) : $my_query->the_post();  //$value = get_field( "text_field" );
-			$output .= '<div class="col-xs-12 col-sm-6 ' . $columns . ' ' . $post_type . ' custom-block">';
+			$output .= '<div class="col-xs-12 col-sm-6 ' . $columns . ' ' . $post_type . ' post-' . get_the_ID()  .  ' custom-block">';
 			if($post_type == 'jobs'){
 				if( get_field('dsp_job_posting_link') ):
 					$output .= '<a href="' .  get_field('dsp_job_posting_link') . '" target="_blank" class="inline-block full-width">';
@@ -680,7 +680,7 @@ function default_job_block($atts) {
     $my_query = new WP_Query($args); 
 	if( $my_query->have_posts() ) {
 		while ($my_query->have_posts()) : $my_query->the_post(); 
-			$output .= '<div class="col-xs-12 col-sm-6 ' . $columns . ' ' . $post_type . ' custom-block">';
+			$output .= '<div class="col-xs-12 col-sm-6 ' . $columns . ' ' . $post_type . ' post-' . get_the_ID()  . ' custom-block">';
 			if( get_field('dsp_job_posting_link') ):
 				$output .= '<a href="' .  get_field('dsp_job_posting_link') . '" target="_blank" class="inline-block full-width">';
 			else:

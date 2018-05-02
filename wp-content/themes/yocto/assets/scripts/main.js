@@ -425,15 +425,15 @@
 			
 			for (var i = 0; i < docsSDKObjectArrayLength; i++) {
 				if(docsSDKObjectArray[i].docVersion === releaseNumber) {
-					jQuery('.featured-doc-blocks').find('.custom-block').last().find('a').attr( "href", docsSDKObjectArray[i].docHTMLFile);
-					jQuery('.featured-doc-blocks').find('.custom-block').last().find('.grid-block-copy h6').text(docsSDKObjectArray[i].docTitle);
+					jQuery('.featured-doc-blocks').find('.post-305').find('a').attr("href", docsSDKObjectArray[i].docHTMLFile);
+					jQuery('.featured-doc-blocks').find('.post-305').find('.grid-block-copy h6').text(docsSDKObjectArray[i].docTitle);
 				}
 			}
 
 			for (var j = 0; j < docsQuickStartObjectArrayLength; j++) {
 				if(docsQuickStartObjectArray[j].docVersion === releaseNumber) {
-		   			jQuery('.featured-doc-blocks').find('.custom-block').first().find('a').attr( "href", docsQuickStartObjectArray[j].docHTMLFile );
-		   		 	jQuery('.featured-doc-blocks').find('.custom-block').first().find('.grid-block-copy h6').text(docsQuickStartObjectArray[j].docTitle);
+		   			jQuery('.featured-doc-blocks').find('.post-296').find('a').attr("href", docsQuickStartObjectArray[j].docHTMLFile);
+		   		 	jQuery('.featured-doc-blocks').find('.post-296').find('.grid-block-copy h6').text(docsQuickStartObjectArray[j].docTitle);
 				}
 			}
 		});
@@ -531,11 +531,11 @@
 				for (var i = 0; i < sectionArrayLength; i++) {
 					if(sectionArray[i].docVersion === releaseCurrentVersion){ 
 						if(section === 'quickstart'){
-							jQuery('.featured-doc-blocks').find('.custom-block').first().find('a').attr( "href", sectionArray[i].docHTMLFile );
-							jQuery('.featured-doc-blocks').find('.custom-block').first().find('.grid-block-copy h6').text(sectionArray[i].docTitle);
+							jQuery('.featured-doc-blocks').find('.post-296').find('a').attr( "href", sectionArray[i].docHTMLFile );
+							jQuery('.featured-doc-blocks').find('.post-296').find('.grid-block-copy h6').text(sectionArray[i].docTitle);
 						}else if(section === 'sdk'){
-							jQuery('.featured-doc-blocks').find('.custom-block').last().find('a').attr( "href", sectionArray[i].docHTMLFile );
-							jQuery('.featured-doc-blocks').find('.custom-block').last().find('.grid-block-copy h6').text(sectionArray[i].docTitle);
+							jQuery('.featured-doc-blocks').find('.post-305').find('a').attr( "href", sectionArray[i].docHTMLFile );
+							jQuery('.featured-doc-blocks').find('.post-305').find('.grid-block-copy h6').text(sectionArray[i].docTitle);
 						}
 					}
 				}
@@ -679,15 +679,15 @@
 			
 			for (var i = 0; i < docsSDKObjectArrayLength; i++) {
 				if(docsSDKObjectArray[i].docVersion === releaseNumber) {
-					jQuery('.featured-doc-blocks').find('.custom-block').last().find('a').attr( "href", docsSDKObjectArray[i].docHTMLFile);
-					jQuery('.featured-doc-blocks').find('.custom-block').last().find('.grid-block-copy h6').text(docsSDKObjectArray[i].docTitle);
+					jQuery('.featured-doc-blocks').find('.post-305').find('a').attr( "href", docsSDKObjectArray[i].docHTMLFile);
+					jQuery('.featured-doc-blocks').find('.post-305').find('.grid-block-copy h6').text(docsSDKObjectArray[i].docTitle);
 				}
 			}
 
 			for (var j = 0; j < docsQuickStartObjectArrayLength; j++) {
 				if(docsQuickStartObjectArray[j].docVersion === releaseNumber) {
-		   			jQuery('.featured-doc-blocks').find('.custom-block').first().find('a').attr( "href", docsQuickStartObjectArray[j].docHTMLFile );
-		   		 	jQuery('.featured-doc-blocks').find('.custom-block').first().find('.grid-block-copy h6').text(docsQuickStartObjectArray[j].docTitle);
+		   			jQuery('.featured-doc-blocks').find('.post-296').find('a').attr( "href", docsQuickStartObjectArray[j].docHTMLFile );
+		   		 	jQuery('.featured-doc-blocks').find('.post-296').find('.grid-block-copy h6').text(docsQuickStartObjectArray[j].docTitle);
 				}
 			}
 		});
@@ -785,11 +785,11 @@
 				for (var i = 0; i < sectionArrayLength; i++) {
 					if(sectionArray[i].docVersion === releaseCurrentVersion){ 
 						if(section === 'quickstart'){
-							jQuery('.featured-doc-blocks').find('.custom-block').first().find('a').attr( "href", sectionArray[i].docHTMLFile );
-							jQuery('.featured-doc-blocks').find('.custom-block').first().find('.grid-block-copy h6').text(sectionArray[i].docTitle);
+							jQuery('.featured-doc-blocks').find('.post-296').find('a').attr( "href", sectionArray[i].docHTMLFile );
+							jQuery('.featured-doc-blocks').find('.post-296').find('.grid-block-copy h6').text(sectionArray[i].docTitle);
 						}else if(section === 'sdk'){
-							jQuery('.featured-doc-blocks').find('.custom-block').last().find('a').attr( "href", sectionArray[i].docHTMLFile );
-							jQuery('.featured-doc-blocks').find('.custom-block').last().find('.grid-block-copy h6').text(sectionArray[i].docTitle);
+							jQuery('.featured-doc-blocks').find('.post-305').find('a').attr( "href", sectionArray[i].docHTMLFile );
+							jQuery('.featured-doc-blocks').find('post-305').find('.grid-block-copy h6').text(sectionArray[i].docTitle);
 						}
 					}
 				}

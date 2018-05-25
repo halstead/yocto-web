@@ -1468,7 +1468,7 @@ if (!class_exists("DjdSitePost")) {
 		$blogname = get_option('blogname');
 		
 		$headers = "MIME-Version: 1.0\r\n" . "From: ".$blogname." "."<".$email.">\n" . "Content-Type: text/HTML; charset=\"" . get_option('blog_charset') . "\"\r\n";
-		$content = '<p>'.__('New Website Form Submission to', 'djd-site-post').' '.$blogname.'.'.'<br/>' .__('To view the entry click here:', 'djd-site-post') . ' '.'<a href="'.get_permalink($post_id).'"><strong>'.$post_title.'</strong></a></p>';
+		$content = '<p>'.__('New Website Form Submission to', 'djd_post_type').' '.$blogname.'.'.'<br/>' .__('To view the entry click here:', 'djd-site-post') . ' '.'<a href="'.get_permalink($post_id).'"><strong>'.$post_title.'</strong></a></p>';
 		wp_mail($email, __('New Yocto Form Submission', 'djd-site-post') . ' ' . $blogname . ': ' . $post_title, $content, $headers);
 	}
 	

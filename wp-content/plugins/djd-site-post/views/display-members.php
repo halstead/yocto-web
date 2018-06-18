@@ -529,7 +529,7 @@ $postTaxonomyTerm = $GLOBALS['djd_post_type_term'];
 			<div class="row">
 				<div class="col-xs-12">
 				<?php if($postTaxonomyTerm  == 'participants' || $postTaxonomyTerm  == 'compatible'){ ?>
-					<label for="djdsitepostcontent">layer / Product Description (180 character limit)</label>
+					<label for="djdsitepostcontent">Layer / Product Description (180 character limit)</label>
 				<?php }elseif($postTaxonomyTerm  == 'consultants' || $postTaxonomyTerm  == 'members') {  ?>
 					<label for="djdsitepostcontent">Company Description (180 character limit)</label>
 				<?php } ?>

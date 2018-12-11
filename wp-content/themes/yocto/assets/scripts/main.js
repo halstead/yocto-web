@@ -247,7 +247,7 @@
 	  			  //layerTableHtml += '	<div class="col-xs-12 col-sm-2">' + obj.committer + '</div>'; //obj.datetime   + i + 
 	  			  layerTableCommitsHtml += '	<div class="col-xs-12 col-sm-6"><p><img src="/wp-content/uploads/2017/07/hexagon-blue.png" class="hexagon"/><a href="' + obj.link + '" target="_blank">' + obj.summary + '</a></p></div>';
 	  			  layerTableCommitsHtml += '	<div class="col-xs-12 col-sm-2"><p><a target="_blank" href="' + obj.link + '">' + obj.repo + '</a></p></div>';
-	  			  layerTableCommitsHtml += '	<div class="col-xs-12 col-sm-2"><p>' + obj.author + '</p></div>';
+	  			  //layerTableCommitsHtml += '	<div class="col-xs-12 col-sm-2"><p>' + obj.author + '</p></div>';
 	  			  layerTableCommitsHtml += '</div>';
 				}
 			});
@@ -315,7 +315,7 @@
 	  			  layerTableHtml += '	<div class="col-xs-12 col-sm-2">' + newDate + '</div>'; //obj.datetime   + i + 
 	  			  layerTableHtml += '	<div class="col-xs-12 col-sm-6"><p><img src="/wp-content/uploads/2017/07/hexagon-yellow.png" class="hexagon"/><a href="' + obj.link + '" target="_blank">' + obj.description + '</a> <span class="priority ' + priorityClass + '">' + obj.priority + '</span></p></div>';
 	  			  layerTableHtml += '	<div class="col-xs-12 col-sm-2"><p>' + obj.status + '</p></div>';
-	  			  layerTableHtml += '	<div class="col-xs-12 col-sm-2"><p>' + obj.assignee + '</p></div>';
+	  			  /* layerTableHtml += '	<div class="col-xs-12 col-sm-2"><p>' + obj.assignee + '</p></div>'; */
 	  			  layerTableHtml += '</div>';
 				}
 			  

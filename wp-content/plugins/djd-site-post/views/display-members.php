@@ -612,7 +612,7 @@ $postTaxonomyTerm = $GLOBALS['djd_post_type_term'];
 			</div>
 			<div class="row">
 				<div class="col-xs-12 ">
-					<label for="dsp_participant_non_profit">7. Organization is a small business (up to 60 employees total), non-profit project, or existing Yocto Project member organization.</label>
+					<label for="dsp_participant_non_profit">7. Organization is a small business (up to 80 employees total), non-profit project, or existing Yocto Project member organization.</label>
 					<input type="radio" required="required" id="dsp_participant_non_profit-yes" name="dsp_participant_non_profit" value="yes" /> Yes
 					<input type="radio" required="required" id="dsp_participant_non_profit-no" name="dsp_participant_non_profit" value="no" /> No
 				</div>
